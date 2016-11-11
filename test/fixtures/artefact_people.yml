@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  person: MyString
+  titel: MyString
+  n_bab_rel: MyString
+
+two:
+  person: MyString
+  titel: MyString
+  n_bab_rel: MyString

@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-md-12" style="margin:10px 0;">
+    <%= render "shared/search" %>
+  </div>
+  <div class="col-md-12">
+    <%= will_paginate @subjects, renderer: BootstrapPagination::Rails %>
+    <%= content_tag :div, class: 'pull-right' do %>
+      <%= link_to 'New Artefact', new_artefact_path, class: 'btn btn-default' %>
+    <% end if current_user %>
+  </div>
+</div>
+
+<div id="artefacts">
+  <%= render @artefacts %>
+</div>

@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Photos</h1>
+
+<table class="table table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th>Ph rel</th>
+      <th>Ph</th>
+      <th>Ph nr</th>
+      <th>Ph add</th>
+      <th>Ph datum</th>
+      <th>Ph text</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @photos.each do |photo| %>
+      <tr>
+        <td>
+        <%= photo.references.inspect %>
+        <%= photo.artefacts.inspect %>
+        <%= link_to photo.ph_rel, photo %></td>
+        <td><%= photo.ph %></td>
+        <td><%= photo.ph_nr %></td>
+        <td><%= photo.ph_add %></td>
+        <td><%= photo.ph_datum %></td>
+        <td><%= photo.ph_text %></td>
+        <td><%= link_to 'Edit', edit_photo_path(photo) %></td>
+        <td><%= link_to 'Destroy', photo, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Photo', new_photo_path %>

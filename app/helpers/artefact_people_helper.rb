@@ -1,0 +1,2 @@
+module ArtefactPeopleHelper
+end

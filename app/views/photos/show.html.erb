@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Ph rel:</strong>
+  <%= @photo.ph_rel %>
+</p>
+
+<p>
+  <strong>Ph:</strong>
+  <%= @photo.ph %>
+</p>
+
+<p>
+  <strong>Ph nr:</strong>
+  <%= @photo.ph_nr %>
+</p>
+
+<p>
+  <strong>Ph add:</strong>
+  <%= @photo.ph_add %>
+</p>
+
+<p>
+  <strong>Ph datum:</strong>
+  <%= @photo.ph_datum %>
+</p>
+
+<p>
+  <strong>Ph text:</strong>
+  <%= @photo.ph_text %>
+</p>
+
+<%= link_to 'Edit', edit_photo_path(@photo) %> |
+<%= link_to 'Back', photos_path %>

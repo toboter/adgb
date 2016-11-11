@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ph_rel: MyString
+  ph: MyString
+  ph_nr: 1
+  ph_add: MyString
+  ph_datum: MyString
+  ph_text: MyText
+
+two:
+  ph_rel: MyString
+  ph: MyString
+  ph_nr: 1
+  ph_add: MyString
+  ph_datum: MyString
+  ph_text: MyText
