@@ -1,4 +1,4 @@
-<% title 'Artefact References' %>
+<% title 'Artefaktzitate' %>
 
 <table class="table table-bordered table-responsive">
   <thead>
@@ -16,8 +16,8 @@
       <tr>
         <td><%= r.verfasser %></td>
         <td><%= r.jahr %></td>
-		<td><%= r.publ %></td>
-		<td><%= r.seite %></td>
+        <td><%= r.publ %></td>
+        <td><%= r.seite %></td>
         <td><%= link_to r.artefact.try(:bab_rel), r.artefact if r.artefact %></td>
       </tr>
     <% end %>
