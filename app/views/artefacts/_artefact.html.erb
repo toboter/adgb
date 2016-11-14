@@ -16,8 +16,8 @@
         </div>
         <div class="col-lg-3">
           <strong>Photos</strong><br>
-          <% artefact.photos.each do |photo| %>
-            <%= link_to photo.ph_rel, photo %>
+          <% artefact.illustrations.each do |illustration| %>
+            <%= illustration.photo ? link_to(illustration.p_rel, illustration.photo) : illustration.p_rel %>
           <% end %>
         </div>
         <div class="col-lg-3">
