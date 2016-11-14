@@ -1,1 +1,21 @@
-<%= @people.inspect %>
+<% title 'Personnamen' %>
+
+<table class="table table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th>Personenname</th>
+      <th>Titel</th>
+      <th>Links</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @people.each do |p| %>
+      <tr>
+        <td><%= p.person %></td>
+        <td><%= p.titel %></td>
+        <td><%= link_to p.artefact.try(:bab_rel), p.artefact if p.artefact %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

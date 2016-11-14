@@ -1,7 +1,7 @@
 class ArtefactPerson < ApplicationRecord
   require 'roo'
   
-  belongs_to :artefact, foreign_key: "bab_rel", primary_key: 'b_bab_rel'
+  belongs_to :artefact, foreign_key: "n_bab_rel", primary_key: 'bab_rel'
 
   def self.col_attr
     %w(n_bab_rel person titel)

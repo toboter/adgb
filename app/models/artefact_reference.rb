@@ -1,8 +1,12 @@
 class ArtefactReference < ApplicationRecord
   require 'roo'
   
-  belongs_to :artefact, foreign_key: "bab_rel", primary_key: 'b_bab_rel'
+  belongs_to :artefact, foreign_key: "b_bab_rel", primary_key: 'bab_rel'
   belongs_to :photo, foreign_key: "ph_rel", primary_key: 'ph_rel'
+
+  def title
+    "#{verfasser} [#{jahr}] #{publ} #{seite}"
+  end
 
   def self.col_attr
     %w(b_bab_rel verfasser publ jahr seite ph_rel)

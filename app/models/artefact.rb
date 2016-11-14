@@ -11,6 +11,10 @@ class Artefact < ApplicationRecord
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
   
   validates :bab_rel, presence: true
+  
+  def full_entry
+    "#{grabung} #{bab} #{bab_ind}; #{mus_sig} #{mus_nr} #{mus_ind}"
+  end
 
   def self.col_attr
     %w(bab_rel grabung bab bab_ind b_join b_korr mus_sig mus_nr mus_ind m_join m_korr 

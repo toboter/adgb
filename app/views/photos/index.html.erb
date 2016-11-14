@@ -1,10 +1,9 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Photos</h1>
+<% title 'Photos' %>
 
 <table class="table table-bordered table-responsive">
   <thead>
     <tr>
+      <th>Links</th>
       <th>Ph rel</th>
       <th>Ph</th>
       <th>Ph nr</th>
@@ -19,9 +18,10 @@
     <% @photos.each do |photo| %>
       <tr>
         <td>
-        <%= photo.references.inspect %>
-        <%= photo.artefacts.inspect %>
-        <%= link_to photo.ph_rel, photo %></td>
+          <%= photo.references.map{ |r| link_to r.title, r }.join(', ').html_safe %>
+          <%= photo.artefacts.map{ |a| link_to a.bab_rel, a }.join(', ').html_safe %>
+        </td>       
+        <td><%= link_to photo.ph_rel, photo %></td>
         <td><%= photo.ph %></td>
         <td><%= photo.ph_nr %></td>
         <td><%= photo.ph_add %></td>

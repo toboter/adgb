@@ -1,1 +1,25 @@
-<%= @references.inspect %>
+<% title 'Artefact References' %>
+
+<table class="table table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th>Verfasser</th>
+      <th>Jahr</th>
+	  <th>Publ</th>
+	  <th>Seite</th>
+      <th>Links</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @references.each do |r| %>
+      <tr>
+        <td><%= r.verfasser %></td>
+        <td><%= r.jahr %></td>
+		<td><%= r.publ %></td>
+		<td><%= r.seite %></td>
+        <td><%= link_to r.artefact.try(:bab_rel), r.artefact if r.artefact %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,98 +1,98 @@
-<%= simple_form_for(@artefact) do |f| %>
+<%= simple_form_for @artefact, html: { class: 'form-horizontal' },
+  wrapper: :horizontal_form do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :bab_rel %>
-    
-    <%= f.input :grabung %>
-    <%= f.input :bab %>
-    <%= f.input :bab_ind %>
-    <%= f.input :b_join %>
-    <%= f.input :b_korr %>
-    
-    <%= f.input :mus_sig %>
-    <%= f.input :mus_nr %>
-    <%= f.input :mus_ind %>
-    <%= f.input :m_join %>
-    <%= f.input :m_korr %>
-    
-    <%= f.input :kod %>
-    <%= f.input :grab %>
-    <%= f.input :text %>
-    <%= f.input :sig %>
-    <%= f.input :diss %>
-    <%= f.input :mus_id %>
-    <%= f.input :standort_alt %>
-    <%= f.input :standort %>
-    
-    <%= f.input :mas1 %>
-    <%= f.input :mas2 %>
-    <%= f.input :mas3 %>
-    
-    <%= f.input :f_obj %>
-    <%= f.input :abklatsch %>
-    <%= f.input :abguss %>
-    
-    <%= f.input :fo_tell %>
-    <%= f.input :fo1 %>
-    <%= f.input :fo2 %>
-    <%= f.input :fo3 %>
-    <%= f.input :fo4 %>
-    <%= f.input :fo_text %>
-    <%= f.input :UTMx %>
-    <%= f.input :UTMxx %>
-    <%= f.input :UTMy %>
-    <%= f.input :UTMyy %>
-    
-    <%= f.input :inhalt %>
-    <%= f.input :period %>
-    <%= f.input :arkiv %>
-    <%= f.input :text_in_archiv %>
-    <%= f.input :jahr %>
-    <%= f.input :datum %>
-    <%= f.input :zeil2 %>
-    <%= f.input :zeil1 %>
-  </div>
-  
-    <did class="row">
-      <div class="col-md-12">
-        <div id="references">
-          <strong>References: </strong>
-          <%= f.simple_fields_for :references do |id| %>
-            <%= render 'reference_fields', f: id %>
-          <% end %>
-          <div class="links">
-            <%= link_to_add_association fa_icon('plus-square', text: 'add reference'), f, :references %>
-          </div>
+  <div class="row">
+    <div class="col-md-12">
+      <%= f.input :bab_rel %>
+      <hr>
+      
+      <%= f.input :grabung %>
+      <%= f.input :bab %>
+      <%= f.input :bab_ind %>
+      <%= f.input :b_join %>
+      <%= f.input :b_korr %>
+      <hr>
+      
+      <%= f.input :mus_sig %>
+      <%= f.input :mus_nr %>
+      <%= f.input :mus_ind %>
+      <%= f.input :m_join %>
+      <%= f.input :m_korr %>
+      <hr>
+      
+      <%= f.input :kod %>
+      <%= f.input :grab %>
+      <%= f.input :text %>
+      <%= f.input :sig %>
+      <%= f.input :diss %>
+      <%= f.input :mus_id %>
+      <%= f.input :standort_alt %>
+      <%= f.input :standort %>
+      
+      <%= f.input :mas1 %>
+      <%= f.input :mas2 %>
+      <%= f.input :mas3 %>
+      
+      <%= f.input :f_obj %>
+      <%= f.input :abklatsch %>
+      <%= f.input :abguss %>
+      <hr>
+      
+      <%= f.input :fo_tell %>
+      <%= f.input :fo1 %>
+      <%= f.input :fo2 %>
+      <%= f.input :fo3 %>
+      <%= f.input :fo4 %>
+      <%= f.input :fo_text %>
+      <%= f.input :UTMx %>
+      <%= f.input :UTMxx %>
+      <%= f.input :UTMy %>
+      <%= f.input :UTMyy %>
+      <hr>
+      
+      <%= f.input :inhalt %>
+      <%= f.input :period %>
+      <%= f.input :arkiv %>
+      <%= f.input :text_in_archiv %>
+      <%= f.input :jahr %>
+      <%= f.input :datum %>
+      <%= f.input :zeil2 %>
+      <%= f.input :zeil1 %>
+
+      <div id="references">
+        <strong>References: </strong>
+        <%= f.simple_fields_for :references do |id| %>
+          <%= render 'reference_fields', f: id %>
+        <% end %>
+        <div class="links">
+          <%= link_to_add_association fa_icon('plus-square', text: 'add reference'), f, :references %>
         </div>
       </div>
 
-      <div class="col-md-12">
-        <div id="photos">
-          <strong>Photos: </strong>
-          <%= f.simple_fields_for :illustrations do |id| %>
-            <%= render 'illustration_fields', f: id %>
-          <% end %>
-          <div class="links">
-            <%= link_to_add_association fa_icon('plus-square', text: 'add photo'), f, :illustrations %>
-          </div>
+      <div id="photos">
+        <strong>Photos: </strong>
+        <%= f.simple_fields_for :illustrations do |id| %>
+          <%= render 'illustration_fields', f: id %>
+        <% end %>
+        <div class="links">
+          <%= link_to_add_association fa_icon('plus-square', text: 'add photo'), f, :illustrations %>
         </div>
       </div>
-      
-      <div class="col-md-12">
-        <div id="people">
-          <strong>Personennamen: </strong>
-          <%= f.simple_fields_for :people do |id| %>
-            <%= render 'person_fields', f: id %>
-          <% end %>
-          <div class="links">
-            <%= link_to_add_association fa_icon('plus-square', text: 'add personname'), f, :people %>
-          </div>
+
+
+      <div id="people">
+        <strong>Personennamen: </strong>
+        <%= f.simple_fields_for :people do |id| %>
+          <%= render 'person_fields', f: id %>
+        <% end %>
+        <div class="links">
+          <%= link_to_add_association fa_icon('plus-square', text: 'add personname'), f, :people %>
         </div>
       </div>
+
+      <br>
+      <%= f.button :submit %>
     </div>
-    
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
+  </div>  
 <% end %>
