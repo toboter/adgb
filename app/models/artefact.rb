@@ -30,8 +30,10 @@ class Artefact < ApplicationRecord
                :f_obj, :abklatsch, :abguss, :fo_tell, :fo1, :fo2, :fo3, :fo4, 
                :fo_text, :UTMx, :UTMxx, :UTMy, :UTMyy, :inhalt, :period, 
                :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1
-    # attributes :creator => ["creators.lname", "creators.fname"]
-    # attributes :tag => "tags.name"
+    attributes :person => ["people.person", "people.titel"]
+    attributes :photo => "photos.ph_rel"
+    attributes :illustration => ["illustrations.p_rel", "illustrations.position"]
+    attributes :reference => ["references.verfasser", "references.publ"]
   end
   
   
