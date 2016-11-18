@@ -11,6 +11,14 @@ class Artefact < ApplicationRecord
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
   
   validates :bab_rel, presence: true
+
+  def bab_name
+    "#{grabung} #{bab}#{bab_ind}"
+  end
+  
+  def mus_name
+    "#{mus_sig} #{mus_nr}#{mus_ind}"
+  end
   
   def full_entry
     "#{grabung} #{bab} #{bab_ind}; #{mus_sig} #{mus_nr} #{mus_ind}"
@@ -20,7 +28,7 @@ class Artefact < ApplicationRecord
     %w(bab_rel grabung bab bab_ind b_join b_korr mus_sig mus_nr mus_ind m_join m_korr 
       kod grab text sig diss mus_id standort_alt standort mas1 mas2 mas3 f_obj 
       abklatsch abguss fo_tell fo1 fo2 fo3 fo4 fo_text UTMx UTMxx UTMy UTMyy 
-      inhalt period arkiv text_in_archiv jahr datum zeil2 zeil1)
+      inhalt period arkiv text_in_archiv jahr datum zeil2 zeil1 gr_datum gr_jahr)
   end
 
   search_scope :search do
@@ -29,7 +37,7 @@ class Artefact < ApplicationRecord
                :diss, :mus_id, :standort_alt, :standort, :mas1, :mas2, :mas3, 
                :f_obj, :abklatsch, :abguss, :fo_tell, :fo1, :fo2, :fo3, :fo4, 
                :fo_text, :UTMx, :UTMxx, :UTMy, :UTMyy, :inhalt, :period, 
-               :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1
+               :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr
     attributes :person => ["people.person", "people.titel"]
     attributes :photo => "photos.ph_rel"
     attributes :illustration => ["illustrations.p_rel", "illustrations.position"]

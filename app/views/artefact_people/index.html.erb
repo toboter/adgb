@@ -14,7 +14,7 @@
       <tr>
         <td><%= p.person %></td>
         <td><%= p.titel %></td>
-        <td><%= link_to p.artefact.try(:bab_rel), p.artefact if p.artefact %></td>
+        <td><%= link_to (p.artefact.grabung ? p.artefact.bab_name : p.artefact.mus_name), p.artefact if p.artefact %></td>
       </tr>
     <% end %>
   </tbody>

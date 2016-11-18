@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161107120007) do
+ActiveRecord::Schema.define(version: 20161118152548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20161107120007) do
   end
 
   create_table "artefact_references", force: :cascade do |t|
-    t.string   "verfasser"
+    t.string   "ver"
     t.string   "publ"
     t.string   "jahr"
     t.string   "seite"
@@ -96,6 +96,8 @@ ActiveRecord::Schema.define(version: 20161107120007) do
     t.string   "zeil1"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.string   "gr_datum"
+    t.string   "gr_jahr"
     t.index ["bab_rel"], name: "index_artefacts_on_bab_rel", unique: true, using: :btree
   end
 

@@ -5,11 +5,11 @@ class ArtefactReference < ApplicationRecord
   belongs_to :photo, foreign_key: "ph_rel", primary_key: 'ph_rel'
 
   def title
-    "#{verfasser} [#{jahr}] #{publ} #{seite}"
+    "#{ver} [#{jahr}] #{publ}#{seite ? ': '+seite : ''}"
   end
 
   def self.col_attr
-    %w(b_bab_rel verfasser publ jahr seite ph_rel)
+    %w(b_bab_rel ver publ jahr seite ph_rel)
   end
 
   def self.import(file)

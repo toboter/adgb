@@ -5,6 +5,10 @@ class Photo < ApplicationRecord
   has_many :occurences, class_name: "ArtefactPhoto", foreign_key: "p_rel", primary_key: :ph_rel
   has_many :artefacts, through: :occurences
 
+  def name
+    "#{ph} #{ph_nr}#{ph_add}"
+  end
+
   def self.col_attr
     %w(ph_rel ph ph_nr ph_add ph_datum ph_text)
   end

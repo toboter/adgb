@@ -4,20 +4,20 @@
       <div class="row">
         <div class="col-lg-3">
           <strong>Grabungsnummer</strong><br>
-          <%= artefact.grabung %><%= artefact.bab %><%= artefact.bab_ind %><br>
+          <%= artefact.bab_name %><br>
           <%= artefact.b_join %><br>
           <%= artefact.b_korr %>
         </div>
         <div class="col-lg-3">
           <strong>Museumsnummer</strong><br>
-          <%= artefact.mus_sig %><%= artefact.mus_nr %><%= artefact.mus_ind %><br>
+          <%= artefact.mus_name %><br>
           <%= artefact.m_join %><br>
           <%= artefact.m_korr %>
         </div>
         <div class="col-lg-3">
           <strong>Photos</strong><br>
           <% artefact.illustrations.each do |illustration| %>
-            <%= illustration.photo ? link_to(illustration.p_rel, illustration.photo) : illustration.p_rel %>: <%= illustration.position %>
+            <%= illustration.photo ? link_to(illustration.name, illustration.photo) : illustration.p_rel %>: <%= illustration.position %>
           <% end %>
         </div>
         <div class="col-lg-3">
@@ -47,6 +47,7 @@
             <%= artefact.arkiv %>
             <%= artefact.text_in_archiv %>
             <%= artefact.jahr %>
+            <%= artefact.datum %>
             <%= artefact.zeil2 %>
             <%= artefact.zeil1 %>
           <% end if artefact.text.present? %>
@@ -67,7 +68,7 @@
       <%= artefact.fo1 %><%= artefact.fo2 %><%= artefact.fo3 %><%= artefact.fo4 %><br>
       <%= artefact.fo_text %><br>
       <%= artefact.UTMx %><%= artefact.UTMxx %><%= artefact.UTMy %><%= artefact.UTMyy %><br>
-      <%= artefact.datum %>
+      <%= artefact.gr_datum %><%= artefact.gr_jahr %>
     </div>
     
     <div class="col-lg-4">
@@ -87,7 +88,7 @@
         <div class="col-lg-12">
           <strong>Bibliographie</strong><br>
           <% artefact.references.each do |r| %>
-            <%= r.verfasser %>; <%= r.publ %>; <%= r.jahr %>; <%= r.seite %>
+            <%= r.title %>
           <% end if artefact.references.any? %>
         </div>
       </div>

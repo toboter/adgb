@@ -9,15 +9,15 @@ class ImportsController < ApplicationController
     redirect_to imports_url, notice: "Artefacts table imported."
   end
 
-  def artefact_references
+  def artefacts_references
     ArtefactReference.destroy_all
     ArtefactReference.import(params[:artefacts_references_file])
     redirect_to imports_url, notice: "ArtefactsReferences table imported."
   end
 
-  def artefact_photos
-    ArtefactPhotos.destroy_all
-    ArtefactPhotos.import(params[:artefacts_photos_file])
+  def artefacts_photos
+    ArtefactPhoto.destroy_all
+    ArtefactPhoto.import(params[:artefacts_photos_file])
     redirect_to imports_url, notice: "ArtefactsPhotos table imported."
   end
 

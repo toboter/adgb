@@ -18,10 +18,10 @@
     <% @photos.each do |photo| %>
       <tr>
         <td>
-          <%= photo.references.map{ |r| link_to r.title, r }.join(', ').html_safe %>
-          <%= photo.artefacts.map{ |a| link_to a.bab_rel, a }.join(', ').html_safe %>
+          <%= photo.references.map{ |r| r.title }.join(', ').html_safe %><br>
+          <%= photo.artefacts.map{ |a| link_to (a.grabung ? a.bab_name : a.mus_name), a }.join(', ').html_safe %>
         </td>       
-        <td><%= link_to photo.ph_rel, photo %></td>
+        <td><%= link_to photo.name, photo %></td>
         <td><%= photo.ph %></td>
         <td><%= photo.ph_nr %></td>
         <td><%= photo.ph_add %></td>

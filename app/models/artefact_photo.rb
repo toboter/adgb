@@ -4,6 +4,10 @@ class ArtefactPhoto < ApplicationRecord
   belongs_to :artefact, foreign_key: "p_bab_rel", primary_key: 'bab_rel'
   belongs_to :photo, foreign_key: "p_rel", primary_key: 'ph_rel'
   
+  def name
+    "#{ph} #{ph_nr}#{ph_add}"
+  end
+  
   def self.col_attr
     %w(p_bab_rel ph ph_nr ph_add position p_rel)
   end

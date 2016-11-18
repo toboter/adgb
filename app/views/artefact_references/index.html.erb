@@ -14,11 +14,11 @@
   <tbody>
     <% @references.each do |r| %>
       <tr>
-        <td><%= r.verfasser %></td>
+        <td><%= r.ver %></td>
         <td><%= r.jahr %></td>
         <td><%= r.publ %></td>
         <td><%= r.seite %></td>
-        <td><%= link_to r.artefact.try(:bab_rel), r.artefact if r.artefact %></td>
+        <td><%= link_to (r.artefact.grabung ? r.artefact.bab_name : r.artefact.mus_name), r.artefact if r.artefact %></td>
       </tr>
     <% end %>
   </tbody>
