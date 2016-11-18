@@ -21,7 +21,7 @@ class Artefact < ApplicationRecord
   end
   
   def full_entry
-    "#{grabung} #{bab} #{bab_ind}; #{mus_sig} #{mus_nr} #{mus_ind}"
+    "#{bab_name}; #{mus_name}"
   end
 
   def self.col_attr
@@ -41,7 +41,7 @@ class Artefact < ApplicationRecord
     attributes :person => ["people.person", "people.titel"]
     attributes :photo => "photos.ph_rel"
     attributes :illustration => ["illustrations.p_rel", "illustrations.position"]
-    attributes :reference => ["references.verfasser", "references.publ"]
+    attributes :reference => ["references.ver", "references.publ"]
   end
   
   
