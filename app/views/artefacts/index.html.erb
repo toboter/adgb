@@ -7,6 +7,16 @@
     <%= content_tag :div, class: 'pull-right' do %>
       <%= link_to 'New Artefact', new_artefact_path, class: 'btn btn-default' %>
     <% end if current_user %>
+    <%= content_tag :div, class: 'pull-right' do %>
+      <span class="label label-default">
+        Total: 
+        <strong><%= @artefacts.count %></strong>
+      </span>
+    <% end %>
   </div>
 </div>
 <%= render @artefacts %>
+
+<div style="margin-top: 20px; margin-bottom: 10px;">
+  <%= render 'shared/per_page' %>
+</div>

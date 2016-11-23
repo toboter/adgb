@@ -1,0 +1,7 @@
+<ul class="pagination">
+  <% (a = ["20", "50", "100", "200"]).each_with_index do |pp, i| %>
+    <%= content_tag :li do %>
+  	  <%= session[:per_page] == pp.to_i ? link_to(pp, '#', style: 'background-color: #eeeeee; color: #23527c;') : link_to(pp, set_per_page_path(per_page: pp), method: :put) %>
+    <% end %>
+  <% end %>
+</ul>

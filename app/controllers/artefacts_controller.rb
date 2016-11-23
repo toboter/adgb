@@ -5,7 +5,7 @@ class ArtefactsController < ApplicationController
   # GET /artefacts
   # GET /artefacts.json
   def index
-    @artefacts = Artefact.search(params[:q]).order(bab_rel: :asc).paginate(:page => params[:page], :per_page => 50)
+    @artefacts = Artefact.search(params[:q]).order(bab_rel: :asc).paginate(:page => params[:page], :per_page => session[:per_page])
   end
 
   # GET /artefacts/1

@@ -1,4 +1,19 @@
-<% title 'Personennamen' %>
+<div class="row">
+  <div class="col-md-12" style="margin:10px 0;">
+    <strong>Distinct people: </strong><%= @people.group_by(&:person).map{ |k,e| k }.join(', ') %>
+  </div>
+  <div class="col-md-12" style="margin-bottom:10px;">
+    <%= will_paginate @people, renderer: BootstrapPagination::Rails %>
+    <%= content_tag :div, class: 'pull-right' do %>
+      <span class="label label-default">
+        Total: <strong><%= @people.count %></strong>; 
+        distinct <%= @people.group_by(&:person).count %>
+      </span>
+    <% end %>
+  </div>
+</div>
+
+
 
 <table class="table table-bordered table-responsive">
   <thead>
@@ -19,3 +34,7 @@
     <% end %>
   </tbody>
 </table>
+
+<div style="margin-top: 20px; margin-bottom: 10px;">
+  <%= render 'shared/per_page' %>
+</div>

@@ -1,4 +1,17 @@
-<% title 'Artefaktzitate' %>
+<div class="row">
+  <div class="col-md-12" style="margin:10px 0;">
+    <strong>Distinct references: </strong><%= @references.group_by{|r| [r.ver, r.jahr, r.publ]}.map{ |k,e| link_to("#{k[0]} #{k[1]}, #{k[2]}", "http://literature.toboter.de/subjects?q=#{k[0]} #{k[1]}") }.join('; ').html_safe %>
+  </div>
+  <div class="col-md-12" style="margin-bottom:10px;">
+    <%= will_paginate @references, renderer: BootstrapPagination::Rails %>
+    <%= content_tag :div, class: 'pull-right' do %>
+      <span class="label label-default">
+        Total: <strong><%= @references.count %></strong>;
+        distinct: <%= @references.group_by{|r| [r.ver, r.jahr, r.publ]}.count %>
+      </span>
+    <% end %>
+  </div>
+</div>
 
 <table class="table table-bordered table-responsive">
   <thead>
@@ -23,3 +36,7 @@
     <% end %>
   </tbody>
 </table>
+
+<div style="margin-top: 20px; margin-bottom: 10px;">
+  <%= render 'shared/per_page' %>
+</div>

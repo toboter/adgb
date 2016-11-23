@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :check_token!
+  before_action :init_session_per_page
   
   rescue_from OAuth2::Error do |exception|
     if exception.response.status == 401
@@ -10,7 +11,11 @@ class ApplicationController < ActionController::Base
       redirect_to root_url, alert: "Access token expired, try signing in again."
     end
   end
-
+  
+  def init_session_per_page
+    session[:per_page] ||= 50
+  end
+  
 private
 
   def oauth_client

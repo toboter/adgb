@@ -1,4 +1,17 @@
-<% title 'Photos' %>
+<div class="row">
+  <div class="col-md-12" style="margin:10px 0;">
+    <%= will_paginate @photos, renderer: BootstrapPagination::Rails %>
+    <%= content_tag :div, class: 'pull-right' do %>
+      <%= link_to 'New Photo', new_photo_path, class: 'btn btn-default' %>
+    <% end if current_user %>
+    <%= content_tag :div, class: 'pull-right' do %>
+      <span class="label label-default">
+        Total: 
+        <strong><%= @photos.count %></strong>
+      </span>
+    <% end %>
+  </div>
+</div>
 
 <table class="table table-bordered table-responsive">
   <thead>
@@ -34,6 +47,6 @@
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Photo', new_photo_path %>
+<div style="margin-top: 20px; margin-bottom: 10px;">
+  <%= render 'shared/per_page' %>
+</div>

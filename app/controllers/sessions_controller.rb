@@ -15,4 +15,9 @@ class SessionsController < ApplicationController
 
     redirect_to root_url, notice: "Bye!"
   end
+  
+  def set_per_page
+    session[:per_page] = params[:per_page].to_i
+    redirect_to :back
+  end
 end
