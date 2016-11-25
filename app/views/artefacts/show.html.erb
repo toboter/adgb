@@ -1,52 +1,36 @@
-<p>
-  <strong>Grabung:</strong>
-  <%= @artefact.grabung %>
-</p>
+<div class="row">
+  <div class="col-md-12 page-header">
+    <% if @artefact.grabung %>
+      <%= content_tag :h1, "#{@artefact.bab_name} <small>#{@artefact.mus_name}</small>".html_safe %>
+    <% else %>
+      <%= content_tag :h1, "#{@artefact.mus_name}" %>
+    <% end %>
+    
+    <%= content_tag :p do %>
+      <strong>Grabung Joins:</strong>
+      <%= @artefact.b_join %>
+    <% end if @artefact.b_join %>
+    
+    <%= content_tag :p do %>
+      <strong>Grabung Korrektur:</strong>
+      <%= @artefact.b_korr %>
+    <% end if @artefact.b_korr %>
+    
+    <%= content_tag :p do %>
+      <strong>Museum Joins:</strong>
+      <%= @artefact.m_join %>
+    <% end if @artefact.m_join %>
+    
+    <%= content_tag :p do %>
+      <strong>Museum Korrektur:</strong>
+      <%= @artefact.m_korr %>
+    <% end if @artefact.m_korr %>
+  </div>
+</div>  
 
-<p>
-  <strong>Bab:</strong>
-  <%= @artefact.bab %>
-</p>
+<div class="row">
+  <div class="col-md-3">
 
-<p>
-  <strong>Bab ind:</strong>
-  <%= @artefact.bab_ind %>
-</p>
-
-<p>
-  <strong>B join:</strong>
-  <%= @artefact.b_join %>
-</p>
-
-<p>
-  <strong>B korr:</strong>
-  <%= @artefact.b_korr %>
-</p>
-
-<p>
-  <strong>Mus sig:</strong>
-  <%= @artefact.mus_sig %>
-</p>
-
-<p>
-  <strong>Mus nr:</strong>
-  <%= @artefact.mus_nr %>
-</p>
-
-<p>
-  <strong>Mus ind:</strong>
-  <%= @artefact.mus_ind %>
-</p>
-
-<p>
-  <strong>M join:</strong>
-  <%= @artefact.m_join %>
-</p>
-
-<p>
-  <strong>M korr:</strong>
-  <%= @artefact.m_korr %>
-</p>
 
 <p>
   <strong>Kod:</strong>
@@ -102,7 +86,8 @@
   <strong>Mas3:</strong>
   <%= @artefact.mas3 %>
 </p>
-
+</div>
+<div class="col-md-3">
 <p>
   <strong>F obj:</strong>
   <%= @artefact.f_obj %>
@@ -167,7 +152,12 @@
   <strong>Utmyy:</strong>
   <%= @artefact.UTMyy %>
 </p>
+<p>
+<%= @artefact.gr_datum %><%= @artefact.gr_jahr %>
+</p>
 
+</div>
+<div class="col-md-3">
 <p>
   <strong>Inhalt:</strong>
   <%= @artefact.inhalt %>
@@ -207,6 +197,30 @@
   <strong>Zeil1:</strong>
   <%= @artefact.zeil1 %>
 </p>
+
+  </div>
+  <div class="col-md-3">
+    <% for img in @illustrations do %>
+<%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
+  <div class="thumbnail">
+    <%= image_tag(img['attachment']['thumb_file']['url']) %>
+    <div class="caption">
+      <%= content_tag :h4, img['name'] if img['name'] %>
+      <p>
+        <% img['tags'].split(',').each do |t| %>
+          <span class="label label-default"><%= t %></span>
+        <% end %>
+        <br>
+        <small>&copy; <%= img['copyright_owner'] %>, <%= img['copyright_license'] %></small>
+	  </p>
+    </div>
+  </div>
+<% end %>
+    <% end %>
+
+  </div>
+</div>
+
 
 <%= link_to 'Edit', edit_artefact_path(@artefact) %> |
 <%= link_to 'Back', artefacts_path %>
