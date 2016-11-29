@@ -1,0 +1,15 @@
+<%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
+  <div class="thumbnail">
+    <%= image_tag(img['attachment']['thumb_file']['url']) %>
+    <div class="caption">
+      <%= content_tag :h4, img['name'] if img['name'] %>
+      <p>
+        <% img['tags'].split(',').each do |t| %>
+          <span class="label label-default"><%= t %></span>
+        <% end %>
+        <br>
+        <small>&copy; <%= img['copyright_owner'] %>, <%= img['copyright_license'] %></small>
+	  </p>
+    </div>
+  </div>
+<% end %>

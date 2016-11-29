@@ -11,6 +11,9 @@ class PhotosController < ApplicationController
   # GET /photos/1
   # GET /photos/1.json
   def show
+    @url = URI.encode("#{Rails.application.secrets.media_host}/api/media/search?q=#{@photo.name}&f=match}")
+    @resp = Net::HTTP.get_response(URI.parse(@url))
+    @photos = Array(JSON.parse(@resp.body))
   end
 
   # GET /photos/new
