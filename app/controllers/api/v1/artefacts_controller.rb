@@ -8,6 +8,7 @@ class Api::V1::ArtefactsController < ActionController::API
     render json: Artefact.find(params[:id]), serializer: ArtefactSerializer
   end
   
+  # überspringt filterrific und nutzt direkt search_scope :search
   def search
     render json: Artefact.search(params[:q]), each_serializer: ArtefactSerializer
   end

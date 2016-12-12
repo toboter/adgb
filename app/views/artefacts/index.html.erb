@@ -1,21 +1,56 @@
-<div class="row">
-  <div class="col-md-12" style="margin:10px 0;">
-    <%= render "shared/search" %>
-  </div>
+<%= content_tag :div, class: 'row' do %>
   <div class="col-md-12">
-    <%= will_paginate @subjects, renderer: BootstrapPagination::Rails %>
     <%= content_tag :div, class: 'pull-right' do %>
       <%= link_to 'New Artefact', new_artefact_path, class: 'btn btn-default' %>
-    <% end if current_user %>
-    <%= content_tag :div, class: 'pull-right' do %>
-      <span class="label label-default">
-        Total: 
-        <strong><%= @artefacts.count %></strong>
-      </span>
     <% end %>
   </div>
+<% end if current_user %>
+
+<div class="well">
+  <%= form_for_filterrific @filterrific do |f| %>
+    <div>
+      <div class="input-group">
+        <span class="input-group-addon"><%= link_to fa_icon('search'), help_path(anchor: 'searching') %></span>
+        <%= f.search_field(:search, placeholder: "Search in all fields", class: 'filterrific-periodically-observed form-control') %>
+      </div>
+      
+      <div style="margin-top:10px; margin-bottom: 10px;">
+      <a href="#filter-fields" class="" data-toggle="collapse">
+        <i class="fa fa-chevron-down fa-lg"></i>
+      </a>
+
+      <div class="row collapse" id="filter-fields" style="margin-top:5px;">
+        <% Artefact.col_attr.each do |c| %>
+          <div class="col-md-2">
+            <%= f.search_field(
+              ("with_#{c}_like").to_sym, placeholder: c.humanize,
+              class: 'filterrific-periodically-observed form-control'
+            ) %>
+          </div>
+        <% end %>
+      </div>
+      </div>
+    </div>
+    
+    <div>
+      Sorted by
+      <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
+    </div>
+    <div>
+      <%= link_to(
+        'Reset filters',
+        reset_filterrific_url,
+      ) %>
+    </div>
+    <%= render_filterrific_spinner %>
+  <% end %>
 </div>
-<%= render @artefacts %>
+
+
+<%= render(
+  partial: 'artefacts/list',
+  locals: { artefacts: @artefacts }
+) %>
 
 <div style="margin-top: 20px; margin-bottom: 10px;">
   <%= render 'shared/per_page' %>

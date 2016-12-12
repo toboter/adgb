@@ -16,6 +16,7 @@
 //= require bootstrap
 //= require select2-full
 //= require cocoon
+//= require filterrific/filterrific-jquery
 //= require turbolinks
 //= require turbolinks-compatibility
 //= require_tree .

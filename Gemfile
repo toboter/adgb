@@ -59,6 +59,6 @@ gem 'omniauth-oauth2'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'roo'
 gem 'search_cop'        # https://github.com/mrkamel/search_cop
-# gem 'ransack'           # https://github.com/activerecord-hackery/ransack
+gem 'filterrific'
 
 ruby '2.3.1'
