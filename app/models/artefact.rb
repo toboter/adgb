@@ -37,7 +37,7 @@ class Artefact < ApplicationRecord
   #scopes
   
   filterrific(
-    default_filter_params: { sorted_by: 'created_at_desc' },
+    default_filter_params: { sorted_by: 'bab_desc' },
     available_filters: col_attr.map{|a| ("with_#{a}_like").to_sym}.concat([:sorted_by, :search])
   )
   
@@ -45,10 +45,10 @@ class Artefact < ApplicationRecord
   scope :sorted_by, lambda { |sort_option|
     direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
     case sort_option.to_s
-    when /^created_at_/
-      order("artefacts.created_at #{ direction }")
-    when /^name_/
+    when /^bab_/
       order("LOWER(artefacts.bab_rel) #{ direction }")
+    when /^mus_/
+      order("LOWER(artefacts.mus_sig) #{ direction }, artefacts.mus_nr #{ direction }, artefacts.mus_ind #{ direction }, LOWER(artefacts.bab_rel) #{ direction }")
     else
       raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
     end
@@ -62,10 +62,10 @@ class Artefact < ApplicationRecord
   
   def self.options_for_sorted_by
     [
-      ['Index asc', 'name_asc'],
-      ['Index desc', 'name_desc'],
-      ['Created at desc', 'created_at_desc'],
-      ['Created at asc', 'created_at_asc']
+      ['Excavation asc', 'bab_asc'],
+      ['Excavation desc', 'bab_desc'],
+      ['Museum asc', 'mus_asc'],
+      ['Museum desc', 'mus_desc']
     ]
   end
 
