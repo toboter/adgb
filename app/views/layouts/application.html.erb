@@ -53,6 +53,7 @@
             <%= content_tag :li, link_to('API', api_path), class: ('active' if current_page?(api_url)) %>
             <%= content_tag :li, link_to('Help', help_path), class: ('active' if current_page?(help_url)) %>
           </ul>
+          <p class="text-muted" style="margin-left:15px; margin-top:20px;"><small>v. <%= APP_VERSION %></small></p>
         </div>
 
 
