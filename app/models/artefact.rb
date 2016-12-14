@@ -6,12 +6,12 @@ class Artefact < ApplicationRecord
   validates :bab_rel, presence: true
 
   
-  has_many :references, class_name: "ArtefactReference", dependent: :destroy, foreign_key: "b_bab_rel", primary_key: :bab_rel
+  has_many :references, class_name: "ArtefactReference", foreign_key: "b_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :references, reject_if: :all_blank, allow_destroy: true
-  has_many :illustrations, class_name: "ArtefactPhoto", dependent: :destroy, foreign_key: "p_bab_rel", primary_key: :bab_rel
+  has_many :illustrations, class_name: "ArtefactPhoto", foreign_key: "p_bab_rel", primary_key: :bab_rel
   has_many :photos, through: :illustrations
   accepts_nested_attributes_for :illustrations, reject_if: :all_blank, allow_destroy: true
-  has_many :people, class_name: "ArtefactPerson", dependent: :destroy, foreign_key: "n_bab_rel", primary_key: :bab_rel
+  has_many :people, class_name: "ArtefactPerson", foreign_key: "n_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
 
   
@@ -74,7 +74,7 @@ class Artefact < ApplicationRecord
                :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :grab, :text, :sig, 
                :diss, :mus_id, :standort_alt, :standort, :mas1, :mas2, :mas3, 
                :f_obj, :abklatsch, :abguss, :fo_tell, :fo1, :fo2, :fo3, :fo4, 
-               :fo_text, :UTMx, :UTMxx, :UTMy, :UTMyy, :inhalt, :period, 
+               :fo_text, :utmx, :utmxx, :utmy, :utmyy, :inhalt, :period, 
                :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr
     attributes :person => ["people.person", "people.titel"]
     attributes :photo => "photos.ph_rel"

@@ -74,7 +74,7 @@
           <%= artefact.fo_tell %><br>
           <%= artefact.fo1 %> <%= artefact.fo2 %> <%= artefact.fo3 %> <%= artefact.fo4 %><br>
           <%= artefact.fo_text %><br>
-          <%= artefact.UTMx %><%= artefact.UTMxx %><%= artefact.UTMy %><%= artefact.UTMyy %><br>
+          UTM E <%= artefact.utmx %> (<%= artefact.utmxx %>) N <%= artefact.utmy %> (<%= artefact.utmyy %>)<br>
           <%= artefact.gr_datum %><%= artefact.gr_jahr %>
         </div>
         
@@ -86,9 +86,7 @@
             </div>
             <div class="col-lg-8">
               <strong>Personen</strong><br>
-                <% artefact.people.each do |p| %>
-                  <%= p.person %>; <%= p.titel %>
-                <% end if artefact.people.any? %>
+                <%= artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') if artefact.people.any? %>
             </div>
           </div>
           <div class="row">

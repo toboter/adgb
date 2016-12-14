@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161118152548) do
+ActiveRecord::Schema.define(version: 20161213113545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,10 +82,10 @@ ActiveRecord::Schema.define(version: 20161118152548) do
     t.string   "fo3"
     t.string   "fo4"
     t.text     "fo_text"
-    t.integer  "UTMx"
-    t.integer  "UTMxx"
-    t.integer  "UTMy"
-    t.integer  "UTMyy"
+    t.integer  "utmx"
+    t.integer  "utmxx"
+    t.integer  "utmy"
+    t.integer  "utmyy"
     t.text     "inhalt"
     t.string   "period"
     t.string   "arkiv"
