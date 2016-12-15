@@ -6,107 +6,98 @@
   
   <% for artefact in @artefacts do %>
     <div class="artefact" id="artefact-<%= artefact.id %>">
-      <div class="row bordered" style="font-size: small;">
-        <div class="col-lg-6">
-          <div class="row">
-            <div class="col-lg-3">
-              <strong>Grabungsnummer</strong><br>
-              <%= artefact.bab_name %><br>
-              <%= artefact.b_join %><br>
-              <%= artefact.b_korr %>
-            </div>
-            <div class="col-lg-3">
-              <strong>Museumsnummer</strong><br>
-              <%= artefact.mus_name %><br>
-              <%= artefact.m_join %><br>
-              <%= artefact.m_korr %>
-            </div>
-            <div class="col-lg-3">
-              <strong>Photos</strong><br>
-              <% artefact.illustrations.each do |illustration| %>
-                <%= illustration.photo ? link_to(illustration.name, illustration.photo) : illustration.p_rel %>: <%= illustration.position %>
-              <% end %>
-            </div>
-            <div class="col-lg-3">
-              <strong>Fundobj./Maße</strong><br>
-              <%= artefact.f_obj %>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12">
-            
-              <%= content_tag :p do %>
-                <%= content_tag :span, "Abkl./Zeich.: #{artefact.abklatsch}" if artefact.abklatsch.present? %>
-                <%= content_tag :span, "Gipsabguß: #{artefact.abguss}" if artefact.abguss.present? %>
+      <div class="row bordered">
+        <div class="col-md-6">
+          <%= content_tag :div, id: "excavation-#{artefact.id}" do %>
+            <%= content_tag :strong, 'Grabungsnummer: ' %>
+            <%= linebreak_before_and_show_if_exists(artefact.bab_name, false) %>
+            <%= linebreak_before_and_show_if_exists(artefact.b_join) %>
+            <%= linebreak_before_and_show_if_exists(artefact.b_korr) %>
+          <% end if artefact.bab_name %>
+          <%= content_tag :div, id: "museum-#{artefact.id}" do %>
+            <%= content_tag :strong, 'Museumsnummer: ' %>
+            <%= linebreak_before_and_show_if_exists(artefact.mus_name, false) %>
+            <%= linebreak_before_and_show_if_exists(artefact.m_join) %>
+            <%= linebreak_before_and_show_if_exists(artefact.m_korr) %>
+          <% end if artefact.mus_name %>
+          
+          <%= content_tag :div, id: "description-#{artefact.id}", style: 'padding-top: 5px;' do %>
+            <strong><em>Beschreibung</em></strong>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.f_obj, 'Fundobj')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abkl./Zeich.')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.abguss, 'Gipsabguß')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.kod, 'Code')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.grab, 'Grab')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.text, 'Text')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.sig, 'Siegelung')) %>
+            <br>
+            <%= content_tag :span do %>
+              <strong>Maße: </strong>
+              <%= linebreak_before_and_show_if_exists(artefact.mas1, false) %><%= ';' if artefact.mas2 || artefact.mas3 %>
+              <%= linebreak_before_and_show_if_exists(artefact.mas2, false) %><%= ';' if artefact.mas3 %>
+              <%= linebreak_before_and_show_if_exists(artefact.mas3, false) %>         
+            <% end if artefact.mas1.present? || artefact.mas2.present? || artefact.mas3.present? %>
+          <% end %>
+
+          <%= content_tag :div, id: "text-description-#{artefact.id}", style: 'padding-top: 5px;' do %>
+            <strong><em>Text info</em></strong>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.period, 'Periode')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.arkiv, 'Archiv')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.text_in_archiv, 'Text in Archiv')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.jahr, 'Jahr')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.datum, 'Datum')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil2, 'Zeil2')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil1, 'Zeil1')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.inhalt, 'Inhalt')) %>
+            <%= content_tag :div do %>
+              <strong>Personen: </strong>
+              <%= artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') %>
+            <% end  if artefact.people.any? %>
+          <% end if artefact.text.present? %>
+        </div>
+
+        <div class="col-md-6">
+          <%= content_tag :div, id: "fundort-#{artefact.id}" do %>
+            <strong><em>Fundort</em></strong>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.fo_tell, 'Tell')) %>
+            <%= content_tag :div do %>
+              <strong>Areal: </strong>
+              <%= linebreak_before_and_show_if_exists(artefact.fo1, false) %>
+              <%= linebreak_before_and_show_if_exists(artefact.fo2, false) %>
+              <%= linebreak_before_and_show_if_exists(artefact.fo3, false) %>
+              <%= linebreak_before_and_show_if_exists(artefact.fo4, false) %>
+            <% end if artefact.fo1 || artefact.fo2 || artefact.fo3 || artefact.fo4 %>
+
+            <%= content_tag :span do %>
+              <strong>UTM E </strong>
+              <%= artefact.utmx %> (<%= artefact.utmxx %>) 
+              <strong>N </strong>
+              <%= artefact.utmy %> (<%= artefact.utmyy %>)
+            <% end if artefact.utm? %>
                 
-                <%= content_tag :span, "Kode: #{artefact.kod}" if artefact.kod.present? %>
-                <%= content_tag :span, "Grab: #{artefact.grab}" if artefact.grab.present? %>
-                <%= content_tag :span, "Text: #{artefact.text}" if artefact.text.present? %>
-                <%= content_tag :span, "Sig: #{artefact.sig}" if artefact.sig.present? %>
-      
-                <%= content_tag :span do %>
-                  Maße: <%= artefact.mas1 %>; <%= artefact.mas2 %>; <%= artefact.mas3 %>         
-                <% end if artefact.mas1.present? || artefact.mas2.present? || artefact.mas3.present? %>
-              <% end %>
-              
-              <%= content_tag :p do %>
-                <%= artefact.period %>
-                <%= artefact.arkiv %>
-                <%= artefact.text_in_archiv %>
-                <%= artefact.jahr %>
-                <%= artefact.datum %>
-                <%= artefact.zeil2 %>
-                <%= artefact.zeil1 %>
-              <% end if artefact.text.present? %>
-    
-              <%= content_tag :p do %>
-                <%= content_tag :span, "Dissov Nr: #{artefact.diss}" if artefact.diss.present? %>
-                <%= content_tag :span, "Museums Id: #{artefact.mus_id}" if artefact.mus_id.present? %>
-                <%= content_tag :span, "Standort alt: #{artefact.standort_alt}" if artefact.standort_alt.present? %>
-                <%= content_tag :span, "Standort: #{artefact.standort}" if artefact.standort.present? %>
-              <% end if current_user %>      
-            </div>
-          </div>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.fo_text, 'Beschreibung')) %>
+            <%= content_tag :div do %>
+              <strong>Ausgrabungsdatum: </strong>
+              <%= linebreak_before_and_show_if_exists(artefact.gr_datum, false) %>
+              <%= linebreak_before_and_show_if_exists(artefact.gr_jahr, false) %>
+            <% end if artefact.gr_datum || artefact.gr_jahr %>
+          <% end %>
+
+          <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
+            <strong><em>Photos</em></strong> <small>(position)</small><br>
+            <%= artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.p_rel)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
+          <% end if artefact.illustrations.any? %>
+
         </div>
+         
+        <div class="col-md-12">
+          <%= content_tag :div, id: "biblio-#{artefact.id}", style: 'padding-top: 10px;' do %>
+            <strong>Bibliographie: </strong>
+            <%= artefact.references.map{ |r| r.title }.join('; ') %>
+          <% end if artefact.references.any? %>
+          
+          <%= link_to fa_icon('eye', text: 'ansehen'), artefact if current_user  %>
         
-        <div class="col-lg-2">
-          <strong>Fundort</strong><br>
-          <%= artefact.fo_tell %><br>
-          <%= artefact.fo1 %> <%= artefact.fo2 %> <%= artefact.fo3 %> <%= artefact.fo4 %><br>
-          <%= artefact.fo_text %><br>
-          UTM E <%= artefact.utmx %> (<%= artefact.utmxx %>) N <%= artefact.utmy %> (<%= artefact.utmyy %>)<br>
-          <%= artefact.gr_datum %><%= artefact.gr_jahr %>
-        </div>
-        
-        <div class="col-lg-4">
-          <div class="row">
-            <div class="col-lg-4">
-              <strong>Inhalt</strong><br>
-              <%= artefact.inhalt %>
-            </div>
-            <div class="col-lg-8">
-              <strong>Personen</strong><br>
-                <%= artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') if artefact.people.any? %>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <strong>Bibliographie</strong><br>
-              <% artefact.references.each do |r| %>
-                <%= r.title %>
-              <% end if artefact.references.any? %>
-            </div>
-          </div>
-        </div>
-    
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="pull-right links">
-              <%= link_to fa_icon('eye'), artefact %>
-              <%= link_to fa_icon('edit'), edit_artefact_path(artefact) if current_user %>
-              <%= link_to fa_icon('remove'), artefact, method: :delete, data: { confirm: 'Are you sure?' } if current_user %>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -22,17 +22,20 @@ class Artefact < ApplicationRecord
   end  
 
   def bab_name
-    "#{grabung} #{bab}#{bab_ind}"
+    grabung && bab ? "#{grabung} #{bab}#{bab_ind}" : nil
   end
   
   def mus_name
-    "#{mus_sig} #{mus_nr}#{mus_ind}"
+    mus_sig ? "#{mus_sig} #{mus_nr}#{mus_ind}" : nil
   end
   
   def full_entry
-    "#{bab_name}; #{mus_name}"
+    "#{bab_name} #{mus_name}"
   end
   
+  def utm?
+    utmx && utmy
+  end
   
   #scopes
   

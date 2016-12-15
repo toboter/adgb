@@ -206,6 +206,6 @@
   <% end %>
 </div>
 
-
+<%= link_to 'remove', @artefact, method: :delete, data: { confirm: 'Are you sure?' } if current_user %>
 <%= link_to 'Edit', edit_artefact_path(@artefact) %> |
 <%= link_to 'Back', artefacts_path %>
