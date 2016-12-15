@@ -73,6 +73,9 @@
               <%= artefact.utmx %> (<%= artefact.utmxx %>) 
               <strong>N </strong>
               <%= artefact.utmy %> (<%= artefact.utmyy %>)
+              <small>
+                <%= link_to fa_icon('external-link', text: 'gmaps'), "http://maps.google.com/maps?t=k&q=loc:#{artefact.to_lat_lon('38S').lat}+#{artefact.to_lat_lon('38S').lon}", target: :_blank %>
+              </small>
             <% end if artefact.utm? %>
                 
             <%= linebreak_before_and_show_if_exists(with_description(artefact.fo_text, 'Beschreibung')) %>

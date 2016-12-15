@@ -60,5 +60,6 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'roo'
 gem 'search_cop'        # https://github.com/mrkamel/search_cop
 gem 'filterrific'
+gem 'geoutm'
 
 ruby '2.3.1'

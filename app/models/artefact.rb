@@ -37,6 +37,10 @@ class Artefact < ApplicationRecord
     utmx && utmy
   end
   
+  def to_lat_lon(zone)
+    GeoUtm::UTM.new(zone, utmx, utmy).to_lat_lon
+  end
+  
   #scopes
   
   filterrific(
