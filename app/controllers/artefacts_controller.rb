@@ -12,8 +12,16 @@ class ArtefactsController < ApplicationController
         sorted_by: Artefact.options_for_sorted_by
       },
     ) or return
-    @artefacts = @filterrific.find.paginate(:page => params[:page], :per_page => session[:per_page])
-
+    @p_artefacts = @filterrific.find
+    @artefacts = @p_artefacts.paginate(:page => params[:page], :per_page => session[:per_page])
+    @gmhash = Gmaps4rails.build_markers(@p_artefacts) do |artefact, marker|
+      if artefact.utm?
+        marker.lat artefact.to_lat_lon('38S').lat
+        marker.lng artefact.to_lat_lon('38S').lon
+        marker.infowindow "#{artefact.full_entry}#{' ('+artefact.kod+')' if artefact.kod}#{', '+artefact.f_obj if artefact.f_obj}" 
+      end
+    end
+#"    
     respond_to do |format|
       format.html
       format.js

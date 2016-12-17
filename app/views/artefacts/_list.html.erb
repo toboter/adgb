@@ -3,7 +3,7 @@
   <div>
     <%= page_entries_info artefacts %>
   </div>
-  
+ 
   <% for artefact in @artefacts do %>
     <div class="artefact" id="artefact-<%= artefact.id %>">
       <div class="row bordered">
@@ -99,7 +99,7 @@
             <%= artefact.references.map{ |r| r.title }.join('; ') %>
           <% end if artefact.references.any? %>
           
-          <%= link_to fa_icon('eye', text: 'ansehen'), artefact if current_user  %>
+          <%= link_to fa_icon('eye', text: 'ansehen'), artefact  %>
         
         </div>
       </div>
@@ -108,3 +108,25 @@
 </div>
 
 <%= will_paginate artefacts, renderer: BootstrapPagination::Rails %>
+
+  <div style='width: 100%; margin-bottom:20px;' class="thumbnail">
+    <div id="map" style='width: 100%; height: 500px;' class=""></div>
+  </div>
+
+<script type="text/javascript">
+  handler = Gmaps.build('Google');
+  handler.buildMap({
+      provider: {
+        mapTypeId: google.maps.MapTypeId.SATELLITE
+      },
+      internal: {
+        id: 'map'
+      }
+    },
+    function(){
+      markers = handler.addMarkers(<%=raw @gmhash.delete_if(&:blank?).to_json %>);
+      handler.bounds.extendWith(markers);
+      handler.fitMapToBounds();
+    }
+  );
+</script>

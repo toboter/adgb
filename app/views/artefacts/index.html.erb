@@ -1,3 +1,9 @@
+<% content_for :head do %>
+  <script src="//maps.google.com/maps/api/js?key=<%= Rails.application.secrets.gmaps_api_key %>"></script>
+  <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
+<% end %>
+
+
 <%= content_tag :div, class: 'row' do %>
   <div class="col-md-12">
     <%= content_tag :div, class: 'pull-right' do %>

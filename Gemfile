@@ -61,5 +61,6 @@ gem 'roo'
 gem 'search_cop'        # https://github.com/mrkamel/search_cop
 gem 'filterrific'
 gem 'geoutm'
+gem 'gmaps4rails'
 
 ruby '2.3.1'

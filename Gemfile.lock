@@ -74,6 +74,7 @@ GEM
     geoutm (1.0.2)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    gmaps4rails (2.1.2)
     hashie (3.4.4)
     i18n (0.7.0)
     jbuilder (2.6.0)
@@ -227,6 +228,7 @@ DEPENDENCIES
   font-awesome-rails
   friendly_id
   geoutm
+  gmaps4rails
   jbuilder (~> 2.5)
   jquery-rails
   jquery-turbolinks

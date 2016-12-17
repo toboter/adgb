@@ -17,6 +17,8 @@
 //= require select2-full
 //= require cocoon
 //= require filterrific/filterrific-jquery
+//= require underscore
+//= require gmaps/google
 //= require turbolinks
 //= require turbolinks-compatibility
 //= require_tree .

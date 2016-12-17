@@ -38,7 +38,7 @@ class Artefact < ApplicationRecord
   end
   
   def to_lat_lon(zone)
-    GeoUtm::UTM.new(zone, utmx, utmy).to_lat_lon
+    GeoUtm::UTM.new(zone, utmx, utmy).to_lat_lon if utm? && zone
   end
   
   #scopes
