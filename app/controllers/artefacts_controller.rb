@@ -35,7 +35,7 @@ class ArtefactsController < ApplicationController
   def show
     @illustrations_url = URI.encode("#{Rails.application.secrets.media_host}/api/media/search?q=#{@artefact.illustrations.map{|i| i.name}.join(', ') }")
     @resp = Net::HTTP.get_response(URI.parse(@illustrations_url))
-    @illustrations = JSON.parse(@resp.body)
+    @illustrations = @artefact.illustrations.any? ? JSON.parse(@resp.body) : []
   end
 
   # GET /artefacts/new

@@ -86,7 +86,7 @@
       <div id="map" style='width: 100%; height: 400px;'></div>
     <% end if @artefact.utm? %>
     <div class="row">
-      <% for img in @illustrations.take(1) do %>
+      <% for img in @illustrations do %>
         <div class="col-md-6"><%= render 'shared/image_thumb', img: img %></div>
       <% end %>
     </div>
