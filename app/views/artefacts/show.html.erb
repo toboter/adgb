@@ -82,9 +82,9 @@
   </div>
 
   <div class="col-md-6">
-    <div style='width: 100%;' class="thumbnail">
+    <%= content_tag :div, style: 'width: 100%;', class: "thumbnail" do %>
       <div id="map" style='width: 100%; height: 400px;'></div>
-    </div>
+    <% end if @artefact.utm? %>
     <div class="row">
       <% for img in @illustrations.take(1) do %>
         <div class="col-md-6"><%= render 'shared/image_thumb', img: img %></div>
@@ -93,7 +93,7 @@
   </div>
 </div>
 
-
+<% if @artefact.utm? %>
 <script type="text/javascript">
   handler = Gmaps.build('Google');
   handler.buildMap({
@@ -117,3 +117,4 @@
     }
   );
 </script>
+<% end %>
