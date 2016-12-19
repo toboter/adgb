@@ -6,7 +6,7 @@ module ArtefactsHelper
   end
  
   def with_description(object, desc)
-  	content_tag(:strong, desc+': ')+object if object.present?
+  	content_tag(:strong, desc)+object if object.present?
   end
   
   def table_row(object, label)
