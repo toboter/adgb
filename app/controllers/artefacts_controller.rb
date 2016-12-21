@@ -19,6 +19,7 @@ class ArtefactsController < ApplicationController
         marker.lat artefact.to_lat_lon('38S').lat
         marker.lng artefact.to_lat_lon('38S').lon
         marker.infowindow "#{artefact.full_entry}#{' ('+artefact.kod+')' if artefact.kod}#{', '+artefact.f_obj if artefact.f_obj}" 
+        # Die marker müssen noch abhängig von ihrer Genauigkeit eingefärbt werden.
       end
     end
 #"    

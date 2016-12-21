@@ -38,7 +38,10 @@ class Artefact < ApplicationRecord
   end
   
   def to_lat_lon(zone)
-    GeoUtm::UTM.new(zone, utmx, utmy).to_lat_lon if utm? && zone
+    # Olof bemängelt eine Verschiebung der von ihm verwendeten UTM WGS84 Koordinaten in maps um E 27 und N 7
+    # GeoUTM bietet verschiedene ellipsoide, das standard WGS84 führt zu dem besagten Verschiebungsfehler
+    # neuer Versuch mit 'International' hier sind die angezeigten Koordinaten viel südlicher.
+    GeoUtm::UTM.new(zone, utmx, utmy, "International").to_lat_lon if utm? && zone
   end
   
   #scopes

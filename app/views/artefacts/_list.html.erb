@@ -56,9 +56,9 @@
               <strong>Personen: </strong>
               <%= artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') %>
             <% end  if artefact.people.any? %>
-            <%= content_tag :strong, '<br>Datum: '.html_safe if artefact.jahr || artefact.datum %>
+            <%= content_tag :strong, '<br>Datum: '.html_safe if artefact.jahr.present? || artefact.datum.present? %>
             <%= linebreak_before_and_show_if_exists(with_description(artefact.jahr, ''), false) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.datum, "#{', ' if artefact.jahr}"), false) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.datum, "#{', ' if artefact.jahr.present?}"), false) %>
             
             <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil2, 'Zeil2: ')) %>
             <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil1, 'Zeil1: ')) %>
@@ -111,7 +111,14 @@
 <%= will_paginate artefacts, renderer: BootstrapPagination::Rails %>
 
 <script type="text/javascript">
-  handler = Gmaps.build('Google');
+  handler = Gmaps.build('Google', { 
+    markers: { 
+      clusterer: { 
+        maxZoom:  18, 
+        gridSize: 10
+      }
+    }
+  });
   handler.buildMap({
       provider: {
         mapTypeId: google.maps.MapTypeId.SATELLITE
