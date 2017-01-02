@@ -50,7 +50,14 @@ class Artefact < ApplicationRecord
   
   filterrific(
     default_filter_params: { sorted_by: 'bab_desc' },
-    available_filters: col_attr.map{|a| ("with_#{a}_like").to_sym}.concat([:sorted_by, :search])
+    available_filters: col_attr.map{|a| ("with_#{a}_like").to_sym}
+      .concat([
+        :sorted_by, 
+        :search, 
+        :with_photo_like, 
+        :with_person_like,
+        :with_bib_like
+      ])
   )
   
   
@@ -68,10 +75,22 @@ class Artefact < ApplicationRecord
   
   col_attr.map do |a|
     scope ("with_#{a}_like").to_sym, lambda { |x|
-      where("LOWER(CAST(artefacts.#{a} AS TEXT)) LIKE ?", "#{x.to_s.downcase}%")
+      where("LOWER(CAST(artefacts.#{a} AS TEXT)) LIKE ?", "%#{x.to_s.downcase}%")
     }
   end 
   
+  scope :with_photo_like, lambda { |x|
+    joins(:photos).where("LOWER(CAST(photos.ph_nr AS TEXT)) LIKE ?", "#{x.to_s.downcase}%")
+   }
+   
+  scope :with_person_like, lambda { |x|
+    joins(:people).where("LOWER(artefact_people.person) LIKE ?", "%#{x.to_s.downcase}%")
+   }
+
+  scope :with_bib_like, lambda { |x|
+    joins(:references).where("CONCAT(LOWER(artefact_references.ver), LOWER(artefact_references.publ), LOWER(artefact_references.jahr)) LIKE ?", "%#{x.to_s.downcase}%")
+   }
+     
   def self.options_for_sorted_by
     [
       ['Excavation asc', 'bab_asc'],
