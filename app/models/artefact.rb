@@ -41,7 +41,9 @@ class Artefact < ApplicationRecord
     # Olof bemängelt eine Verschiebung der von ihm verwendeten UTM WGS84 Koordinaten in maps um E 27 und N 7
     # GeoUTM bietet verschiedene ellipsoide, das standard WGS84 führt zu dem besagten Verschiebungsfehler
     # neuer Versuch mit 'International' hier sind die angezeigten Koordinaten viel südlicher.
-    GeoUtm::UTM.new(zone, utmx, utmy, "International").to_lat_lon if utm? && zone
+    # Laut Olof ergibt sich daraus ein noch viel größerer Fehler. Daher wieder wgs84. 
+    # Nun aber mit 27m Abzug auf x und 7m auf der y Achse.
+    GeoUtm::UTM.new(zone, utmx-27, utmy-7, "WGS-84").to_lat_lon if utm? && zone
   end
   
   #scopes
