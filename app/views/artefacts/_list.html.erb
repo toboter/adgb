@@ -1,13 +1,21 @@
 <div id="filterrific_results">
 
   <div>
-    <%= page_entries_info artefacts %>
+    <%= page_entries_info artefacts %><span class="pull-right badge">total: <%= Artefact.count %></span>
   </div>
 
-  <div style='width: 100%; margin-bottom:20px;' class="thumbnail">
-    <div id="map" style='width: 100%; height: 500px;' class=""></div>
+  <a href="#record-access-settings" class="" data-toggle="collapse">
+    Toggle record access settings
+  </a>
+  <div class="collapse" id="record-access-settings">
+    <%= render 'shared/record_access_settings', records: @artefacts, accessors: @users if can?(:update, Artefact) %>
   </div>
   
+  <%= content_tag :div, style: 'width: 100%; margin-bottom:20px;', class: 'thumbnail' do %>
+    <div id="map" style='width: 100%; height: 500px;' class=""></div>
+  <% end if @artefacts.present? %>
+   
+
   <% for artefact in @artefacts do %>
     <div class="artefact" id="artefact-<%= artefact.id %>">
       <div class="row bordered">
@@ -101,6 +109,7 @@
           
           <%= content_tag :div, style: 'padding-top: 10px;' do %>
             <%= link_to fa_icon('eye', text: 'ansehen'), artefact  %>
+            <span class="badge pull-right"><%= artefact.accessors.map(&:name).join(', ') %></span>
           <% end %>
         </div>
       </div>

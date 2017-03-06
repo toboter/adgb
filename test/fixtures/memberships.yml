@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  role: MyString
+  project_id: 1
+  project_name: MyString
+  project_owner_id: 1
+  local_access: MyString
+
+two:
+  user: two
+  role: MyString
+  project_id: 1
+  project_name: MyString
+  project_owner_id: 1
+  local_access: MyString

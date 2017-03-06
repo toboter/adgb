@@ -1,0 +1,44 @@
+<div class="well" style="margin-top:10px; margin-bottom: 20px;">
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Record access settings</h4>
+      <p class="text-muted">Removing any user from the records will set the record to published.</p>
+    </div>
+    <div class="col-md-6">
+      <%= form_tag add_multiple_accessors_accessibilities_path, method: :put do %>
+        <%= hidden_field_tag 'record_class', records.first.class %>
+        <% records.each do |r| %>
+          <%= hidden_field_tag 'record_ids[]', r.id %>
+        <% end %>
+        <strong>Add access for all displayed records to:</strong>
+        <ul style="padding-left:0;">
+          <% accessors.each do |a| %>
+              <li style="list-style-type:none;">
+                  <%= check_box_tag 'accessor_ids[]', a.id %>
+                  <%= a.name %>
+              </li>
+          <% end %>
+        </ul>
+        <%= submit_tag "Add to all", class: 'btn btn-default' %>
+      <% end %> 
+    </div>
+    <div class="col-md-6">
+      <%= form_tag remove_multiple_accessors_accessibilities_path, method: :delete do %>
+        <%= hidden_field_tag 'record_class', records.first.class %>
+        <% records.each do |r| %>
+          <%= hidden_field_tag 'record_ids[]', r.id %>
+        <% end %>
+        <strong>Remove access to all displayed records from:</strong>
+        <ul style="padding-left:0;">
+          <% accessors.each do |a| %>
+              <li style="list-style-type:none;">
+                  <%= check_box_tag 'accessor_ids[]', a.id %>
+                  <%= a.name %>
+              </li>
+          <% end %>
+        </ul>
+        <%= submit_tag "Remove from all", class: 'btn btn-default' %>
+      <% end %>
+    </div>
+  </div>
+</div>

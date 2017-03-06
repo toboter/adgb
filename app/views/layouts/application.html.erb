@@ -24,7 +24,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-left">
-            <%= content_tag :p, fa_icon('user', text: "Signed in as #{current_user.try(:name)}"), class: 'navbar-text' if current_user %>
+            <%= content_tag :p, fa_icon('user', text: "Signed in as #{link_to current_user.try(:name), user_path}".html_safe), class: 'navbar-text' if current_user %>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to 'Help', help_path %></li>
@@ -38,22 +38,25 @@
       <div class="row">      
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-pills nav-stacked">
-            <%= content_tag :li, link_to('Artefacts', artefacts_path), class: ('active' if current_page?(artefacts_url)) %>
-            <%= content_tag :li, link_to('Photos', photos_path), class: ('active' if current_page?(photos_url)) %>
-            <%= content_tag :li, link_to('Mentioned people', people_path), class: ('active' if current_page?(people_url)) %>
-            <%= content_tag :li, link_to('Used references', references_path), class: ('active' if current_page?(references_url)) %>       
+            <%= content_tag :li, link_to('Artefacts', artefacts_path), class: ('active' if current_page?(artefacts_url)) if can?(:index, Artefact) %>
+            <%= content_tag :li, link_to('Photos', photos_path), class: ('active' if current_page?(photos_url)) if can?(:index, Photo) %>
+            <%= content_tag :li, link_to('Mentioned people', people_path), class: ('active' if current_page?(people_url)) if can?(:index, ArtefactPerson) %>
+            <%= content_tag :li, link_to('Used references', references_path), class: ('active' if current_page?(references_url)) if can?(:index, ArtefactReference) %>       
           </ul>
           <hr>
-                   
-          <ul class="nav nav-pills nav-stacked">
-            <%= content_tag :li, link_to("Import", imports_path), class: ('active' if current_page?(imports_url)) %></li>
-          </ul>
-          <hr>
+          
+          <% if can?(:import, Artefact) %>       
+            <ul class="nav nav-pills nav-stacked">
+              <%= content_tag :li, link_to("Import", imports_path), class: ('active' if current_page?(imports_url)) %>
+            </ul>
+            <hr>
+          <% end %>
           <ul class="nav nav-pills nav-stacked">
             <%= content_tag :li, link_to('API', api_path), class: ('active' if current_page?(api_url)) %>
             <%= content_tag :li, link_to('Help', help_path), class: ('active' if current_page?(help_url)) %>
           </ul>
           <p class="text-muted" style="margin-left:15px; margin-top:20px;"><small>v. <%= APP_VERSION %></small></p>
+
         </div>
 
 
@@ -85,7 +88,7 @@
           <% end if alert || notice %>
           
           <%= yield %>
-          
+
         </div>
       </div>
     </div>
@@ -114,7 +117,7 @@
               <% if current_user %>        
                 <li><%= link_to fa_icon('sign-out', text: "Sign Out"), signout_path %></li>
               <% else %>
-                <li><%= link_to fa_icon('sign-in', text: "Sign in through Bab-ili"), "/auth/babili" %></li>
+                <li><%= link_to fa_icon('sign-in', text: "Sign in through Bab-ili"), signin_path(provider: 'babili', origin: request.original_url) %></li>
               <% end %>
             </ul>            
           </div>        

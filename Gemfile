@@ -61,6 +61,8 @@ gem 'roo'
 gem 'search_cop'        # https://github.com/mrkamel/search_cop
 gem 'filterrific'
 gem 'geoutm'
+gem 'rest-client'
+gem 'cancancan'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.

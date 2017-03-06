@@ -2,10 +2,13 @@ class Artefact < ApplicationRecord
   include SearchCop
   require 'roo'
 
-
   validates :bab_rel, presence: true
+  # validates :accessors, presence: { message: 'At least one user needs access to the record.' }
+  # projekte deren status auf published steht, deren Daten werden öffentlich angezeigt.
 
-  
+  has_many :accessibilities, as: :accessable, dependent: :destroy
+  has_many :accessors, through: :accessibilities
+  accepts_nested_attributes_for :accessibilities, reject_if: :all_blank, allow_destroy: true
   has_many :references, class_name: "ArtefactReference", foreign_key: "b_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :references, reject_if: :all_blank, allow_destroy: true
   has_many :illustrations, class_name: "ArtefactPhoto", foreign_key: "p_bab_rel", primary_key: :bab_rel
@@ -13,7 +16,21 @@ class Artefact < ApplicationRecord
   accepts_nested_attributes_for :illustrations, reject_if: :all_blank, allow_destroy: true
   has_many :people, class_name: "ArtefactPerson", foreign_key: "n_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
+  belongs_to :creator, class_name: 'User'
 
+
+ 
+  def self.visible_for(user)
+    if user
+      left_outer_joins(:accessibilities).where(accessibilities: {id: nil}).or(left_outer_joins(:accessibilities).where(accessibilities: {accessor_id: user}))
+    else
+      left_outer_joins(:accessibilities).where(accessibilities: {id: nil})
+    end
+  end
+
+  def accessible_through?(user)
+    user.in?(self.accessors) || self.accessors.empty?
+  end
   
   # virtual attributes
 
@@ -56,10 +73,10 @@ class Artefact < ApplicationRecord
         :search, 
         :with_photo_like, 
         :with_person_like,
-        :with_bib_like
+        :with_bib_like,
+        :in_project
       ])
   )
-  
   
   scope :sorted_by, lambda { |sort_option|
     direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
@@ -116,13 +133,22 @@ class Artefact < ApplicationRecord
   
   # import/export
   
-  def self.import(file)
+  def self.import(file, creator_id)
     spreadsheet = open_spreadsheet(file)
     header = spreadsheet.row(1).map{|h| h.underscore }
+    @user = User.find(creator_id)
     (2..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
       artefact = find_by_bab_rel(row["bab_rel"]) || new
       artefact.attributes = row.to_hash.slice(*Artefact.col_attr)
+      
+      artefact.creator = @user
+      artefact.accessors << @user
+
+      #for id in project_ids do
+      #  artefact.accessibilities.where(project_id: id.to_i).first_or_create
+      #end
+      #raise artefact.accessibilities.inspect
       artefact.save!
     end
   end
@@ -135,4 +161,6 @@ class Artefact < ApplicationRecord
     else raise "Unknown file type: #{file.original_filename}"
     end
   end
+
+
 end

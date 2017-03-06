@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161213113545) do
+ActiveRecord::Schema.define(version: 20170214152148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accessibilities", force: :cascade do |t|
+    t.string   "accessable_type"
+    t.integer  "accessable_id"
+    t.integer  "accessor_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "scope"
+    t.integer  "creator_id"
+    t.index ["accessable_type", "accessable_id"], name: "index_accessibilities_on_accessable_type_and_accessable_id", using: :btree
+  end
 
   create_table "artefact_people", force: :cascade do |t|
     t.string   "person"
@@ -98,6 +109,7 @@ ActiveRecord::Schema.define(version: 20161213113545) do
     t.datetime "updated_at",     null: false
     t.string   "gr_datum"
     t.string   "gr_jahr"
+    t.integer  "creator_id"
     t.index ["bab_rel"], name: "index_artefacts_on_bab_rel", unique: true, using: :btree
   end
 
@@ -122,6 +134,8 @@ ActiveRecord::Schema.define(version: 20161213113545) do
     t.string   "gender"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "token"
+    t.string   "scope"
   end
 
 end

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+  get '/auth/:provider', to: 'sessions#new', as: 'signin'
   get '/auth/:provider/callback', to: 'sessions#create'
   get '/signout', to: 'sessions#destroy', as: 'signout'
   put '/set_per_page', to: 'sessions#set_per_page'
@@ -13,6 +15,16 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :accessibilities, only: [] do
+    collection do
+      put :add_multiple_accessors
+      delete :remove_multiple_accessors
+    end
+  end
+  
+  resource :user, only: [:show, :edit, :update] do
+    get 'add_token_to_babili', to: 'users#add_token_to_babili'
+  end
   resources :photos
   resources :artefacts
   resources :artefact_people, only: :index, path: 'people', as: 'people'
@@ -25,6 +37,7 @@ Rails.application.routes.draw do
           get 'search'
         end 
       end  
+      resources :projects, only: :create
     end
   end
   

@@ -3,6 +3,8 @@
   <small>Bestehende Datensätze (key: BabRel) werden aktualisiert, nicht vorhandene neu erstellt.</small>
   <%= form_tag artefacts_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_file %>
+    <%= hidden_field_tag :creator_id, current_user %>%
+
     <%= submit_tag "Import" %>
   <% end %>
   <br>

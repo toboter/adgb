@@ -14,7 +14,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   
   
   def type
-    'DOGArtefactObject'
+    'Koldewey-Artefact'
   end
 
   def links

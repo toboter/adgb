@@ -1,0 +1,20 @@
+<% title "You are logged in as #{current_user.name}" %>
+
+<p>
+  Your personal API Access Token is: <strong><%= current_user.token %></strong>
+  <%= link_to 'Recreate Token and add to babili/search', add_token_to_babili_user_path, class: 'btn btn-sm btn-danger' %>
+</p>
+
+Log in token:
+<%= @access_token.token %>
+<br><br>
+
+Local write abilities:
+<%= current_user_write_abilities %>
+<br><br>
+Read abilities: 
+<%= current_user_read_abilities %>
+
+
+<br><br>
+<%= link_to 'edit', edit_user_path %>

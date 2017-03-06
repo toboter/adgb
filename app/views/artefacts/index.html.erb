@@ -3,14 +3,13 @@
   <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
 <% end %>
 
-
 <%= content_tag :div, class: 'row' do %>
   <div class="col-md-12">
     <%= content_tag :div, class: 'pull-right' do %>
       <%= link_to 'New Artefact', new_artefact_path, class: 'btn btn-default' %>
     <% end %>
   </div>
-<% end if current_user %>
+<% end if can?(:create, Artefact) %>
 
 <div class="well">
   <%= form_for_filterrific @filterrific do |f| %>
@@ -26,20 +25,6 @@
       </a>
 
       <div class="row collapse" id="filter-fields" style="margin-top:5px;">
-<% 
-=begin %>
-        <% Artefact.col_attr.each do |c| %>
-          <div class="col-md-2">
-            <%= f.search_field(
-              ("with_#{c}_like").to_sym, placeholder: c.humanize,
-              class: 'filterrific-periodically-observed form-control'
-            ) %>
-          </div>
-        <% end %>
-<% 
-=end %>
-        
-
         <div class="col-md-6">
           <%= content_tag :div do %>
             <div class="form-inline">

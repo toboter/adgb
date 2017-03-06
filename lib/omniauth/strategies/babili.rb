@@ -21,7 +21,8 @@ module OmniAuth
           email: raw_info["email"],
           birthday: raw_info["birthday"],
           gender: raw_info["gender"],
-          name: raw_info["display_name"]
+          name: raw_info["display_name"],
+          projects: raw_info["projects"]
           # and anything else you want to return to your API consumers
         }
       end

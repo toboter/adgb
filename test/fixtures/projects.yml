@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  access: MyString
+  public: false
+  babili_project_id: 1
+
+two:
+  access: MyString
+  public: false
+  babili_project_id: 1

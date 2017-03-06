@@ -16,9 +16,10 @@
       
       <div class="col-md-2">
         <%= content_tag :div, id: 'buttons', class: 'pull-right', style: 'margin-top:20px;' do %>
-          <%= link_to 'Delete', @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default' if current_user %>
-          <%= link_to 'Edit', edit_artefact_path(@artefact), class: 'btn btn-default' %>
-        <% end if current_user %>
+          <%= link_to 'Delete', @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default' if can?(:destroy, @artefact) %>
+          <%= link_to 'Edit', edit_artefact_path(@artefact), class: 'btn btn-default' if can?(:update, @artefact) %>
+        <% end %>
+        
       </div>
     </div>
   </div>
@@ -26,6 +27,7 @@
 
 <div class="row">
   <div class="col-md-6">
+    <p><span class="badge"><%= @artefact.accessors.map(&:name).join(', ') %></span></p>
     <table class="table table-striped">
       <tbody>
         <%= table_row(@artefact.b_join, 'Grabung Joins') %>
