@@ -3,6 +3,7 @@ class Photo < ApplicationRecord
   
   has_many :references, class_name: "ArtefactReference", foreign_key: "ph_rel", primary_key: :ph_rel
   has_many :occurences, class_name: "ArtefactPhoto", foreign_key: "p_rel", primary_key: :ph_rel
+  accepts_nested_attributes_for :occurences, reject_if: :all_blank, allow_destroy: true
   has_many :artefacts, through: :occurences
 
   def name

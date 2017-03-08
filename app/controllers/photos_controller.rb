@@ -87,6 +87,6 @@ class PhotosController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def photo_params
-      params.require(:photo).permit(:ph_rel, :ph, :ph_nr, :ph_add, :ph_datum, :ph_text)
+      params.require(:photo).permit(:ph_rel, :ph, :ph_nr, :ph_add, :ph_datum, :ph_text, occurences_attributes: [:id, :ph, :ph_nr, :ph_add, :position, :p_bab_rel, :_destroy])
     end
 end

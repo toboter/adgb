@@ -16,8 +16,8 @@
       
       <div class="col-md-2">
         <%= content_tag :div, id: 'buttons', class: 'pull-right', style: 'margin-top:20px;' do %>
-          <%= link_to 'Delete', @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default' if can?(:destroy, @artefact) %>
-          <%= link_to 'Edit', edit_artefact_path(@artefact), class: 'btn btn-default' if can?(:update, @artefact) %>
+          <%= link_to 'Edit', edit_artefact_path(@artefact), class: 'btn btn-warning' if can?(:update, @artefact) %>
+          <%= link_to 'Delete', @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' if can?(:destroy, @artefact) %>
         <% end %>
         
       </div>

@@ -9,8 +9,20 @@
     <%= f.input :ph_datum %>
     <%= f.input :ph_text %>
   </div>
+  
+      <div id="photos">
+        <strong>Artefacts: </strong>
+        <%= f.simple_fields_for :occurences do |id| %>
+          <%= render 'occurence_fields', f: id %>
+          <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.occurences.count > 1 %>
+        <% end %>
+        <div class="links clearfix">
+          <%= link_to_add_association fa_icon('plus-square', text: 'artefact'), f, :occurences, class: 'btn btn-sm btn-success pull-right' %>
+        </div>
+      </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.submit class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', (@photo.new_record? ? photos_path : @photo), class: "btn btn-default" %>
   </div>
 <% end %>
