@@ -65,39 +65,48 @@
       <%= f.input :zeil2 %>
       <%= f.input :zeil1 %>
 
+      <hr>
+
       <div id="references">
         <strong>References: </strong>
         <%= f.simple_fields_for :references do |id| %>
           <%= render 'reference_fields', f: id %>
+          <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.references.count > 1 %>
         <% end %>
-        <div class="links">
-          <%= link_to_add_association fa_icon('plus-square', text: 'add reference'), f, :references %>
+        <div class="links clearfix">
+          <%= link_to_add_association fa_icon('plus-square', text: 'add reference'), f, :references, class: 'btn btn-sm btn-success pull-right' %>
         </div>
       </div>
+
+      <hr>
 
       <div id="photos">
         <strong>Photos: </strong>
         <%= f.simple_fields_for :illustrations do |id| %>
           <%= render 'illustration_fields', f: id %>
+          <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.illustrations.count > 1 %>
         <% end %>
-        <div class="links">
-          <%= link_to_add_association fa_icon('plus-square', text: 'add photo'), f, :illustrations %>
+        <div class="links clearfix">
+          <%= link_to_add_association fa_icon('plus-square', text: 'add photo'), f, :illustrations, class: 'btn btn-sm btn-success pull-right' %>
         </div>
       </div>
 
+      <hr>
 
       <div id="people">
         <strong>Personennamen: </strong>
         <%= f.simple_fields_for :people do |id| %>
           <%= render 'person_fields', f: id %>
+          <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.people.count > 1 %>
         <% end %>
-        <div class="links">
-          <%= link_to_add_association fa_icon('plus-square', text: 'add personname'), f, :people %>
+        <div class="links clearfix">
+          <%= link_to_add_association fa_icon('plus-square', text: 'add personname'), f, :people, class: 'btn btn-sm btn-success pull-right' %>
         </div>
       </div>
 
-      <br>
-      <%= f.button :submit %>
+      <hr>
+      <%= f.submit class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', (@artefact.new_record? ? artefacts_path : @artefact), class: "btn btn-default" %>
     </div>
   </div>  
 <% end %>

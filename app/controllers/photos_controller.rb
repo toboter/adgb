@@ -1,4 +1,7 @@
 class PhotosController < ApplicationController
+  require 'rest-client'
+  require 'json'
+
   before_action :set_photo, only: [:show, :edit, :update, :destroy]
   before_action :authorize, except: [:index, :show]
   load_and_authorize_resource
@@ -12,9 +15,19 @@ class PhotosController < ApplicationController
   # GET /photos/1
   # GET /photos/1.json
   def show
-    @url = URI.encode("#{Rails.application.secrets.media_host}/api/media/search?q=#{@photo.name}&f=match}")
-    @resp = Net::HTTP.get_response(URI.parse(@url))
-    @photos = Array(JSON.parse(@resp.body))
+    @media = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first
+    @url = "#{@media['url']}?q=#{@photo.name}&f=match}&access_token=#{@media['user_access_token']}"
+    begin
+      response = RestClient.get(@url)
+      @photos = JSON.parse(response.body)
+    rescue Errno::ECONNREFUSED
+      "Server at #{@media['url']} is refusing connection."
+      flash.now[:notice] = "Can't connect to #{@media['url']}."
+      @photos = []
+    end
+
+    # Artefact.visible_for(current_user).map{ |a| a.illustrations }  where.not?
+    @occurences = @photo.occurences.order(position: :asc)
   end
 
   # GET /photos/new

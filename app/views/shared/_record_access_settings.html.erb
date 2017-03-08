@@ -5,8 +5,7 @@
       <p class="text-muted">Removing any user from the records will set the record to published.</p>
     </div>
     <div class="col-md-6">
-      <%= form_tag add_multiple_accessors_accessibilities_path, method: :put do %>
-        <%= hidden_field_tag 'record_class', records.first.class %>
+      <%= form_tag add_multiple_accessors_artefacts_path, method: :put do %>
         <% records.each do |r| %>
           <%= hidden_field_tag 'record_ids[]', r.id %>
         <% end %>
@@ -22,9 +21,9 @@
         <%= submit_tag "Add to all", class: 'btn btn-default' %>
       <% end %> 
     </div>
+
     <div class="col-md-6">
-      <%= form_tag remove_multiple_accessors_accessibilities_path, method: :delete do %>
-        <%= hidden_field_tag 'record_class', records.first.class %>
+      <%= form_tag remove_multiple_accessors_artefacts_path, method: :delete do %>
         <% records.each do |r| %>
           <%= hidden_field_tag 'record_ids[]', r.id %>
         <% end %>

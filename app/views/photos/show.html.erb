@@ -1,4 +1,39 @@
 <div class="row">
+  <div class="col-md-12 page-header">
+    <div class="row">
+      <div class="col-md-10">
+        <%= content_tag :h1, @photo.name %>
+      </div>      
+      <div class="col-md-2">
+        <%= content_tag :div, id: 'buttons', class: 'pull-right', style: 'margin-top:20px;' do %>
+          <%= link_to 'Edit', edit_photo_path(@photo), class: 'btn btn-default btn-warning' if can?(:update, @photo) %>
+          <%= link_to 'Delete', @photo, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' if can?(:destroy, @photo) %>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <%= content_tag :p do %>
+          <strong>Ph add:</strong>
+          <%= @photo.ph_add %>
+        <% end if @photo.ph_add%>
+        
+        <%= content_tag :p do %>
+          <strong>Ph datum:</strong>
+          <%= @photo.ph_datum %>
+        <% end if @photo.ph_datum %>
+      </div>
+      <div class="col-md-9">
+        <%= content_tag :p do %>
+          <strong>Description:</strong>
+          <%= @photo.ph_text %>
+        <% end if @photo.ph_text %>
+      </div>
+    </div>
+  </div>
+</div>  
+
+<div class="row">
   <div class="col-md-6">
   <% if @photos.present? %>
     <% for img in @photos.take(1) do %>
@@ -19,44 +54,25 @@
       <% end %>
     <% end %>
   <% else %>
-    no photos for <%= @photo.name %> found in <%= Rails.application.secrets.media_host %>
+    no photos for <%= @photo.name %> found in <%= @media['url'] %>
   <% end %>
+
+    <%= content_tag :p do %>
+      <strong>References:</strong>
+      <%= @photo.references.map{ |r| r.title }.join(', ').html_safe %>
+    <% end if @photo.references.any? %>
   </div>
   
   <div class="col-md-6">
-    <p>
-      <strong>Ph rel:</strong>
-      <%= @photo.name %>
-    </p>
-    
-    <p>
-      <strong>Ph:</strong>
-      <%= @photo.ph %>
-    </p>
-    
-    <p>
-      <strong>Ph nr:</strong>
-      <%= @photo.ph_nr %>
-    </p>
-    
-    <p>
-      <strong>Ph add:</strong>
-      <%= @photo.ph_add %>
-    </p>
-    
-    <p>
-      <strong>Ph datum:</strong>
-      <%= @photo.ph_datum %>
-    </p>
-    
-    <p>
-      <strong>Ph text:</strong>
-      <%= @photo.ph_text %>
-    </p>
-
+    <table class="table table-bordered table-responsive">
+      <% @occurences.each_with_index do |occ, index| %>
+        <tr>
+          <td><%= index+1 %></td>
+          <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact && can?(:read, occ.artefact) %></td>
+          <td><%= occ.position %></td>
+        </tr>
+      <% end %>
+    </table>
   </div>
   
 </div>
-    
-<%= link_to 'Edit', edit_photo_path(@photo) %> |
-<%= link_to 'Back', photos_path %>

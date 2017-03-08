@@ -5,6 +5,28 @@ class ArtefactsController < ApplicationController
   before_action :authorize, except: [:index, :show]
   load_and_authorize_resource
 
+
+
+  def add_multiple_accessors
+    @accessors = User.where(id: params[:accessor_ids])
+    @records = controller_name.classify.constantize.where(id: params[:record_ids])
+    @records.each do |record|
+      record.accessors << @accessors.map{|a| a unless record.accessors.include?(a) || record.accessors.empty?}.compact
+    end
+    redirect_to url_for(controller_name.classify.constantize), notice: "Accessors successfully added to #{controller_name.classify.pluralize}."
+  end
+
+  def remove_multiple_accessors
+    @accessors = User.where(id: params[:accessor_ids])
+    @records = controller_name.classify.constantize.where(id: params[:record_ids])
+    @records.each do |record|
+      record.accessors.delete(@accessors)
+    end
+    redirect_to url_for(controller_name.classify.constantize), notice: 'Accessors successfully removed.'
+  end
+
+
+
   # GET /artefacts
   # GET /artefacts.json
   def index

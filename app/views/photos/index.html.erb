@@ -2,7 +2,7 @@
   <div class="col-md-12" style="margin:10px 0;">
     <%= will_paginate @photos, renderer: BootstrapPagination::Rails %>
     <%= content_tag :div, class: 'pull-right' do %>
-      <%= link_to 'New Photo', new_photo_path, class: 'btn btn-default' %>
+      <%= link_to 'New Photo', new_photo_path, class: 'btn btn-default btn-success' %>
     <% end if current_user %>
     <%= content_tag :div, class: 'pull-right' do %>
       <span class="label label-default">
@@ -16,32 +16,20 @@
 <table class="table table-bordered table-responsive">
   <thead>
     <tr>
-      <th>Links</th>
-      <th>Ph rel</th>
-      <th>Ph</th>
-      <th>Ph nr</th>
-      <th>Ph add</th>
-      <th>Ph datum</th>
-      <th>Ph text</th>
-      <th colspan="2"></th>
+      <th>Photo</th>
+      <th>Datum</th>
+      <th>Description</th>
+      <th>Add</th>
     </tr>
   </thead>
 
   <tbody>
     <% @photos.each do |photo| %>
       <tr>
-        <td>
-          <%= photo.references.map{ |r| r.title }.join(', ').html_safe %><br>
-          <%= photo.artefacts.map{ |a| link_to (a.grabung ? a.bab_name : a.mus_name), a }.join(', ').html_safe %>
-        </td>       
         <td><%= link_to photo.name, photo %></td>
-        <td><%= photo.ph %></td>
-        <td><%= photo.ph_nr %></td>
-        <td><%= photo.ph_add %></td>
         <td><%= photo.ph_datum %></td>
         <td><%= photo.ph_text %></td>
-        <td><%= link_to 'Edit', edit_photo_path(photo) %></td>
-        <td><%= link_to 'Destroy', photo, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= photo.ph_add %></td>
       </tr>
     <% end %>
   </tbody>

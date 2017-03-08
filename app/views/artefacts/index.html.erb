@@ -3,13 +3,14 @@
   <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
 <% end %>
 
-<%= content_tag :div, class: 'row' do %>
+<%= content_tag :div, class: 'row', style: 'margin-bottom: 10px;' do %>
   <div class="col-md-12">
     <%= content_tag :div, class: 'pull-right' do %>
-      <%= link_to 'New Artefact', new_artefact_path, class: 'btn btn-default' %>
+      <%= link_to 'New Artefact', new_artefact_path, class: 'btn btn-success' if can?(:create, Artefact) %>
+      <%= link_to 'Manage record access',"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can?(:create, Accessibility) %>
     <% end %>
   </div>
-<% end if can?(:create, Artefact) %>
+<% end if can?(:create, Artefact) || can?(:create, Accessibility) %>
 
 <div class="well">
   <%= form_for_filterrific @filterrific do |f| %>

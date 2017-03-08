@@ -11,12 +11,15 @@ class Ability
     can :manage, Artefact do |artefact|
       artefact.accessors.empty? ? user.can_manage? : (artefact.accessors.include?(user) && user.can_manage?)
     end
+    cannot :create, Artefact unless user.can_manage?
 
     can :read, [ArtefactPhoto, ArtefactPerson, ArtefactReference, Photo]
 
     can :manage, Photo do |photo|
       user.can_manage?
     end
+
+    can :manage, Accessibility if user.can_manage?
 
   end
 end

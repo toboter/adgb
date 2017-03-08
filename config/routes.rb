@@ -14,19 +14,17 @@ Rails.application.routes.draw do
       post 'photos'
     end
   end
-
-  resources :accessibilities, only: [] do
-    collection do
-      put :add_multiple_accessors
-      delete :remove_multiple_accessors
-    end
-  end
   
   resource :user, only: [:show, :edit, :update] do
     get 'add_token_to_babili', to: 'users#add_token_to_babili'
   end
   resources :photos
-  resources :artefacts
+  resources :artefacts do
+    collection do
+      put :add_multiple_accessors
+      delete :remove_multiple_accessors
+    end
+  end
   resources :artefact_people, only: :index, path: 'people', as: 'people'
   resources :artefact_references, only: :index, path: 'references', as: 'references'
   
