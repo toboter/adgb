@@ -62,15 +62,15 @@ class ArtefactsController < ApplicationController
   # GET /artefacts/1
   # GET /artefacts/1.json
   def show
-    # Das access_token wird aus current_user_read_abilities entnommen.
-    @illustrations_url = "#{Rails.application.secrets.media_host}/api/media/search?q=#{@artefact.illustrations.map{|i| i.name}.join(', ')}&access_token=#{params[:access_token]}"
+    token = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first.try(:[], 'user_access_token') #.first.dig('user_access_token')
+    @illustrations_url = "#{Rails.application.secrets.media_host}/api/media/search?q=#{@artefact.illustrations.map{|i| i.name}.join(', ')}"
     if @artefact.illustrations.any?
       begin
-        response = RestClient.get(@illustrations_url)
+        response = RestClient.get(@illustrations_url, {:Authorization => "Token #{token}"})
         @illustrations = JSON.parse(response.body)
       rescue Errno::ECONNREFUSED
-        "Server at #{@illustrations_url} is refusing connection."
-        flash.now[:notice] = "Can't connect to #{@illustrations_url}."
+        "Server at #{Rails.application.secrets.media_host} is refusing connection."
+        flash.now[:notice] = "Can't connect to #{Rails.application.secrets.media_host}."
         @illustrations = []
       end
     else 

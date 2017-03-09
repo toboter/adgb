@@ -15,14 +15,14 @@ class PhotosController < ApplicationController
   # GET /photos/1
   # GET /photos/1.json
   def show
-    @media = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first
-    @url = "#{@media['url']}?q=#{@photo.name}&f=match}&access_token=#{@media['user_access_token']}"
+    token = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first.try(:[], 'user_access_token')
+    @url = "#{Rails.application.secrets.media_host}/api/media/search?q=#{@photo.name}&f=match}"
     begin
-      response = RestClient.get(@url)
+      response = RestClient.get(@url, {:Authorization => "Token #{token}"})
       @photos = JSON.parse(response.body)
     rescue Errno::ECONNREFUSED
-      "Server at #{@media['url']} is refusing connection."
-      flash.now[:notice] = "Can't connect to #{@media['url']}."
+      "Server at #{Rails.application.secrets.media_host} is refusing connection."
+      flash.now[:notice] = "Can't connect to #{Rails.application.secrets.media_host}."
       @photos = []
     end
 

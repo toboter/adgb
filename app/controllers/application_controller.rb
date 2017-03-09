@@ -44,12 +44,12 @@ private
   end
 
   def current_user_write_abilities
-    @current_user_write_abilities = access_token.get("/api/my/authorizations/write").parsed.select{|p| p['uid'].include?(Rails.application.secrets.client_id) } if current_user && access_token
+    @current_user_write_abilities = (current_user && access_token) ? access_token.get("/api/my/authorizations/write").parsed.select{|p| p['uid'].include?(Rails.application.secrets.client_id) } : []
   end
   helper_method :current_user_write_abilities
 
   def current_user_read_abilities
-    @current_user_read_abilities = access_token.get("/api/my/authorizations/read").parsed if current_user && access_token
+    @current_user_read_abilities = (current_user && access_token) ? access_token.get("/api/my/authorizations/read").parsed : []
   end
   helper_method :current_user_read_abilities
  

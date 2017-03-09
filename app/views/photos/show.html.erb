@@ -54,7 +54,7 @@
       <% end %>
     <% end %>
   <% else %>
-    no photos for <%= @photo.name %> found in <%= @media['url'] %>
+    no photos for <%= @photo.name %> found in <%= Rails.application.secrets.media_host %>
   <% end %>
 
     <%= content_tag :p do %>
