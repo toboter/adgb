@@ -3,11 +3,10 @@ class Artefact < ApplicationRecord
   require 'roo'
 
   validates :bab_rel, presence: true
-  # validates :accessors, presence: { message: 'At least one user needs access to the record.' }
-  # projekte deren status auf published steht, deren Daten werden öffentlich angezeigt.
 
   has_many :accessibilities, as: :accessable, dependent: :destroy
   has_many :accessors, through: :accessibilities
+
   accepts_nested_attributes_for :accessibilities, reject_if: :all_blank, allow_destroy: true
   has_many :references, class_name: "ArtefactReference", foreign_key: "b_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :references, reject_if: :all_blank, allow_destroy: true
@@ -118,16 +117,19 @@ class Artefact < ApplicationRecord
   end
 
   search_scope :search do
-     attributes :bab_rel, :grabung, :bab, :bab_ind, :b_join, :b_korr, :mus_sig, 
+    attributes :bab_rel, :b_join, :b_korr, :mus_sig, :arkiv, :text_in_archiv,
                :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :grab, :text, :sig, 
-               :diss, :mus_id, :standort_alt, :standort, :mas1, :mas2, :mas3, 
-               :f_obj, :abklatsch, :abguss, :fo_tell, :fo1, :fo2, :fo3, :fo4, 
-               :fo_text, :utmx, :utmxx, :utmy, :utmyy, :inhalt, :period, 
-               :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr
+               :diss, :mus_id, :f_obj, :abklatsch, :abguss, :fo_tell, 
+               :fo_text, :inhalt, :period, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr,
+               :fo1, :fo2, :fo3, :fo4, :mas1, :mas2, :mas3, :standort_alt, :standort, :utmx, :utmxx, :utmy, :utmyy
+    attributes :excavation => "grabung"
+    attributes :excavation_number => "bab"
+    attributes :excavation_number_index => "bab_ind"
     attributes :person => ["people.person", "people.titel"]
     attributes :photo => "photos.ph_rel"
     attributes :illustration => ["illustrations.p_rel", "illustrations.position"]
     attributes :reference => ["references.ver", "references.publ"]
+
   end
  
   
@@ -143,7 +145,7 @@ class Artefact < ApplicationRecord
       artefact.attributes = row.to_hash.slice(*Artefact.col_attr)
       
       artefact.creator = @user
-      artefact.accessors << @user
+      artefact.accessors << @user unless artefact.accessors.include?(@user)
 
       #for id in project_ids do
       #  artefact.accessibilities.where(project_id: id.to_i).first_or_create

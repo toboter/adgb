@@ -32,7 +32,7 @@ class ArtefactsController < ApplicationController
   def index
     @users = User.all
     @filterrific = initialize_filterrific(
-      Artefact.visible_for(current_user),
+      Artefact.visible_for(current_user).eager_load(:illustrations, :references, :people),
       params[:filterrific],
       select_options: {
         sorted_by: Artefact.options_for_sorted_by
@@ -62,7 +62,7 @@ class ArtefactsController < ApplicationController
   # GET /artefacts/1
   # GET /artefacts/1.json
   def show
-    token = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first.try(:[], 'user_access_token') #.first.dig('user_access_token')
+    token = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first.try(:[], 'user_access_token')
     @illustrations_url = "#{Rails.application.secrets.media_host}/api/media/search?q=#{@artefact.illustrations.map{|i| i.name}.join(', ')}"
     if @artefact.illustrations.any?
       begin

@@ -5,7 +5,7 @@ class ImportsController < ApplicationController
   end
 
   def artefacts
-    Artefact.import(params[:artefacts_file], params[:creator_id])
+    Artefact.import(params[:artefacts_file], current_user.id)
     redirect_to imports_url, notice: "Artefacts table imported."
   end
 

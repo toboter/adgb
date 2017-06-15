@@ -1,2 +1,19 @@
-<h1>Home#api</h1>
-<p>Find me in app/views/home/api.html.erb</p>
+<h1>API</h1>
+
+<h4>Attributes</h4>
+<table class="table table-bordered table-condensed">
+  <thead>
+    <tr>
+      <td>Search key</td>
+      <td>searched attributes</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% Artefact.search_reflection(:search).attributes.each do |key, attr| %>
+      <tr>
+        <td><%= key %></td>
+        <td><%= attr.join(', ') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
