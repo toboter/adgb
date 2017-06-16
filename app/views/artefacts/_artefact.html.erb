@@ -17,7 +17,7 @@
             <div class="col-lg-3">
               <strong>Photos</strong><br>
               <% artefact.illustrations.each do |illustration| %>
-                <%= illustration.photo ? link_to(illustration.name, illustration.photo) : illustration.p_rel %>: <%= illustration.position %>
+                <%= illustration.photo ? link_to(illustration.name, illustration.photo) : illustration.name %>: <%= illustration.position %>
               <% end %>
             </div>
             <div class="col-lg-3">
