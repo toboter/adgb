@@ -29,7 +29,7 @@
 
           <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
             <strong><em>Photos</em></strong> <small>(position)</small><br>
-            <%= artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.p_rel)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
+            <%= artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
           <% end if artefact.illustrations.any? %>
           
           <%= content_tag :div, id: "description-#{artefact.id}", style: 'padding-top: 5px;' do %>
