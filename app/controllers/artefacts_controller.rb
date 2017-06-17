@@ -30,7 +30,7 @@ class ArtefactsController < ApplicationController
       params[:filterrific],
     ) or return
     @filterrific.find.in_batches.each do |records|
-      Accessibility.where(accessor: @accessors, accessable: records).delete_all
+      Accessibility.where(accessor: @accessors, accessable: records).destroy_all
     end
     redirect_to url_for(controller_name.classify.constantize), notice: 'Accessors successfully removed.'
   end

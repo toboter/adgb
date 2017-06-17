@@ -1,7 +1,7 @@
 <div id="filterrific_results">
 
   <div>
-    <%= page_entries_info artefacts %><%= content_tag :span, "total: #{Artefact.count}", class: 'pull-right badge' if can?(:create, Artefact) %>
+    <%= page_entries_info artefacts %>
   </div>
   <%= content_tag :div, render('shared/record_access_settings', records: @artefacts, accessors: @users), class: "collapse", id: "record-access-settings" if can?(:create, Accessibility) %>
   
@@ -103,7 +103,7 @@
           
           <%= content_tag :div, style: 'padding-top: 10px;' do %>
             <%= link_to fa_icon('eye', text: 'ansehen'), artefact  %>
-            <span class="badge pull-right"><%= artefact.accessors.map(&:name).join(', ') %></span>
+            <span class="badge pull-right"></span>
           <% end %>
         </div>
       </div>
@@ -111,7 +111,9 @@
   <% end %>
 </div>
 
-<%= will_paginate artefacts, renderer: BootstrapPagination::Rails %>
+<div id="init-pagination">
+  <%= will_paginate artefacts, renderer: BootstrapPagination::Rails %>
+</div>
 
 <script type="text/javascript">
   handler = Gmaps.build('Google', { 

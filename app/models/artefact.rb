@@ -21,7 +21,7 @@ class Artefact < ApplicationRecord
  
   def self.visible_for(user)
     if user
-      left_outer_joins(:accessibilities).where(accessibilities: {id: nil}).or(left_outer_joins(:accessibilities).where(accessibilities: {accessor_id: user}))
+      left_outer_joins(:accessibilities).where(accessibilities: {id: nil}).or(left_outer_joins(:accessibilities).where(accessibilities: {accessor_id: user.id}))
     else
       left_outer_joins(:accessibilities).where(accessibilities: {id: nil})
     end
