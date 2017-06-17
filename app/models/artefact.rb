@@ -72,8 +72,7 @@ class Artefact < ApplicationRecord
         :search, 
         :with_photo_like, 
         :with_person_like,
-        :with_bib_like,
-        :in_project
+        :with_bib_like
       ])
   )
   

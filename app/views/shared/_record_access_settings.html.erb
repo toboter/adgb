@@ -6,9 +6,14 @@
     </div>
     <div class="col-md-6">
       <%= form_tag add_multiple_accessors_artefacts_path, method: :put do %>
-        <% records.each do |r| %>
-          <%= hidden_field_tag 'record_ids[]', r.id %>
+        <%= hidden_field_tag 'filterrific[search]', @filterrific.search %>
+        <% Artefact.col_attr.each do |a| %>
+          <%= hidden_field_tag "filterrific[with_#{a}_like]", @filterrific.send("with_#{a}_like") %>
         <% end %>
+        <%= hidden_field_tag 'filterrific[with_photo_like]', @filterrific.with_photo_like %>
+        <%= hidden_field_tag 'filterrific[with_person_like]', @filterrific.with_person_like %>
+        <%= hidden_field_tag 'filterrific[with_bib_like]', @filterrific.with_bib_like %>
+
         <strong>Add access for all displayed records to:</strong>
         <ul style="padding-left:0;">
           <% accessors.each do |a| %>
@@ -24,9 +29,14 @@
 
     <div class="col-md-6">
       <%= form_tag remove_multiple_accessors_artefacts_path, method: :delete do %>
-        <% records.each do |r| %>
-          <%= hidden_field_tag 'record_ids[]', r.id %>
+        <%= hidden_field_tag 'filterrific[search]', @filterrific.search %>
+        <% Artefact.col_attr.each do |a| %>
+          <%= hidden_field_tag "filterrific[with_#{a}_like]", @filterrific.send("with_#{a}_like") %>
         <% end %>
+        <%= hidden_field_tag 'filterrific[with_photo_like]', @filterrific.with_photo_like %>
+        <%= hidden_field_tag 'filterrific[with_person_like]', @filterrific.with_person_like %>
+        <%= hidden_field_tag 'filterrific[with_bib_like]', @filterrific.with_bib_like %>
+        
         <strong>Remove access to all displayed records from:</strong>
         <ul style="padding-left:0;">
           <% accessors.each do |a| %>

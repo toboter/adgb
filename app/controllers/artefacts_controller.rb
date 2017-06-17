@@ -9,18 +9,28 @@ class ArtefactsController < ApplicationController
 
   def add_multiple_accessors
     @accessors = User.where(id: params[:accessor_ids])
-    @records = controller_name.classify.constantize.where(id: params[:record_ids])
-    @records.each do |record|
-      record.accessors << @accessors.map{|a| a unless record.accessors.include?(a) || record.accessors.empty?}.compact
+    @filterrific = initialize_filterrific(
+      controller_name.classify.constantize.visible_for(current_user),
+      params[:filterrific],
+    ) or return
+    @filterrific.find.in_batches.each do |records|
+      values =[]
+      @accessors.each do |accessor|
+        values << records.map {|record| "(#{accessor.id},#{record.id},'#{record.class.name}',#{current_user.id},now(),now())" unless record.accessor_ids.include?(accessor.id)}
+      end
+      ActiveRecord::Base.connection.execute("INSERT INTO accessibilities (accessor_id, accessable_id, accessable_type, creator_id, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
     end
     redirect_to url_for(controller_name.classify.constantize), notice: "Accessors successfully added to #{controller_name.classify.pluralize}."
   end
 
   def remove_multiple_accessors
     @accessors = User.where(id: params[:accessor_ids])
-    @records = controller_name.classify.constantize.where(id: params[:record_ids])
-    @records.each do |record|
-      record.accessors.delete(@accessors)
+    @filterrific = initialize_filterrific(
+      controller_name.classify.constantize.visible_for(current_user),
+      params[:filterrific],
+    ) or return
+    @filterrific.find.in_batches.each do |records|
+      Accessibility.where(accessor: @accessors, accessable: records).delete_all
     end
     redirect_to url_for(controller_name.classify.constantize), notice: 'Accessors successfully removed.'
   end
@@ -32,14 +42,15 @@ class ArtefactsController < ApplicationController
   def index
     @users = User.all
     @filterrific = initialize_filterrific(
-      Artefact.visible_for(current_user).eager_load(:illustrations, :references, :people),
+      Artefact.visible_for(current_user),
       params[:filterrific],
       select_options: {
         sorted_by: Artefact.options_for_sorted_by
       },
     ) or return
-    @p_artefacts = @filterrific.find
+    @p_artefacts = @filterrific.find.eager_load(:illustrations, :references, :people)
     @artefacts = @p_artefacts.paginate(:page => params[:page], :per_page => session[:per_page])
+
     @gmhash = Gmaps4rails.build_markers(@p_artefacts) do |artefact, marker|
       if artefact.utm?
         marker.lat artefact.to_lat_lon('38S').lat
@@ -52,7 +63,8 @@ class ArtefactsController < ApplicationController
           :height  => 32
         })
       end
-    end    
+    end
+
     respond_to do |format|
       format.html
       format.js
