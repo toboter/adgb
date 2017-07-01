@@ -17,6 +17,7 @@
 //= require select2-full
 //= require cocoon
 //= require filterrific/filterrific-jquery
+//= require bootstrap-markdown-bundle
 //= require underscore
 //= require gmaps/google
 //= require turbolinks

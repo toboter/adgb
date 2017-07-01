@@ -1,17 +1,20 @@
+<% title 'References', false %>
+
 <div class="row">
   <div class="col-md-12" style="margin:10px 0;">
-    <strong>Distinct references: </strong><%= @references.group_by{|r| [r.ver, r.jahr, r.publ]}.map{ |k,e| "#{k[0]} #{k[1]}, #{k[2]}" }.join('; ').html_safe %>
+    <strong>Distinct references: </strong>
+    <span class="label label-default"><%= @distinct.count %></span>
+    <%= @distinct.map{ |k,e| link_to "#{k[0]} #{k[1]}, #{k[2]}", references_path(ver: k[0], jahr:k[1], publ: k[2]) }.join(', ').html_safe %>
   </div>
   <div class="col-md-12" style="margin-bottom:10px;">
+    <div class="well" style="padding:10px 10px;">
+      <%= page_entries_info @references, model: 'Reference' %>
+      <%= link_to('Reset', references_path, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
+    </div>
     <%= will_paginate @references, renderer: BootstrapPagination::Rails %>
-    <%= content_tag :div, class: 'pull-right' do %>
-      <span class="label label-default">
-        Total: <strong><%= @references.count %></strong>;
-        distinct: <%= @references.group_by{|r| [r.ver, r.jahr, r.publ]}.count %>
-      </span>
-    <% end %>
   </div>
 </div>
+
 
 <table class="table table-bordered table-responsive">
   <thead>

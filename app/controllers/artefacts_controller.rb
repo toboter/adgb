@@ -1,40 +1,10 @@
 class ArtefactsController < ApplicationController
   require 'rest-client'
   require 'json'
-  before_action :set_artefact, only: [:show, :edit, :update, :destroy]
-  before_action :authorize, except: [:index, :show]
+
   load_and_authorize_resource
-
-
-
-  def add_multiple_accessors
-    @accessors = User.where(id: params[:accessor_ids])
-    @filterrific = initialize_filterrific(
-      controller_name.classify.constantize.visible_for(current_user),
-      params[:filterrific],
-    ) or return
-    @filterrific.find.in_batches.each do |records|
-      values =[]
-      @accessors.each do |accessor|
-        values << records.map {|record| "(#{accessor.id},#{record.id},'#{record.class.name}',#{current_user.id},now(),now())" unless record.accessor_ids.include?(accessor.id)}
-      end
-      ActiveRecord::Base.connection.execute("INSERT INTO accessibilities (accessor_id, accessable_id, accessable_type, creator_id, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
-    end
-    redirect_to url_for(controller_name.classify.constantize), notice: "Accessors successfully added to #{controller_name.classify.pluralize}."
-  end
-
-  def remove_multiple_accessors
-    @accessors = User.where(id: params[:accessor_ids])
-    @filterrific = initialize_filterrific(
-      controller_name.classify.constantize.visible_for(current_user),
-      params[:filterrific],
-    ) or return
-    @filterrific.find.in_batches.each do |records|
-      Accessibility.where(accessor: @accessors, accessable: records).destroy_all
-    end
-    redirect_to url_for(controller_name.classify.constantize), notice: 'Accessors successfully removed.'
-  end
-
+  skip_load_resource only: :index
+  skip_authorize_resource only: :index
 
 
   # GET /artefacts
@@ -141,10 +111,6 @@ class ArtefactsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_artefact
-      @artefact = Artefact.find(params[:id])
-    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def artefact_params

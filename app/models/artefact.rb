@@ -1,13 +1,14 @@
 class Artefact < ApplicationRecord
+  extend FriendlyId
   include SearchCop
   require 'roo'
+  include Nabu
+  include Enki
+
+  friendly_id :bab_rel
 
   validates :bab_rel, presence: true
 
-  has_many :accessibilities, as: :accessable, dependent: :destroy
-  has_many :accessors, through: :accessibilities
-
-  accepts_nested_attributes_for :accessibilities, reject_if: :all_blank, allow_destroy: true
   has_many :references, class_name: "ArtefactReference", foreign_key: "b_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :references, reject_if: :all_blank, allow_destroy: true
   has_many :illustrations, class_name: "ArtefactPhoto", foreign_key: "p_bab_rel", primary_key: :bab_rel
@@ -15,28 +16,17 @@ class Artefact < ApplicationRecord
   accepts_nested_attributes_for :illustrations, reject_if: :all_blank, allow_destroy: true
   has_many :people, class_name: "ArtefactPerson", foreign_key: "n_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
-  belongs_to :creator, class_name: 'User'
-
-
- 
-  def self.visible_for(user)
-    if user
-      left_outer_joins(:accessibilities).where(accessibilities: {id: nil}).or(left_outer_joins(:accessibilities).where(accessibilities: {accessor_id: user.id}))
-    else
-      left_outer_joins(:accessibilities).where(accessibilities: {id: nil})
-    end
-  end
-
-  def accessible_through?(user)
-    user.in?(self.accessors) || self.accessors.empty?
-  end
   
-  # virtual attributes
 
+  # virtual attributes
   def self.col_attr
     attribute_names.map {|n| n unless ['id', 'created_at', 'updated_at'].include?(n) }.compact
-  end  
+  end
 
+  def name
+    bab_name || mus_name
+  end
+  
   def bab_name
     grabung && bab ? "#{grabung} #{bab}#{bab_ind}" : nil
   end

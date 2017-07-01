@@ -55,7 +55,6 @@ gem "select2-rails"     # https://select2.github.io/examples.html
 gem "font-awesome-rails"
 gem 'cocoon'
 gem 'will_paginate-bootstrap'
-gem 'omniauth-oauth2'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'roo'
 gem 'search_cop'        # https://github.com/mrkamel/search_cop
@@ -63,9 +62,23 @@ gem 'filterrific'
 gem 'geoutm'
 gem 'rest-client'
 gem 'cancancan'
+gem 'browser'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
 gem 'gmaps4rails'
+
+# Auth & Babili
+# gem 'marduk', path: '/home/tschmidt/dev/babylon/gem_dev/marduk'
+gem 'marduk', git: 'https://github.com/toboter/marduk.git'
+
+# Record Sharing
+# gem 'enki', path: '/home/tschmidt/dev/babylon/gem_dev/enki'
+gem 'enki', git: 'https://github.com/toboter/enki.git'
+
+# Comments
+# gem 'nabu', path: '/home/tschmidt/dev/babylon/gem_dev/nabu'
+gem 'nabu', git: 'https://github.com/toboter/nabu.git'
+gem 'rails-bootstrap-markdown'
 
 ruby '2.3.1'

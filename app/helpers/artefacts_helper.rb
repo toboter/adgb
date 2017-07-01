@@ -13,6 +13,6 @@ module ArtefactsHelper
     content_tag :tr do
       concat content_tag :th, label+':'
       concat content_tag :td, object
-    end if object.present?  
+    end if object.present?
   end
 end

@@ -2,7 +2,7 @@
   <div class="thumbnail">
     <%= image_tag(img['attachment']['thumb_file']['url']) %>
     <div class="caption">
-      <%= content_tag :h4, img['name'] if img['name'] %>
+      <%= content_tag :h5, img['name'] if img['name'] %>
       <p>
         <% img['tags'].split(',').each do |t| %>
           <span class="label label-default"><%= t %></span>

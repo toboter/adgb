@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-
-  get '/auth/:provider', to: 'sessions#new', as: 'signin'
-  get '/auth/:provider/callback', to: 'sessions#create'
-  get '/signout', to: 'sessions#destroy', as: 'signout'
-  put '/set_per_page', to: 'sessions#set_per_page'
+  # added by nabu
+  concern :commentable do
+    resources :comments, only: [:index, :new, :create, :destroy]
+  end
+  # 'concerns: :commentable' needs to be added to any resource where nabu is included.
   
   resources :imports, only: :index, path: 'import' do
     collection do
@@ -15,11 +15,9 @@ Rails.application.routes.draw do
     end
   end
   
-  resource :user, only: [:show, :edit, :update] do
-    get 'add_token_to_babili', to: 'users#add_token_to_babili'
-  end
   resources :photos
-  resources :artefacts do
+  
+  resources :artefacts, concerns: :commentable do
     collection do
       put :add_multiple_accessors
       delete :remove_multiple_accessors

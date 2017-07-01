@@ -2,14 +2,21 @@ class PhotosController < ApplicationController
   require 'rest-client'
   require 'json'
 
-  before_action :set_photo, only: [:show, :edit, :update, :destroy]
-  before_action :authorize, except: [:index, :show]
   load_and_authorize_resource
+  skip_load_resource only: :index
+  skip_authorize_resource only: :index
 
   # GET /photos
   # GET /photos.json
   def index
-    @photos = Photo.paginate(:page => params[:page], :per_page => session[:per_page])
+    @filterrific = initialize_filterrific(
+      Photo.visible_for(current_user),
+      params[:filterrific],
+      select_options: {
+        sorted_by: Photo.options_for_sorted_by
+      },
+    ) or return
+    @photos = @filterrific.find.paginate(:page => params[:page], per_page: session[:per_page])
   end
 
   # GET /photos/1
@@ -19,15 +26,15 @@ class PhotosController < ApplicationController
     @url = "#{Rails.application.secrets.media_host}/api/media/search?q=#{@photo.name}&f=match}"
     begin
       response = RestClient.get(@url, {:Authorization => "Token #{token}"})
-      @photos = JSON.parse(response.body)
+      @images = JSON.parse(response.body)
     rescue Errno::ECONNREFUSED
       "Server at #{Rails.application.secrets.media_host} is refusing connection."
       flash.now[:notice] = "Can't connect to #{Rails.application.secrets.media_host}."
-      @photos = []
+      @images = nil
     end
 
     # Artefact.visible_for(current_user).map{ |a| a.illustrations }  where.not?
-    @occurences = @photo.occurences.order(position: :asc)
+    @occurences = @photo.occurences.where(artefact: Artefact.visible_for(current_user).all).order(position: :asc)
   end
 
   # GET /photos/new

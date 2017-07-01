@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <% if photo %>
+      <%= content_tag :p, fa_icon('link')+' '+link_to(photo_url(photo), photo_url(photo)) %>
+
+      <%= link_to(fa_icon("edit", text: 'Edit'), edit_photo_path(photo), class: 'btn btn-sm btn-warning pull-right', style: 'margin-top: 5px;') if can? :edit, photo %>
+      <%= content_tag :h3, link_to("#{photo.name}", photo) %>
+
+      <% unless images.nil? %>
+        <% for img in images.take(1) do %>
+          <%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
+            <div class="thumbnail">
+              <%= image_tag(img['attachment']['small_file']['url']) %>
+              <div class="caption">
+                <%= content_tag :h4, img['name'] if img['name'] %>
+                <p>
+                  <% img['tags'].split(',').each do |t| %>
+                    <span class="label label-default"><%= t %></span>
+                  <% end %>
+                  <br>
+                  <small>&copy; <%= img['copyright_owner'] %>, <%= img['copyright_license'] %></small>
+                </p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        no images for <%= photo.name %> found in <%= Rails.application.secrets.media_host %>
+      <% end %>
+      <p class="text-muted"><%= photo.ph_text %></p>
+    <% end %>
+  </div>
+</div>

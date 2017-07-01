@@ -1,0 +1,19 @@
+<div id="filterrific_results">
+
+
+  <div class="collapse" id="record-access-settings">
+    <%= share_multiple_with(Photo) %>
+  </div>
+
+  <div class="list-group">
+    <% photos.each do |photo| %>
+      <%= link_to photo, remote: !browser.device.mobile?, class: "list-group-item" do %>
+        <strong><%= photo.name %></strong><br/>
+        <%= photo.ph_text %>
+      <% end %>
+    <% end %>
+  </div>
+  <div id="pagination-results">
+    <%= will_paginate photos, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
+  </div>
+</div>

@@ -21,9 +21,6 @@ private
   def set_user
     token = request.headers['Authorization'] ? request.headers['Authorization'].split(' ').last : params[:access_token]
     @user = User.find_by_token(token)
-    # url = "#{Rails.application.secrets.provider_site}/api/projects"
-    # response = RestClient.get(url,  {:Authorization => "Token #{token}"})
-    # @project_ids = JSON.parse(response).select{|p| p['accessibilities'].map{|a| a['oauth_uid']}.include?(Rails.application.secrets.client_id) }.map{ |p| p['id']}
   end
 
 end

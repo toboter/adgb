@@ -1,78 +1,83 @@
-<div class="row">
-  <div class="col-md-12 page-header">
-    <div class="row">
-      <div class="col-md-10">
-        <%= content_tag :h1, @photo.name %>
-      </div>      
-      <div class="col-md-2">
-        <%= content_tag :div, id: 'buttons', class: 'pull-right', style: 'margin-top:20px;' do %>
-          <%= link_to 'Edit', edit_photo_path(@photo), class: 'btn btn-default btn-warning' if can?(:update, @photo) %>
-          <%= link_to 'Delete', @photo, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' if can?(:destroy, @photo) %>
-        <% end %>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <%= content_tag :p do %>
-          <strong>Ph add:</strong>
-          <%= @photo.ph_add %>
-        <% end if @photo.ph_add%>
-        
-        <%= content_tag :p do %>
-          <strong>Ph datum:</strong>
-          <%= @photo.ph_datum %>
-        <% end if @photo.ph_datum %>
-      </div>
-      <div class="col-md-9">
-        <%= content_tag :p do %>
-          <strong>Description:</strong>
-          <%= @photo.ph_text %>
-        <% end if @photo.ph_text %>
-      </div>
-    </div>
-  </div>
-</div>  
+<% title @photo.name %>
+
+<% content_for(:buttons) do %>
+  <%= link_to 'Edit', edit_photo_path(@photo), class: 'btn btn-default btn-warning' if can?(:edit, @photo) %>
+  <%= link_to 'Delete', @photo, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' if can?(:destroy, @photo) %>
+<% end if can?(:edit, @photo) || can?(:destroy, @photo) %>
 
 <div class="row">
   <div class="col-md-6">
-  <% if @photos.present? %>
-    <% for img in @photos.take(1) do %>
-      <%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
-        <div class="thumbnail">
-          <%= image_tag(img['attachment']['normal_file']['url']) %>
-          <div class="caption">
-            <%= content_tag :h4, img['name'] if img['name'] %>
-            <p>
-              <% img['tags'].split(',').each do |t| %>
-                <span class="label label-default"><%= t %></span>
-              <% end %>
-              <br>
-              <small>&copy; <%= img['copyright_owner'] %>, <%= img['copyright_license'] %></small>
-          </p>
+    <% unless @images.nil? %>
+      <% for img in @images.take(1) do %>
+        <%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
+          <div class="thumbnail">
+            <%= image_tag(img['attachment']['normal_file']['url']) %>
+            <div class="caption">
+              <%= content_tag :h4, img['name'] if img['name'] %>
+              <p>
+                <% img['tags'].split(',').each do |t| %>
+                  <span class="label label-default"><%= t %></span>
+                <% end %>
+                <br>
+                <small>&copy; <%= img['copyright_owner'] %>, <%= img['copyright_license'] %></small>
+            </p>
+            </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
+    <% else %>
+      no photos for <%= @photo.name %> found in <%= Rails.application.secrets.media_host %>
     <% end %>
-  <% else %>
-    no photos for <%= @photo.name %> found in <%= Rails.application.secrets.media_host %>
-  <% end %>
-
-    <%= content_tag :p do %>
-      <strong>References:</strong>
-      <%= @photo.references.map{ |r| r.title }.join(', ').html_safe %>
-    <% end if @photo.references.any? %>
   </div>
   
   <div class="col-md-6">
-    <table class="table table-bordered table-responsive">
-      <% @occurences.each_with_index do |occ, index| %>
-        <tr>
-          <td><%= index+1 %></td>
-          <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact && can?(:read, occ.artefact) %></td>
-          <td><%= occ.position %></td>
-        </tr>
-      <% end %>
-    </table>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <%= content_tag :li, link_to('Info', '#info', aria: {controls: 'info'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
+          <%= content_tag :li, link_to(fa_icon('share-alt', text: "Sharing"), '#sharing', aria: {controls: 'sharing'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
+        </ul>
+
+        <div class="tab-content">
+          <%= content_tag :div, id: 'info', role: 'tabpanel', class: 'tab-pane active' do %>
+            <%= content_tag :table, class: 'table table-bordered' do %>
+              <tbody>
+                <%= content_tag :tr do %>
+                  <th>addenda</th>
+                  <td><%= @photo.ph_add %></td>
+                <% end if @photo.ph_add %>
+                <%= content_tag :tr do %>
+                  <th>Datum</th>
+                  <td><%= @photo.ph_datum %></td>
+                <% end if @photo.ph_datum %>
+                <%= content_tag :tr do %>
+                  <th>Description</th>
+                  <td><%= @photo.ph_text %></td>
+                <% end if @photo.ph_text %>
+
+                <%= content_tag :tr do %>
+                  <th>References</th>
+                  <td><%= @photo.references.map{ |r| r.title }.join(', ').html_safe %></td>
+                <% end if @photo.references.any? %>
+              </tbody>
+            <% end %>
+            <table class="table table-bordered table-responsive">
+              <% @occurences.each_with_index do |occ, index| %>
+                <tr>
+                  <td><%= index+1 %></td>
+                  <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact %></td>
+                  <td><%= occ.position %></td>
+                </tr>
+              <% end %>
+            </table>
+          <% end %>
+
+          <%= content_tag :div, id: 'sharing', role: 'tabpanel', class: 'tab-pane' do %>
+            <%= shared_with(@photo) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
-  
 </div>
