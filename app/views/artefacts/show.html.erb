@@ -62,7 +62,7 @@
           <%= table_row(@artefact.mus_id, 'Museums Id') %>
           <%= table_row(@artefact.standort, 'Standort') %>
           <%= table_row(@artefact.standort_alt, 'Standort (alt)') %>
-        <% end if can? :edit, artefact %>         
+        <% end if can? :edit, @artefact %>         
       </tbody>
     </table>
   </div>
