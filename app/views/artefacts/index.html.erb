@@ -133,11 +133,11 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.check_box :with_published_records %>
-                    <%= f.label(:with_published_records, 'Published records only') %>
+                    <%= f.label(:with_published_records, 'Published records only', class: 'filterrific-periodically-observed') %>
                   </div>
                   <div class="form-group">
                     <%= f.check_box :with_unshared_records %>
-                    <%= f.label(:with_unshared_records, 'Records not shared to anyone') %>
+                    <%= f.label(:with_unshared_records, 'Records not shared to anyone', class: 'filterrific-periodically-observed') %>
                   </div>
                   <div class="form-group">
                     <%= f.label(:with_user_shared_to_like, 'Records shared to') %>
