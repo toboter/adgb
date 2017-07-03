@@ -70,9 +70,9 @@ class Artefact < ApplicationRecord
     direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
     case sort_option.to_s
     when /^bab_/
-      order("LOWER(artefacts.bab_rel) #{ direction }")
+      order("LOWER(artefacts.grabung) #{ direction }, artefacts.bab #{ direction }, artefacts.bab_ind #{ direction }")
     when /^mus_/
-      order("LOWER(artefacts.mus_sig) #{ direction }, artefacts.mus_nr #{ direction }, artefacts.mus_ind #{ direction }, LOWER(artefacts.bab_rel) #{ direction }")
+      order("LOWER(artefacts.mus_sig) #{ direction }, artefacts.mus_nr #{ direction }, artefacts.mus_ind #{ direction }")
     else
       raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
     end
