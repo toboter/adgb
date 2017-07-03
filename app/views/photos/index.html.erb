@@ -15,20 +15,36 @@
         </div>
       </div>
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" style="margin-top:10px;">
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="typeFilterHeading">
+        <%= content_tag :div, class: 'panel panel-default' do %>
+          <div class="panel-heading" role="tab" id="AdminFilterHeading">
             <h4 class="panel-title">
-              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#typeFilter" aria-expanded="false" aria-controls="typeFilter">
-                Filters
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#AdminFilter" aria-expanded="false" aria-controls="AdminFilter">
+                Administrative filters
               </a>
             </h4>
           </div>
-          <div id="typeFilter" class="panel-collapse collapse" role="tabpanel" aria-labelledby="typeFilterHeading">
+          <div id="AdminFilter" class="panel-collapse collapse" role="tabpanel" aria-labelledby="AdminFilterHeading">
             <div class="panel-body">
-
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.check_box :with_published_records %>
+                    <%= f.label(:with_published_records, 'Published records only') %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.check_box :with_unshared_records %>
+                    <%= f.label(:with_unshared_records, 'Records not shared to anyone') %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label(:with_user_shared_to_like, 'Records shared to') %>
+                    <%= f.collection_select(:with_user_shared_to_like, User.all, :id, :name, { include_blank: '- Any -' }, {class: 'filterrific-periodically-observed form-control'}) %>
+                    <p class="text-muted">Results also include groups a user belongs to</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        <% end if can_create? || can_administrate? %>
       </div>
     <% end %> <!-- filterrific form end -->
   </div>
@@ -52,8 +68,8 @@
 
   <div class="col-md-5">
     <%= content_tag :div, class: 'clearfix' do %>
-      <%= link_to 'New Photo', new_photo_path, class: 'btn btn-default btn-success' %>
-      <%= link_to 'Sharing',"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
+      <%= link_to fa_icon('plus', text: 'Photo'), new_photo_path, class: 'btn btn-default btn-success' %>
+      <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
     <hr>
     <% end if current_user %>
 

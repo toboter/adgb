@@ -1,5 +1,5 @@
 $("#init-pagination").remove();
-<% js = escape_javascript(
-  render(partial: 'artefacts/list', locals: { artefacts: @artefacts })
-) %>
+$("#pagination-results").remove(); 
+<% js = escape_javascript(render(partial: 'artefacts/list', locals: { artefacts: @artefacts })) %>
 $("#filterrific_results").html("<%= js %>");
+$("#page-result-info").html("<%= escape_javascript(page_entries_info @artefacts, model: 'Artefact') %>");

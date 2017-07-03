@@ -62,10 +62,28 @@ class Artefact < ApplicationRecord
         :search, 
         :with_photo_like, 
         :with_person_like,
-        :with_bib_like
+        :with_bib_like,
+        :with_published_records,
+        :with_unshared_records,
+        :with_user_shared_to_like
       ])
   )
-  
+
+  scope :with_published_records, lambda { |flag|
+    return nil  if 0 == flag # checkbox unchecked
+    published_records
+  }
+
+  scope :with_unshared_records, lambda { |flag|
+    return nil  if 0 == flag # checkbox unchecked
+    inaccessible_records
+  }
+
+  scope :with_user_shared_to_like, lambda { |user_id|
+    user = User.find(user_id)
+    accessible_by_records(user)
+  }
+
   scope :sorted_by, lambda { |sort_option|
     direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
     case sort_option.to_s
