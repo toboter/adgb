@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170701143127) do
+ActiveRecord::Schema.define(version: 20170703181538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,7 +98,9 @@ ActiveRecord::Schema.define(version: 20170701143127) do
     t.datetime "updated_at",     null: false
     t.string   "gr_datum"
     t.string   "gr_jahr"
+    t.string   "slug"
     t.index ["bab_rel"], name: "index_artefacts_on_bab_rel", unique: true, using: :btree
+    t.index ["slug"], name: "index_artefacts_on_slug", unique: true, using: :btree
   end
 
   create_table "comment_hierarchies", id: false, force: :cascade do |t|
@@ -150,7 +152,9 @@ ActiveRecord::Schema.define(version: 20170701143127) do
     t.text     "ph_text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "slug"
     t.index ["ph_rel"], name: "index_photos_on_ph_rel", unique: true, using: :btree
+    t.index ["slug"], name: "index_photos_on_slug", unique: true, using: :btree
   end
 
   create_table "record_activities", force: :cascade do |t|

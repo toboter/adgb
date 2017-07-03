@@ -115,7 +115,7 @@
 </div>
 
 <div id="init-pagination">
-  <%= will_paginate artefacts, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate artefacts, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
 </div>
 
 <script type="text/javascript">

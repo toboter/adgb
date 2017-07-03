@@ -18,7 +18,7 @@ class ArtefactsController < ApplicationController
         sorted_by: Artefact.options_for_sorted_by
       },
     ) or return
-    @p_artefacts = @filterrific.find.eager_load(:illustrations, :references, :people)
+    @p_artefacts = @filterrific.find #.eager_load(:illustrations, :references, :people)
     @artefacts = @p_artefacts.paginate(:page => params[:page], :per_page => session[:per_page])
 
     @gmhash = Gmaps4rails.build_markers(@p_artefacts) do |artefact, marker|

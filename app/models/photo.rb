@@ -4,7 +4,7 @@ class Photo < ApplicationRecord
   require 'roo'
   include Enki
 
-  friendly_id :ph_rel
+  friendly_id :ph_rel, use: :slugged
   
   has_many :references, class_name: "ArtefactReference", foreign_key: "ph_rel", primary_key: :ph_rel
   has_many :occurences, class_name: "ArtefactPhoto", foreign_key: "p_rel", primary_key: :ph_rel

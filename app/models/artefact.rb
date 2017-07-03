@@ -5,7 +5,7 @@ class Artefact < ApplicationRecord
   include Nabu
   include Enki
 
-  friendly_id :bab_rel
+  friendly_id :bab_rel, use: :slugged
 
   validates :bab_rel, presence: true
 
