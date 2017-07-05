@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+  <h3 id="mapviewModalLabel">Map</h3>
+</div>
+<div class="modal-body">
+  <div id="map" style='width: 100%; height: 500px;'></div>
+</div>
+<div class="modal-footer">
+  <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+</div>
+
+
+<script type="text/javascript">
+
+  handler = Gmaps.build('Google', { 
+    markers: { 
+      clusterer: { 
+        maxZoom:  18, 
+        gridSize: 10
+      }
+    }
+  });
+  handler.buildMap({
+      provider: {
+        mapTypeId: google.maps.MapTypeId.SATELLITE
+      },
+      internal: {
+        id: 'map'
+      }
+    },
+    function(){
+      markers = handler.addMarkers(<%=raw gmhash.delete_if(&:blank?).to_json %>);
+      handler.bounds.extendWith(markers);
+      handler.fitMapToBounds();
+    }
+  );
+</script>

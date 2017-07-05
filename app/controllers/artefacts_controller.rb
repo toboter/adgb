@@ -3,25 +3,35 @@ class ArtefactsController < ApplicationController
   require 'json'
 
   load_and_authorize_resource
-  skip_load_resource only: :index
-  skip_authorize_resource only: :index
+  skip_load_resource only: [:index, :mapview]
+  skip_authorize_resource only: [:index, :mapview]
 
 
   # GET /artefacts
   # GET /artefacts.json
   def index
-    @users = User.all
     @filterrific = initialize_filterrific(
       Artefact.visible_for(current_user),
       params[:filterrific],
       select_options: {
         sorted_by: Artefact.options_for_sorted_by
       },
+      persistence_id: 'shared_key',
     ) or return
-    @p_artefacts = @filterrific.find.eager_load({illustrations: :photo}, :references, :people)
-    @artefacts = @p_artefacts.paginate(:page => params[:page], :per_page => session[:per_page])
+    @artefacts = @filterrific.find.paginate(:page => params[:page], :per_page => session[:per_page]).eager_load({illustrations: :photo}, :references, :people)
+  end
 
-    @gmhash = Gmaps4rails.build_markers(@p_artefacts) do |artefact, marker|
+  def mapview
+    @filterrific = initialize_filterrific(
+      Artefact.visible_for(current_user),
+      session[:filterrific],
+      select_options: {
+        sorted_by: Artefact.options_for_sorted_by
+      },
+      persistence_id: 'shared_key',
+    ) or return
+    @artefacts = @filterrific.find
+    @gmhash = Gmaps4rails.build_markers(@artefacts) do |artefact, marker|
       if artefact.utm?
         marker.lat artefact.to_lat_lon('38S').lat
         marker.lng artefact.to_lat_lon('38S').lon
@@ -33,11 +43,6 @@ class ArtefactsController < ApplicationController
           :height  => 32
         })
       end
-    end
-
-    respond_to do |format|
-      format.html
-      format.js
     end
   end
 
@@ -111,6 +116,10 @@ class ArtefactsController < ApplicationController
   end
 
   private
+
+    def load_filterrific_set
+
+    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def artefact_params

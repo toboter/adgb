@@ -154,9 +154,6 @@
   </div>
 </div>
 
-
-
-
 <div class="row">
   <div class="col-md-7">
     <div class="well" style="padding:10px 10px;">
@@ -169,9 +166,13 @@
   </div>
   <div class="col-md-5">
     <%= content_tag :div, class: '' do %>
-      <%= link_to fa_icon('plus', text: 'Artefact'), new_artefact_path, class: 'btn btn-success' if can?(:create, Artefact) %>
-      <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
-    <% end if can?(:create, Artefact) || can_administrate? %>
+      <%  if can?(:create, Artefact) || can_administrate? %>
+        <%= link_to fa_icon('plus', text: 'Artefact'), new_artefact_path, class: 'btn btn-success' if can?(:create, Artefact) %>
+        <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
+      <% end %>
+      <%= link_to fa_icon('map', text: 'Show Map'), mapview_artefacts_path, class: 'btn btn-default', remote: true, data: {toggle: "modal", target: '#mapviewModal'} %>
+      
+    <% end %>
   </div>
 </div>
 
@@ -184,3 +185,13 @@
 <div style="margin-top: 20px; margin-bottom: 10px;">
   <%= render 'shared/per_page' %>
 </div>
+
+<% content_for :modals do %>
+  <div id="mapviewModal" class="modal fade" role="dialog" aria-labelledby="mapviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg" role="document">
+      <div class="modal-content">
+        Loading...
+      </div>
+    </div>
+  </div>
+<% end %>

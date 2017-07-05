@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     collection do
       put :add_multiple_accessors
       delete :remove_multiple_accessors
+      get :mapview
     end
   end
   resources :artefact_people, only: :index, path: 'people', as: 'people'

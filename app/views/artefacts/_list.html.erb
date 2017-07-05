@@ -1,12 +1,7 @@
 <div id="filterrific_results">
   <div class="collapse" id="record-access-settings">
-    <%= share_multiple_with(Artefact) %>
+    <%= share_multiple_with(Artefact) if can?(:create, Artefact) || can_administrate? %>
   </div>
-
-  <%= content_tag :div, style: 'width: 100%; margin-bottom:20px;', class: 'thumbnail' do %>
-    <div id="map" style='width: 100%; height: 500px;' class=""></div>
-  <% end if @artefacts.present? %>
-   
 
   <% for artefact in @artefacts do %>
     <div class="artefact" id="artefact-<%= artefact.id %>">
@@ -112,28 +107,3 @@
 <div id="init-pagination">
   <%= will_paginate artefacts, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
 </div>
-
-<script type="text/javascript">
-  handler = Gmaps.build('Google', { 
-    markers: { 
-      clusterer: { 
-        maxZoom:  18, 
-        gridSize: 10
-      }
-    }
-  });
-  handler.buildMap({
-      provider: {
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-      },
-      internal: {
-        id: 'map'
-      }
-    },
-    function(){
-      markers = handler.addMarkers(<%=raw @gmhash.delete_if(&:blank?).to_json %>);
-      handler.bounds.extendWith(markers);
-      handler.fitMapToBounds();
-    }
-  );
-</script>
