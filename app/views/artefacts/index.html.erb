@@ -190,7 +190,17 @@
   <div id="mapviewModal" class="modal fade" role="dialog" aria-labelledby="mapviewModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-lg" role="document">
       <div class="modal-content">
-        Loading...
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+          <h3 id="mapviewModalLabel">Map</h3>
+        </div>
+        <div class="modal-body">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+          <span class="sr-only">Loading...</span>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
       </div>
     </div>
   </div>

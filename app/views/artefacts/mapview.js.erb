@@ -1,4 +1,4 @@
 $("#mapviewModal").modal('show');
-$("#mapviewModal").find(".modal-body").remove();
+$("#mapviewModal").find(".map-container").remove();
 <% js = escape_javascript(render(partial: 'artefacts/mapview', locals: {gmhash: @gmhash})) %>
-$("#mapviewModal").find(".modal-content").html("<%= js %>");
+$("#mapviewModal").find(".modal-body").html("<%= js %>");
