@@ -29,6 +29,7 @@
             <%= linebreak_before_and_show_if_exists(with_description(artefact.f_obj, 'Fundobj: '), false) %>
             <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abkl./Zeich.: ')) %>
             <%= linebreak_before_and_show_if_exists(with_description(artefact.abguss, 'Gipsabguß: ')) %>
+            <%= linebreak_before_and_show_if_exists(with_description(artefact.code, 'Full code: ')) %>
             <%= linebreak_before_and_show_if_exists(with_description(artefact.kod, 'Code: ')) %>
             <%= linebreak_before_and_show_if_exists(with_description(artefact.grab, 'Grab: '), false) %>
             <%= linebreak_before_and_show_if_exists(with_description(artefact.text, 'Text: '), false) %>
@@ -82,7 +83,7 @@
               <strong>N </strong>
               <%= artefact.utmy %> (<%= artefact.utmyy %>)
               <small>
-                <%= link_to fa_icon('external-link', text: 'gmaps'), "http://maps.google.com/maps?t=k&q=loc:#{artefact.to_lat_lon('38S').lat}+#{artefact.to_lat_lon('38S').lon}", target: :_blank %>
+                <%= link_to fa_icon('external-link', text: 'gmaps'), "http://maps.google.com/maps?t=k&q=loc:#{artefact.latitude}+#{artefact.longitude}", target: :_blank %>
               </small>
             <% end if artefact.utm? %>
           <% end %>

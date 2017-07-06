@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170703181538) do
+ActiveRecord::Schema.define(version: 20170706111334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,9 @@ ActiveRecord::Schema.define(version: 20170703181538) do
     t.string   "gr_datum"
     t.string   "gr_jahr"
     t.string   "slug"
+    t.string   "code"
+    t.float    "latitude"
+    t.float    "longitude"
     t.index ["bab_rel"], name: "index_artefacts_on_bab_rel", unique: true, using: :btree
     t.index ["slug"], name: "index_artefacts_on_slug", unique: true, using: :btree
   end

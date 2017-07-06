@@ -6,6 +6,7 @@ class Artefact < ApplicationRecord
   include Enki
 
   friendly_id :bab_rel, use: :slugged
+  before_save :set_code, :set_latitude, :set_longitude
 
   validates :bab_rel, presence: true
 
@@ -21,6 +22,65 @@ class Artefact < ApplicationRecord
   # virtual attributes
   def self.col_attr
     attribute_names.map {|n| n unless ['id', 'created_at', 'updated_at'].include?(n) }.compact
+  end
+
+  KOD_MATERIAL = {
+    "A" => "Asphalt", 
+    "B" => "Bestattung(sbeigabe)",
+    "G" => "Glas",
+    "H" => "Holz",
+    "K" => "Knochen/Muschel",
+    "M" => "Metall",
+    "Q" => "Quarzkeramik",
+    "S" => "Stein",
+    "T" => "Ton",
+    "W" => "Wandputz/Estrich",
+    "X" => "Probe",
+    "Z" => "Ziegel",
+    "-" => "unbestimmt",
+    "?" => "unbestimmt",
+  }
+
+  KOD_ART = {
+    "A" => "Altar",
+    "B" => "Bulle/Gefäßverschluss",
+    "C" => "Glocke",
+    "D" => "Brenndreieck",
+    "E" => "Gewicht",
+    "F" => "Figur/Figürliches",
+    "G" => "Gefäß",
+    "J" => "Schmuck/Perle(n)",
+    "K" => "Knopf/Knauf",
+    "L" => "Lampe",
+    "M" => "Münze",
+    "O" => "Ring/Reif",
+    "P" => "Platte",
+    "S" => "Siegel",
+    "T" => "Tafel",
+    "W" => "Wirtel",
+    "Z" => "Zylinder",
+    # "G" => "(glasiert)",
+    "H" => "(Dach, hellenistisch)",
+    "Q" => "(Kunststein)",
+    "R" => "(reliefiert)",
+    "?" => "unbestimmt",
+    nil => "unbestimmt"
+  }
+
+  def kod_to_values
+    kod.present? ? (kod.split(' ').map{ |key| [Artefact::KOD_MATERIAL[key[0]], Artefact::KOD_ART[key[1]]] }.join(', ')) : 'unbestimmt'
+  end
+
+  def set_code
+    self.code = kod_to_values
+  end
+
+  def set_latitude
+    self.latitude = to_lat_lon('38S').lat if utm?
+  end
+
+  def set_longitude
+    self.longitude = to_lat_lon('38S').lon if utm?
   end
 
   def name
@@ -125,7 +185,7 @@ class Artefact < ApplicationRecord
 
   search_scope :search do
     attributes :bab_rel, :b_join, :b_korr, :mus_sig, :arkiv, :text_in_archiv,
-               :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :grab, :text, :sig, 
+               :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :code, :grab, :text, :sig, 
                :diss, :mus_id, :f_obj, :abklatsch, :abguss, :fo_tell, 
                :fo_text, :inhalt, :period, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr,
                :fo1, :fo2, :fo3, :fo4, :mas1, :mas2, :mas3, :standort_alt, :standort, :utmx, :utmxx, :utmy, :utmyy
@@ -136,7 +196,6 @@ class Artefact < ApplicationRecord
     attributes :photo => "photos.ph_rel"
     attributes :illustration => ["illustrations.p_rel", "illustrations.position"]
     attributes :reference => ["references.ver", "references.publ"]
-
   end
  
   
