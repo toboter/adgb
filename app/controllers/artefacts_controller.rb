@@ -49,8 +49,8 @@ class ArtefactsController < ApplicationController
   # GET /artefacts/1
   # GET /artefacts/1.json
   def show
-    token = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first.try(:[], 'user_access_token')
-    @illustrations_url = "#{Rails.application.secrets.media_host}/api/media/search?q=#{@artefact.illustrations.map{|i| i.name}.join(', ')}"
+    token = current_user_read_abilities.select{ |r| r['name'] == 'Commons' }.first.try(:[], 'user_access_token')
+    @illustrations_url = "#{Rails.application.secrets.media_host}/api/commons/search?q=#{@artefact.illustrations.map{|i| "'#{i.name}'"}.join(' OR ')}"
     if @artefact.illustrations.any?
       begin
         response = RestClient.get(@illustrations_url, {:Authorization => "Token #{token}"})

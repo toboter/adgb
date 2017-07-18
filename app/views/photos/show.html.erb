@@ -8,10 +8,10 @@
 <div class="row">
   <div class="col-md-6">
     <% unless @images.nil? %>
-      <% for img in @images.take(1) do %>
+      <% for img in @images do %>
         <%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
           <div class="thumbnail">
-            <%= image_tag(img['attachment']['normal_file']['url']) %>
+            <%= image_tag(img['files']['size_640']['url']) %>
             <div class="caption">
               <%= content_tag :h4, img['name'] if img['name'] %>
               <p>

@@ -22,8 +22,8 @@ class PhotosController < ApplicationController
   # GET /photos/1
   # GET /photos/1.json
   def show
-    token = current_user_read_abilities.select{ |r| r['name'] == 'Media' }.first.try(:[], 'user_access_token')
-    @url = "#{Rails.application.secrets.media_host}/api/media/search?q=#{@photo.name}&f=match}"
+    token = current_user_read_abilities.select{ |r| r['name'] == 'Commons' }.first.try(:[], 'user_access_token')
+    @url = "#{Rails.application.secrets.media_host}/api/commons/search?q=#{@photo.name}&f=match}"
     begin
       response = RestClient.get(@url, {:Authorization => "Token #{token}"})
       @images = JSON.parse(response.body)
