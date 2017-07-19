@@ -23,3 +23,11 @@
 //= require turbolinks
 //= require turbolinks-compatibility
 //= require_tree .
+
+$(document).ready(function() {
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
+});

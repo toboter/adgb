@@ -62,13 +62,28 @@
               </tbody>
             <% end %>
             <table class="table table-bordered table-responsive">
-              <% @occurences.each_with_index do |occ, index| %>
+              <thead>
                 <tr>
-                  <td><%= index+1 %></td>
-                  <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact %></td>
-                  <td><%= occ.position %></td>
+                  <td></td>
+                  <td>Object</td>
+                  <td>
+                    Position 
+                    <%= link_to fa_icon('info'), 'javascript:;',
+                      class: 'label label-info', 
+                      data: {toggle: 'tooltip', placement: 'left'}, 
+                      title: 'First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+                    </td>
                 </tr>
-              <% end %>
+              </thead>
+              <tbody>
+                <% @occurences.each_with_index do |occ, index| %>
+                  <tr>
+                    <td><%= index+1 %></td>
+                    <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact %></td>
+                    <td><%= occ.position %></td>
+                  </tr>
+                <% end %>
+              </tbody>
             </table>
           <% end %>
 
