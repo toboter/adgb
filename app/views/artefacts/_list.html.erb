@@ -21,7 +21,12 @@
           <% end if artefact.mus_name.present? %>
 
           <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
-            <strong><em>Photos</em></strong> <small>(position)</small><br>
+            <strong><em>Photos</em></strong>
+            <%= link_to fa_icon('info'), 'javascript:;',
+                  class: 'label label-info', 
+                  data: {toggle: 'tooltip', placement: 'top'}, 
+                  title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+            <br>
             <%= artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
           <% end if artefact.illustrations.any? %>
           

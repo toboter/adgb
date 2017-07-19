@@ -1,8 +1,8 @@
 <% title @artefact.name %>
 
 <% content_for(:buttons) do %>
-  <%= link_to 'Edit', edit_artefact_path(@artefact), class: 'btn btn-warning' if can?(:edit, @artefact) %>
-  <%= link_to 'Delete', @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' if can?(:destroy, @artefact) %>
+  <%= link_to fa_icon('edit', text: 'Edit'), edit_artefact_path(@artefact), class: 'btn btn-warning' if can?(:edit, @artefact) %>
+  <%= link_to fa_icon('remove', text: 'Delete'), @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' if can?(:destroy, @artefact) %>
 <% end if can?(:edit, @artefact) || can?(:destroy, @artefact) %>
 
 <% content_for :head do %>
@@ -15,8 +15,10 @@
   <div class="col-md-6">
     <table class="table table-striped">
       <tbody>
+        <%= table_row(@artefact.bab_name, 'Excavation No') %>
         <%= table_row(@artefact.b_join, 'Grabung Joins') %>
         <%= table_row(@artefact.b_korr, 'Grabung Korrektur') %>
+        <%= table_row(@artefact.mus_name, 'Museum No') %>
         <%= table_row(@artefact.m_join, 'Museum Joins') %>
         <%= table_row(@artefact.m_korr, 'Museum Korrektur') %>
 
@@ -38,7 +40,13 @@
         <%= table_row("<strong>E</strong> #{@artefact.utmx} (#{@artefact.utmxx}) <strong>N</strong> #{@artefact.utmy} (#{@artefact.utmyy})".html_safe, 'UTM') if @artefact.utm? %>
 
         <%= content_tag :tr do %>
-          <th>Photos <small>(position)</small></th>
+          <th>
+            Photos
+            <%= link_to fa_icon('info'), 'javascript:;',
+                  class: 'label label-info', 
+                  data: {toggle: 'tooltip', placement: 'top'}, 
+                  title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+          </th>
           <td><%= @artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %></td>
         <% end if @artefact.illustrations.any? %>
         <%= content_tag :tr do %>
@@ -72,9 +80,9 @@
       <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-          <%= content_tag :li, link_to('Map', '#map', aria: {controls: 'map'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
-          <%= content_tag :li, link_to(fa_icon('photo', text: "Images"), '#images', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
-          <%= content_tag :li, link_to("Comments <span class='badge'>#{@artefact.root_comments.count}</span>".html_safe, '#comments', aria: {controls: 'comments'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
+          <%= content_tag :li, link_to(fa_icon('map', text: "Map"), '#map', aria: {controls: 'map'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
+          <%= content_tag :li, link_to(fa_icon('photo', text: "Photos"), '#images', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
+          <%= content_tag :li, link_to(fa_icon('comments', text: "Comments <span class='badge'>#{@artefact.root_comments.count}</span>".html_safe), '#comments', aria: {controls: 'comments'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
           <%= content_tag :li, link_to(fa_icon('share-alt', text: "Sharing"), '#sharing', aria: {controls: 'sharing'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
         </ul>
 
