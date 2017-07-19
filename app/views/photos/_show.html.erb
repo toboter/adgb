@@ -17,9 +17,8 @@
                   <% img['tags'].split(',').each do |t| %>
                     <span class="label label-default"><%= t %></span>
                   <% end %>
-                  <br>
-                  <small>&copy; <%= img['copyright_owner'] %>, <%= img['copyright_license'] %></small>
                 </p>
+                <p class="small">&copy; <%= img['file_copyright'] %> <%= img['file_copyright_details'] %></p>
               </div>
             </div>
           <% end %>
