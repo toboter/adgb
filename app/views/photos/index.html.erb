@@ -74,7 +74,7 @@
     <% end if current_user %>
 
     <%= content_tag :div, id: "show-target", data: {spy: 'affix', 'offset-top': "60"} do %>
-      <%= render partial: 'photos/show', locals: { photo: @photos.first, images: @images } %>
+      <%= render partial: 'photos/show', locals: { photo: @photos.first } %>
     <% end if !browser.device.mobile? %>
   </div>
 </div>

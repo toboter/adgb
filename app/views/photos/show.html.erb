@@ -7,26 +7,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <% unless @images.nil? %>
-      <% for img in @images do %>
-        <%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
-          <div class="thumbnail">
-            <%= image_tag(img['files']['size_640']['url']) %>
-            <div class="caption">
-              <%= content_tag :h4, img['name'] if img['name'] %>
-              <p>
-                <% img['tags'].split(',').each do |t| %>
-                  <span class="label label-default"><%= t %></span>
-                <% end %>
-              </p>
-              <p class="small">&copy; <%= img['file_copyright'] %> <%= img['file_copyright_details'] %></p>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
-    <% else %>
-      no photos for <%= @photo.name %> found in <%= Rails.application.secrets.media_host %>
-    <% end %>
+    <%= render partial: 'shared/display_files', locals: {files: @files, parent: @photo, size: 'size_640'} %>
   </div>
   
   <div class="col-md-6">
@@ -95,3 +76,4 @@
     </div>
   </div>
 </div>
+

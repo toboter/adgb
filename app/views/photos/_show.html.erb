@@ -5,28 +5,12 @@
 
       <%= link_to(fa_icon("edit", text: 'Edit'), edit_photo_path(photo), class: 'btn btn-sm btn-warning pull-right', style: 'margin-top: 5px;') if can? :edit, photo %>
       <%= content_tag :h3, link_to("#{photo.name}", photo) %>
-
-      <% unless images.nil? %>
-        <% for img in images.take(1) do %>
-          <%= link_to img['links']['human'], target: :_blank, style: 'text-decoration: none;' do %>
-            <div class="thumbnail">
-              <%= image_tag(img['files']['size_640']['url']) %>
-              <div class="caption">
-                <%= content_tag :h4, img['name'] if img['name'] %>
-                <p>
-                  <% img['tags'].split(',').each do |t| %>
-                    <span class="label label-default"><%= t %></span>
-                  <% end %>
-                </p>
-                <p class="small">&copy; <%= img['file_copyright'] %> <%= img['file_copyright_details'] %></p>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
-      <% else %>
-        no images for <%= photo.name %> found in <%= Rails.application.secrets.media_host %>
-      <% end %>
-      <p class="text-muted"><%= photo.ph_text %></p>
+      
+      <%= render partial: 'shared/display_files', locals: {files: (@files.present? ? (@files.map{ |f| f if f['type'] == 'Image' }.compact.take(1)) : @files), parent: photo, size: 'size_320'} %>
+      <p class="text-muted">
+        <%= photo.ph_text %>
+      </p>
+      <%= content_tag :span, link_to("#{fa_icon('file')} #{@files.length-1} more files".html_safe, photo), class: 'pull-right' if @files.present? %>
     <% end %>
   </div>
 </div>

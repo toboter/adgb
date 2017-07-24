@@ -94,11 +94,7 @@
           <% end %>
 
           <%= content_tag :div, id: 'images', role: 'tabpanel', class: 'tab-pane', style: 'padding-top:20px;' do %>
-            <div class="row">
-              <% for img in @illustrations do %>
-                <div class="col-md-6"><%= render 'shared/image_thumb', img: img %></div>
-              <% end %>
-            </div>
+            <%= render partial: 'shared/display_files', locals: {files: @files, parent: @artefact, size: 'size_320'} %>
           <% end %>
 
           <%= content_tag :div, id: 'comments', role: 'tabpanel', class: 'tab-pane' do %>
