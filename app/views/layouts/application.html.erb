@@ -61,10 +61,7 @@
           <ul class="nav nav-pills nav-stacked">
             <%= render 'shared/nav' %>
           </ul>
-          <p class="text-muted" style="margin-left:15px; margin-top:20px;"><small>v. <%= APP_VERSION %></small></p>
-
         </div>
-
 
         <div class="col-sm-9 col-md-10 main">
           <%= content_tag :div, class: "page-header" do %>
@@ -117,7 +114,14 @@
               <li><%= link_to "About", "#{Rails.application.secrets.provider_site}/about" %></li>
               <li><%= link_to "Imprint", "#{Rails.application.secrets.provider_site}/imprint" %></li>
               <li><%= link_to 'Contact', "#{Rails.application.secrets.provider_site}/contact?origin=adgb" %></li>
-            </ul>            
+            </ul>
+            <p class="navbar-text navbar-right" style="margin-right:0px;">
+              <small>
+                git commit <%= link_to APP_VERSION, 'https://github.com/toboter/adgb', target: :blank %> |  
+                ruby <%= RUBY_VERSION %>, 
+                rails <%= Rails.version %>
+              </small>
+            </p>
           </div>        
         </div>
       </nav>
