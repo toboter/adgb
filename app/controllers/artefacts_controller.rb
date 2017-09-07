@@ -49,15 +49,15 @@ class ArtefactsController < ApplicationController
   # GET /artefacts/1
   # GET /artefacts/1.json
   def show
-    @commons_token = current_user_read_abilities.select{ |r| r['name'] == 'Commons' }.first.try(:[], 'user_access_token')
-    @illustrations_url = "#{Rails.application.secrets.media_host}/api/commons/search?q=#{@artefact.illustrations.map{|i| "'#{i.name}'"}.join(' OR ')}"
+    @commons = current_user_search_abilities.detect{|s| s.name == 'Commons'}
+    @illustrations_url = "#{@commons.url}?q=#{@artefact.illustrations.map{|i| "'#{i.name}'"}.join(' OR ')}"
     if @artefact.illustrations.any?
       begin
-        response = RestClient.get(@illustrations_url, {:Authorization => "Token #{@commons_token}"})
+        response = RestClient.get(@illustrations_url, {:Authorization => "Token #{@commons.user_access_token}"})
         @files = JSON.parse(response.body)
       rescue Errno::ECONNREFUSED
-        "Server at #{Rails.application.secrets.media_host} is refusing connection."
-        flash.now[:notice] = "Can't connect to #{Rails.application.secrets.media_host}."
+        "Server at #{@commons.url} is refusing connection."
+        flash.now[:notice] = "Can't connect to #{@commons.url}."
         @files = []
       end
     else 

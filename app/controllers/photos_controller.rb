@@ -22,14 +22,14 @@ class PhotosController < ApplicationController
   # GET /photos/1
   # GET /photos/1.json
   def show
-    @commons_token = current_user_read_abilities.select{ |r| r['name'] == 'Commons' }.first.try(:[], 'user_access_token')
-    @url = "#{Rails.application.secrets.media_host}/api/commons/search?q=#{@photo.name}&f=match}"
+    @commons = current_user_search_abilities.detect{|s| s.name == 'Commons'}
+    @url = "#{@commons.url}?q=#{@photo.name}&f=match}"
     begin
-      response = RestClient.get(@url, {:Authorization => "Token #{@commons_token}"})
+      response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
       @files= JSON.parse(response.body)
     rescue Errno::ECONNREFUSED
-      "Server at #{Rails.application.secrets.media_host} is refusing connection."
-      flash.now[:notice] = "Can't connect to #{Rails.application.secrets.media_host}."
+      "Server at #{@commons.url} is refusing connection."
+      flash.now[:notice] = "Can't connect to #{@commons.url}."
       @files = []
     end
 
