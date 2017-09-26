@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170706111334) do
+ActiveRecord::Schema.define(version: 20170926100048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -201,6 +201,7 @@ ActiveRecord::Schema.define(version: 20170706111334) do
     t.boolean  "app_commentator"
     t.boolean  "app_creator"
     t.boolean  "app_publisher"
+    t.string   "image_thumb_url"
   end
 
   add_foreign_key "memberships", "groups"
