@@ -22,7 +22,7 @@ class PhotosController < ApplicationController
   # GET /photos/1
   # GET /photos/1.json
   def show
-    @commons = current_user_search_abilities.detect{|s| s.name == 'Commons'}
+    @commons = current_user ? current_user_search_abilities.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: Rails.application.secrets.media_host, user_access_token: nil)
     @url = "#{@commons.url}?q=#{@photo.name}&f=match}"
     begin
       response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
