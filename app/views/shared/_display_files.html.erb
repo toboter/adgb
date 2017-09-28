@@ -3,7 +3,7 @@
     <% for file in files do %>
       <%= content_tag :div, class: ('col-md-6' if size == 'thumb_160') do %>
         <%= content_tag :div, class: 'thumbnail', id: "file-#{file['oid']}" do %>
-          <%= image_tag "#{file['files'][size]['url']}&access_token=#{@commons_token}", style: 'width:100%;', id: "file-#{file['oid']}-#{file['type'].underscore}" if file['type'] == 'Image' %>
+          <%= image_tag "#{file['files'][size]['url']}&access_token=#{@commons.user_access_token}", style: 'width:100%;', id: "file-#{file['oid']}-#{file['type'].underscore}" if file['type'] == 'Image' %>
           <%= content_tag :div, class: 'caption', id: "file-#{file['oid']}-caption" do %>
             <%= content_tag :h4 do %>
               <%= file['name'] if file['name'] %>
