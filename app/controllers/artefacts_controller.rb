@@ -49,7 +49,7 @@ class ArtefactsController < ApplicationController
   # GET /artefacts/1
   # GET /artefacts/1.json
   def show
-    @commons = current_user ? current_user_search_abilities.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: Rails.application.secrets.media_host, user_access_token: nil)
+    @commons = current_user ? current_user_search_abilities.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
     @illustrations_url = "#{@commons.url}?q=#{@artefact.illustrations.map{|i| "'#{i.name}'"}.join(' OR ')}"
     if @artefact.illustrations.any?
       begin
