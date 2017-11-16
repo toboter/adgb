@@ -1,6 +1,6 @@
 <div id="filterrific_results">
   <div class="collapse" id="record-access-settings">
-    <%= share_multiple_with(Artefact) if can?(:create, Artefact) || can_administrate? %>
+    <%= share_multiple_with(Artefact) if can?(:create, Artefact) || can_create? %>
   </div>
 
   <% for artefact in @artefacts do %>

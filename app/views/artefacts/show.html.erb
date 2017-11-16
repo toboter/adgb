@@ -80,21 +80,22 @@
       <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-          <%= content_tag :li, link_to(fa_icon('map', text: "Map"), '#map', aria: {controls: 'map'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
-          <%= content_tag :li, link_to(fa_icon('photo', text: "Photos"), '#images', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
+          <%= content_tag :li, link_to(fa_icon('photo', text: "Photos"), '#images', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
+          <%= content_tag :li, link_to(fa_icon('map', text: "Map"), '#map', aria: {controls: 'map'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
           <%= content_tag :li, link_to(fa_icon('comments', text: "Comments <span class='badge'>#{@artefact.root_comments.count}</span>".html_safe), '#comments', aria: {controls: 'comments'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
           <%= content_tag :li, link_to(fa_icon('share-alt', text: "Sharing"), '#sharing', aria: {controls: 'sharing'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
         </ul>
 
         <div class="tab-content">
-          <%= content_tag :div, id: 'map', role: 'tabpanel', class: 'tab-pane active', style: 'padding-top:20px;' do %>
+
+          <%= content_tag :div, id: 'images', role: 'tabpanel', class: 'tab-pane active', style: 'padding-top:20px;' do %>
+            <%= render partial: 'shared/display_files', locals: {files: @files, parent: @artefact, size: 'size_320'} %>
+          <% end %>
+
+          <%= content_tag :div, id: 'map', role: 'tabpanel', class: 'tab-pane', style: 'padding-top:20px;' do %>
             <%= content_tag :div, style: 'width: 100%;', class: "thumbnail" do %>
               <div id="map-render" style='width: 100%; height: 400px;'></div>
             <% end if @artefact.utm? %>      
-          <% end %>
-
-          <%= content_tag :div, id: 'images', role: 'tabpanel', class: 'tab-pane', style: 'padding-top:20px;' do %>
-            <%= render partial: 'shared/display_files', locals: {files: @files, parent: @artefact, size: 'size_320'} %>
           <% end %>
 
           <%= content_tag :div, id: 'comments', role: 'tabpanel', class: 'tab-pane' do %>
@@ -112,26 +113,28 @@
 
 <% if @artefact.utm? %>
   <script type="text/javascript">
-    handler = Gmaps.build('Google');
-    handler.buildMap({
-        provider: {
-          mapTypeId: google.maps.MapTypeId.SATELLITE
-        },
-        internal: {
-          id: 'map-render'
-        }
-      },
-      function(){
-        markers = handler.addMarkers([
-          {
-            "lat": <%= @artefact.to_lat_lon('38S').lat %>,
-            "lng": <%= @artefact.to_lat_lon('38S').lon %>,
-            "infowindow": "<%= "#{@artefact.full_entry}#{' ('+@artefact.kod+')' if @artefact.kod}#{', '+@artefact.f_obj if @artefact.f_obj}" %>"
+    $('a[href="#map"]').on('shown.bs.tab', function (e) {
+      handler = Gmaps.build('Google');
+      handler.buildMap({
+          provider: {
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+          },
+          internal: {
+            id: 'map-render'
           }
-        ]);
-        handler.bounds.extendWith(markers);
-        handler.fitMapToBounds();
-      }
-    );
+        },
+        function(){
+          markers = handler.addMarkers([
+            {
+              "lat": <%= @artefact.to_lat_lon('38S').lat %>,
+              "lng": <%= @artefact.to_lat_lon('38S').lon %>,
+              "infowindow": "<%= "#{@artefact.full_entry}#{' ('+@artefact.kod+')' if @artefact.kod}#{', '+@artefact.f_obj if @artefact.f_obj}" %>"
+            }
+          ]);
+          handler.bounds.extendWith(markers);
+          handler.fitMapToBounds();
+        }
+      );
+    });
   </script>
 <% end %>
