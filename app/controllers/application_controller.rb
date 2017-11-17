@@ -3,9 +3,14 @@ class ApplicationController < ActionController::Base
   include Marduk
 
   rescue_from CanCan::AccessDenied do |exception|
+    session[:user_return_to] = request.path if !current_user
     respond_to do |format|
       format.json { head :forbidden }
-      format.html { redirect_to root_url, :alert => exception.message }
+      if !current_user && params[:login] == 'true'
+        format.html { redirect_to '/auth/babili', info: 'You need to sign in before continuing.' }
+      else
+        format.html { redirect_to root_url, :alert => exception.message }        
+      end
     end
   end
 

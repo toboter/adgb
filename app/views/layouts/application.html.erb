@@ -55,6 +55,10 @@
       </div>
     </nav>
 
+    <% flash.each do |message_type, message| %>
+      <%= javascript_tag "toastr['#{ message_type == 'notice' ? 'info' : (message_type == 'alert' ? 'warning' : message_type) }']('#{message}')" %>
+    <% end %>
+
     <div class="container-fluid" style="margin-top: 60px;">
       <div class="row">      
         <div class="col-sm-3 col-md-2 sidebar hidden-xs">
@@ -72,24 +76,7 @@
               </div>
             </h1>
           <% end if content_for?(:buttons) || content_for?(:title) && @show_header %>
-          
-          <%= content_tag :div, class: 'row' do %>
-            <div class="col-md-12">
-              <%= content_tag :div, class: "alert alert-info" do %>
-                <%= notice %>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              <% end if notice %>
-              <%= content_tag :div, class: "alert alert-danger" do %>
-                <%= alert %>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              <% end if alert %>
-            </div>
-          <% end if alert || notice %>
-          
+                 
           <%= yield %>
 
         </div>

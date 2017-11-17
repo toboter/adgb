@@ -63,13 +63,14 @@ gem 'geoutm'
 gem 'rest-client'
 gem 'cancancan'
 gem 'browser'
+gem 'toastr-rails'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
 gem 'gmaps4rails'
 
 # Auth & Babili
-# gem 'marduk', path: '/home/tschmidt/dev/babylon/gem_dev/marduk'
+# gem 'marduk', path: '/home/tschmidt/dev/gem_dev/marduk'
 gem 'marduk', git: 'https://github.com/toboter/marduk.git'
 
 # Record Sharing

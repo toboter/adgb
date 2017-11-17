@@ -16,6 +16,7 @@
 //= require bootstrap
 //= require select2-full
 //= require cocoon
+//= require toastr
 //= require filterrific/filterrific-jquery
 //= require bootstrap-markdown-bundle
 //= require underscore
@@ -23,6 +24,13 @@
 //= require turbolinks
 //= require turbolinks-compatibility
 //= require_tree .
+
+/*global toastr*/
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "positionClass": "toast-top-left",
+}
 
 $(document).ready(function() {
 
