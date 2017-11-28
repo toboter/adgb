@@ -20,9 +20,121 @@ class Artefact < ApplicationRecord
   
 
   # virtual attributes
+
   def self.col_attr
     attribute_names.map {|n| n unless ['id', 'created_at', 'updated_at'].include?(n) }.compact
   end
+
+
+  # Naming
+
+  def name
+    bab_name || mus_name
+  end
+  
+  def bab_name
+    grabung && bab ? "#{grabung} #{bab}#{bab_ind}" : nil
+  end
+  
+  def mus_name
+    mus_sig ? "#{mus_sig} #{mus_nr}#{mus_ind}" : nil
+  end
+  
+  def full_entry
+    "#{bab_name} #{mus_name}"
+  end
+  
+
+  # Scopes
+  
+  filterrific(
+    default_filter_params: { sorted_by: 'bab_desc' },
+    available_filters: col_attr.map{|a| ("with_#{a}_like").to_sym}
+      .concat([
+        :sorted_by, 
+        :search, 
+        :with_photo_like, 
+        :with_person_like,
+        :with_bib_like,
+        :with_published_records,
+        :with_unshared_records,
+        :with_user_shared_to_like
+      ])
+  )
+
+  scope :with_published_records, lambda { |flag|
+    return nil  if 0 == flag # checkbox unchecked
+    published_records
+  }
+
+  scope :with_unshared_records, lambda { |flag|
+    return nil  if 0 == flag # checkbox unchecked
+    inaccessible_records
+  }
+
+  scope :with_user_shared_to_like, lambda { |user_id|
+    user = User.find(user_id)
+    accessible_by_records(user)
+  }
+
+  col_attr.map do |a|
+    scope ("with_#{a}_like").to_sym, lambda { |x|
+      where("LOWER(CAST(artefacts.#{a} AS TEXT)) LIKE ?", "%#{x.to_s.downcase}%")
+    }
+  end 
+  
+  scope :with_photo_like, lambda { |x|
+    joins(:photos).where("LOWER(CAST(photos.identifier_stable AS TEXT)) LIKE ?", "#{x.to_s.downcase}%")
+   }
+   
+  scope :with_person_like, lambda { |x|
+    joins(:people).where("LOWER(artefact_people.person) LIKE ?", "%#{x.to_s.downcase}%")
+   }
+
+  scope :with_bib_like, lambda { |x|
+    joins(:references).where("CONCAT(LOWER(artefact_references.ver), LOWER(artefact_references.publ), LOWER(artefact_references.jahr)) LIKE ?", "%#{x.to_s.downcase}%")
+   }
+
+
+  scope :sorted_by, lambda { |sort_option|
+    direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
+    case sort_option.to_s
+    when /^bab_/
+      order("LOWER(artefacts.grabung) #{ direction }, artefacts.bab #{ direction }, artefacts.bab_ind #{ direction }")
+    when /^mus_/
+      order("LOWER(artefacts.mus_sig) #{ direction }, artefacts.mus_nr #{ direction }, artefacts.mus_ind #{ direction }")
+    else
+      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
+    end
+  }
+
+  def self.options_for_sorted_by
+    [
+      ['Excavation asc', 'bab_asc'],
+      ['Excavation desc', 'bab_desc'],
+      ['Museum asc', 'mus_asc'],
+      ['Museum desc', 'mus_desc']
+    ]
+  end
+
+  search_scope :search do
+    attributes :bab_rel, :b_join, :b_korr, :mus_sig, :arkiv, :text_in_archiv,
+               :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :code, :grab, :text, :sig, 
+               :diss, :mus_id, :f_obj, :abklatsch, :abguss, :fo_tell, 
+               :fo_text, :inhalt, :period, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr,
+               :fo1, :fo2, :fo3, :fo4, :mas1, :mas2, :mas3, :standort_alt, :standort, :utmx, :utmxx, :utmy, :utmyy
+    attributes :excavation => "grabung"
+    attributes :excavation_number => "bab"
+    attributes :excavation_number_index => "bab_ind"
+    attributes :person => ["people.person", "people.titel"]
+    attributes :photo => "photos.identifier_stable"
+    attributes :illustration => ["illustrations.p_rel", "illustrations.position"]
+    attributes :reference => ["references.ver", "references.publ"]
+  end
+ 
+  
+
+  # KOD lookup
 
   KOD_MATERIAL = {
     "A" => "Asphalt", 
@@ -75,28 +187,16 @@ class Artefact < ApplicationRecord
     self.code = kod_to_values
   end
 
+
+
+  # GEO
+
   def set_latitude
     self.latitude = to_lat_lon('38S').lat if utm?
   end
 
   def set_longitude
     self.longitude = to_lat_lon('38S').lon if utm?
-  end
-
-  def name
-    bab_name || mus_name
-  end
-  
-  def bab_name
-    grabung && bab ? "#{grabung} #{bab}#{bab_ind}" : nil
-  end
-  
-  def mus_name
-    mus_sig ? "#{mus_sig} #{mus_nr}#{mus_ind}" : nil
-  end
-  
-  def full_entry
-    "#{bab_name} #{mus_name}"
   end
   
   def utm?
@@ -111,95 +211,10 @@ class Artefact < ApplicationRecord
     # Nun aber mit 27m Abzug auf x und 7m auf der y Achse.
     GeoUtm::UTM.new(zone, utmx-27, utmy-7, "WGS-84").to_lat_lon if utm? && zone
   end
-  
-  #scopes
-  
-  filterrific(
-    default_filter_params: { sorted_by: 'bab_desc' },
-    available_filters: col_attr.map{|a| ("with_#{a}_like").to_sym}
-      .concat([
-        :sorted_by, 
-        :search, 
-        :with_photo_like, 
-        :with_person_like,
-        :with_bib_like,
-        :with_published_records,
-        :with_unshared_records,
-        :with_user_shared_to_like
-      ])
-  )
 
-  scope :with_published_records, lambda { |flag|
-    return nil  if 0 == flag # checkbox unchecked
-    published_records
-  }
 
-  scope :with_unshared_records, lambda { |flag|
-    return nil  if 0 == flag # checkbox unchecked
-    inaccessible_records
-  }
 
-  scope :with_user_shared_to_like, lambda { |user_id|
-    user = User.find(user_id)
-    accessible_by_records(user)
-  }
-
-  scope :sorted_by, lambda { |sort_option|
-    direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
-    case sort_option.to_s
-    when /^bab_/
-      order("LOWER(artefacts.grabung) #{ direction }, artefacts.bab #{ direction }, artefacts.bab_ind #{ direction }")
-    when /^mus_/
-      order("LOWER(artefacts.mus_sig) #{ direction }, artefacts.mus_nr #{ direction }, artefacts.mus_ind #{ direction }")
-    else
-      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
-    end
-  }
-  
-  col_attr.map do |a|
-    scope ("with_#{a}_like").to_sym, lambda { |x|
-      where("LOWER(CAST(artefacts.#{a} AS TEXT)) LIKE ?", "%#{x.to_s.downcase}%")
-    }
-  end 
-  
-  scope :with_photo_like, lambda { |x|
-    joins(:photos).where("LOWER(CAST(photos.ph_nr AS TEXT)) LIKE ?", "#{x.to_s.downcase}%")
-   }
-   
-  scope :with_person_like, lambda { |x|
-    joins(:people).where("LOWER(artefact_people.person) LIKE ?", "%#{x.to_s.downcase}%")
-   }
-
-  scope :with_bib_like, lambda { |x|
-    joins(:references).where("CONCAT(LOWER(artefact_references.ver), LOWER(artefact_references.publ), LOWER(artefact_references.jahr)) LIKE ?", "%#{x.to_s.downcase}%")
-   }
-     
-  def self.options_for_sorted_by
-    [
-      ['Excavation asc', 'bab_asc'],
-      ['Excavation desc', 'bab_desc'],
-      ['Museum asc', 'mus_asc'],
-      ['Museum desc', 'mus_desc']
-    ]
-  end
-
-  search_scope :search do
-    attributes :bab_rel, :b_join, :b_korr, :mus_sig, :arkiv, :text_in_archiv,
-               :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :code, :grab, :text, :sig, 
-               :diss, :mus_id, :f_obj, :abklatsch, :abguss, :fo_tell, 
-               :fo_text, :inhalt, :period, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr,
-               :fo1, :fo2, :fo3, :fo4, :mas1, :mas2, :mas3, :standort_alt, :standort, :utmx, :utmxx, :utmy, :utmyy
-    attributes :excavation => "grabung"
-    attributes :excavation_number => "bab"
-    attributes :excavation_number_index => "bab_ind"
-    attributes :person => ["people.person", "people.titel"]
-    attributes :photo => "photos.ph_rel"
-    attributes :illustration => ["illustrations.p_rel", "illustrations.position"]
-    attributes :reference => ["references.ver", "references.publ"]
-  end
- 
-  
-  # import/export
+  # Import/export
   
   def self.import(file, creator_id)
     spreadsheet = open_spreadsheet(file)
@@ -210,8 +225,8 @@ class Artefact < ApplicationRecord
       artefact = find_by_bab_rel(row["bab_rel"]) || new
       artefact.attributes = row.to_hash.slice(*Artefact.col_attr)
       
-      artefact.creator = @user
-      artefact.accessors << @user unless artefact.accessors.include?(@user)
+      # artefact.creator = @user
+      # artefact.share_to(@user, @user, true) unless artefact.record_accessors.include?(@user.id)
 
       #for id in project_ids do
       #  artefact.accessibilities.where(project_id: id.to_i).first_or_create

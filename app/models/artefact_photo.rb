@@ -2,7 +2,7 @@ class ArtefactPhoto < ApplicationRecord
   require 'roo'
 
   belongs_to :artefact, foreign_key: "p_bab_rel", primary_key: 'bab_rel'
-  belongs_to :photo, foreign_key: "p_rel", primary_key: 'ph_rel'
+  belongs_to :photo, class_name: 'Source', foreign_key: :source_id
   
   def name
     "#{ph} #{ph_nr}#{ph_add}"
@@ -17,7 +17,7 @@ class ArtefactPhoto < ApplicationRecord
     header = spreadsheet.row(1).map{|h| h.underscore }
     (2..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
-      a_photo = new
+      a_photo = find_by_p_bab_rel_and_p_rel(row["p_bab_rel"], row["p_rel"]) || new # updates statt neu wegen verweis zu source_id
       a_photo.attributes = row.to_hash.slice(*ArtefactPhoto.col_attr)
       a_photo.save!
     end

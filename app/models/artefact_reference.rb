@@ -2,7 +2,6 @@ class ArtefactReference < ApplicationRecord
   require 'roo'
   
   belongs_to :artefact, foreign_key: "b_bab_rel", primary_key: 'bab_rel'
-  belongs_to :photo, foreign_key: "ph_rel", primary_key: 'ph_rel'
 
   def title
     "#{ver} [#{jahr}] #{publ}#{seite ? ': '+seite : ''}"

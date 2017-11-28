@@ -1,19 +1,9 @@
 <% title "Photos", false %>
 
+
 <div class="row">
   <div class="col-md-12" style="margin:10px 0;">
-    <%= form_for_filterrific @filterrific do |f| %>
-      <div class="form-inline row">
-        <div class="form-group col-md-8 col-sm-8">
-          <div class="input-group" style="width:100%">
-            <span class="input-group-addon" style="width:38px;"><%= link_to fa_icon('search'), help_path(anchor: 'searching') %></span>
-            <%= f.search_field(:search, placeholder: "Search in all fields", class: 'filterrific-periodically-observed form-control', style: '') %>
-          </div>
-        </div>
-        <div class="form-group col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1">
-          <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by], {}, { class: 'form-control pull-right' }) %>
-        </div>
-      </div>
+    <%= form_tag photo_imports_path, method: :get do |f| %>
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" style="margin-top:10px;">
         <%= content_tag :div, class: 'panel panel-default' do %>
           <div class="panel-heading" role="tab" id="AdminFilterHeading">
@@ -28,20 +18,23 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <%= f.check_box :with_published_records %>
-                    <%= f.label(:with_published_records, 'Published records only') %>
+                    <%= check_box_tag :with_published_records, '', params[:with_published_records] %>
+                    <%= label_tag(:with_published_records, 'Published records only') %>
                   </div>
                   <div class="form-group">
-                    <%= f.check_box :with_unshared_records %>
-                    <%= f.label(:with_unshared_records, 'Records not shared to anyone') %>
+                    <%= check_box_tag :with_unshared_records, '', params[:with_unshared_records] %>
+                    <%= label_tag(:with_unshared_records, 'Records not shared to anyone') %>
                   </div>
                   <div class="form-group">
-                    <%= f.label(:with_user_shared_to_like, 'Records shared to') %>
-                    <%= f.collection_select(:with_user_shared_to_like, User.all, :id, :name, { include_blank: '- Any -' }, {class: 'filterrific-periodically-observed form-control'}) %>
+                    <%= label_tag(:with_user_shared_to_like, 'Records shared to') %>
+                    <%= select_tag(:with_user_shared_to_like, options_from_collection_for_select(User.all, 'id', 'name', params[:with_user_shared_to_like]), include_blank: '- Any -', class: 'form-control') %>
                     <p class="text-muted">Results also include groups a user belongs to</p>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="panel-footer">
+              <%= submit_tag 'Set filter', class: 'btn btn-default text-strong' %>
             </div>
           </div>
         <% end if can_create? || can_administrate? %>
@@ -55,12 +48,12 @@
 
     <div class="well" style="padding:10px 10px;">
       <span id="page-result-info">
-        <%= page_entries_info @photos, model: 'Photo' %>
+        <%= page_entries_info @photos, model: 'PhotoImport' %>
       </span>
       <%= render_filterrific_spinner %>
-      <%= link_to('Reset', reset_filterrific_url, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
+      <%= link_to('Reset', photo_imports_path, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
     </div>
-    <%= render(partial: 'photos/list', locals: { photos: @photos }) %>
+    <%= render(partial: 'photo_imports/list', locals: { photos: @photos }) %>
     <div style="margin-top: 20px; margin-bottom: 10px;">
       <%= render 'shared/per_page' %>
     </div>
@@ -68,13 +61,12 @@
 
   <div class="col-md-5">
     <%= content_tag :div, class: 'clearfix' do %>
-      <%= link_to fa_icon('plus', text: 'Photo'), new_photo_path, class: 'btn btn-default btn-success' %>
       <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
     <hr>
     <% end if current_user %>
 
     <%= content_tag :div, id: "show-target", data: {spy: 'affix', 'offset-top': "60"} do %>
-      <%= render partial: 'photos/show', locals: { photo: @photos.first } %>
+      <%= render partial: 'photo_imports/show', locals: { photo: @photos.first } %>
     <% end if !browser.device.mobile? %>
   </div>
 </div>

@@ -1,0 +1,123 @@
+<% title "#{@source.name_tree}" %>
+
+<% content_for(:buttons) do %>
+  <%= link_to sti_source_path(@source.type, @source, :edit), class: 'btn btn-warning' do %>
+    <%= fa_icon("edit") %>
+    <%= "Edit" %>
+  <% end if can? :edit, @source %>
+  <%= link_to @source, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' do %>
+    <%= fa_icon("remove") %>
+    <%= "Delete" %>
+  <% end if can? :destroy, @source %>
+<% end if current_user %>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <%= content_tag :li, link_to('All sources', sources_path) %>      
+      <% @source.ancestors.reverse.each do |e| %>
+        <%= content_tag :li, link_to(e.name, e) %>
+      <% end %>
+      <%= content_tag :li, @source.name, class: 'active' %>
+    </ol>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-7">
+    <%= content_tag :div, id: "object-#{@source.id}", style: 'padding-top:10px;padding-bottom:10px;' do %>
+      <%= content_tag :h3, class: 'text-muted' do %>
+        <%= fa_icon(@source.icon) %>
+        <%= @source.name %>
+      <% end %>
+      <%= content_tag :p, @source.remarks, class: 'text-muted' if @source.remarks %>
+      <table class="table table-striped">
+        <tbody>
+            <% @source.type_data.each do |k,v|%>
+              <%= content_tag :tr do %>
+                <th><%= k.humanize %>:</th>
+                <td><%= link_to v, sources_path(search: v) %></td>
+              <% end if v %>
+            <% end if @source.type_data %>
+        </tbody>
+      </table>
+    <% end %>
+
+    <%= render partial: "child", collection: @source.children %>
+  </div>
+
+  <div class="col-md-5">
+
+    <%= content_tag :div do %>
+      <%= content_tag :div, class: "btn-group" do %>
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= fa_icon("plus") %> New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <% for type in @source.class.subtypes do %>
+            <%= content_tag :li, link_to(type, sti_source_path(type, nil, :new, parent_id: @source.id)) %>
+          <% end %>
+        </ul>
+      <% end if can? :new, Source %>
+      <%= content_tag :div, class: 'pull-right' do %>
+      <% end if @source.present? %>
+      <div class="clearfix"></div>
+    <hr>
+    <% end %>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <%= content_tag :li, link_to('Identity', '#identity', aria: {controls: 'identity'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
+          <%= content_tag :li, link_to("Comments <span class='badge'>#{@source.root_comments.count}</span>".html_safe, '#comments', aria: {controls: 'comments'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
+          <%= content_tag :li, link_to(fa_icon('share-alt', text: "Sharing"), '#sharing', aria: {controls: 'sharing'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
+        </ul>
+
+        <div class="tab-content">
+          <%= content_tag :div, id: 'identity', role: 'tabpanel', class: 'tab-pane active' do %>
+            
+            <%= content_tag :div, class: "", style: 'padding-top:20px;' do %>
+
+            <% end %>
+
+            <%= content_tag :table, class: 'table table-bordered' do %>
+              <tbody>
+                  <tr>
+                    <th>Ident:</th>
+                    <td><%= @source.name_tree %></td>
+                  </tr>
+                  <tr>
+                    <th>Self:</th>
+                    <td><%= link_to fa_icon('link', text: source_url(@source)), source_url(@source) %> </td>
+                  </tr>
+              </tbody>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :div, id: 'comments', role: 'tabpanel', class: 'tab-pane' do %>
+            <%= commentables_for(@source) %>
+          <% end %>
+
+          <%= content_tag :div, id: 'sharing', role: 'tabpanel', class: 'tab-pane' do %>
+            <%= shared_with(@source) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%= content_tag :div, id: "similar-objects" do %>
+      <h4>Similar objects</h4>
+      <div class="list-group">
+        <% @source.similar.each do |source| %>
+          <%= link_to source, class: 'list-group-item' do %>
+            <%= source.name_tree %><br>
+            <small><%= source.type %></small>
+          <% end %>
+        <% end %>
+      </div>
+    <% end if @source.similar.any? %>
+  </div>
+
+</div>

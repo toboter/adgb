@@ -1,0 +1,27 @@
+<%= simple_form_for(@source) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= @source.parent.inspect %>
+    <%= f.input :type, disabled: true %>
+    <%= f.input :parent_id, 
+      collection: Source.all-@source.descendants, 
+      label_method: :name_tree, 
+      value_method: :id,
+      selected: @source.parent_id,
+      include_blank: true %>
+
+    <%= f.input :identifier_stable %>
+    <%= f.input :identifier_temp %>
+
+    <% @source.class.jsonb_attributes.each do |p| %>
+      <%= f.input p %>
+    <% end %>
+
+    <%= f.input :remarks %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

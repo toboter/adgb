@@ -1,13 +1,13 @@
-<% title @photo.name_tree %>
+<% title @photo_import.name %>
 
 <% content_for(:buttons) do %>
-  <%= link_to fa_icon('edit', text: 'Edit'), edit_photo_path(@photo), class: 'btn btn-default btn-warning' if can?(:edit, @photo) %>
-  <%= link_to fa_icon('remove', text: 'Delete'), @photo, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' if can?(:destroy, @photo_import) %>
-<% end if can?(:edit, @photo) || can?(:destroy, @photo) %>
+  <%= link_to fa_icon('edit', text: 'Edit'), edit_photo_import_path(@photo_import), class: 'btn btn-default btn-warning' if can?(:edit, @photo_import) %>
+  <%= link_to fa_icon('remove', text: 'Delete'), @photo_import, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' if can?(:destroy, @photo_import) %>
+<% end if can?(:edit, @photo_import) || can?(:destroy, @photo_import) %>
 
 <div class="row">
   <div class="col-md-6">
-    <%= render partial: 'shared/display_files', locals: {files: @files, parent: @photo, size: 'size_640'} %>
+    <%= render partial: 'shared/display_files', locals: {files: @files, parent: @photo_import, size: 'size_640'} %>
   </div>
   
   <div class="col-md-6">
@@ -25,21 +25,21 @@
               <tbody>
                 <%= content_tag :tr do %>
                   <th>addenda</th>
-                  <td><%= @photo.addenda %></td>
-                <% end if @photo.addenda %>
+                  <td><%= @photo_import.ph_add %></td>
+                <% end if @photo_import.ph_add %>
                 <%= content_tag :tr do %>
-                  <th>Date</th>
-                  <td><%= @photo.photo_at %></td>
-                <% end if @photo.photo_at %>
+                  <th>Datum</th>
+                  <td><%= @photo_import.ph_datum %></td>
+                <% end if @photo_import.ph_datum %>
                 <%= content_tag :tr do %>
                   <th>Description</th>
-                  <td><%= @photo.description %></td>
-                <% end if @photo.description %>
+                  <td><%= @photo_import.ph_text %></td>
+                <% end if @photo_import.ph_text %>
 
                 <%= content_tag :tr do %>
                   <th>References</th>
-                  <td><%= @ref.map{ |r| r.title }.join(', ').html_safe %></td>
-                <% end if @ref.any? %>
+                  <td><%= @photo_import.references.map{ |r| r.title }.join(', ').html_safe %></td>
+                <% end if @photo_import.references.any? %>
               </tbody>
             <% end %>
             <table class="table table-bordered table-responsive">
@@ -69,10 +69,11 @@
           <% end %>
 
           <%= content_tag :div, id: 'sharing', role: 'tabpanel', class: 'tab-pane' do %>
-            <%= shared_with(@photo) %>
+            <%= shared_with(@photo_import) %>
           <% end %>
         </div>
       </div>
     </div>
   </div>
 </div>
+

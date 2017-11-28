@@ -1,0 +1,18 @@
+<%= content_tag :div, id: "object-#{@source.id}-child-object-#{child.id}", class: '', style: "margin-left:20px;#{'padding-top:10px;' if child.depth == 1}" do %>
+  <h4 class="text-muted">
+    <%= fa_icon(child.icon) %>
+    <%= link_to child.name, child %>
+  </h4>
+  <%= content_tag :p, content_tag(:small, child.remarks), class: 'text-muted' if child.remarks %>
+  <table class="table table-striped">
+    <tbody>
+      <% child.type_data.each do |k,v|%>
+        <%= content_tag :tr do %>
+          <th><%= k.humanize %>:</th>
+          <td><%= link_to v, sources_path(search: v) %></td>
+        <% end if v %>
+      <% end if child.type_data %>
+    </tbody>
+  </table>
+  <%= render partial: "child", collection: child.children if (child.depth - @source.depth < 2) %>
+<% end %>

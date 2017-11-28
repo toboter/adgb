@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :photos
+  resources :photo_imports
   
   resources :artefacts, concerns: :commentable do
     collection do
@@ -26,14 +26,23 @@ Rails.application.routes.draw do
   end
   resources :artefact_people, only: :index, path: 'people', as: 'people'
   resources :artefact_references, only: :index, path: 'references', as: 'references'
+  resources :sources
+  resources :archives, controller: 'sources', type: 'Archive', concerns: :commentable
+  resources :collections, controller: 'sources', type: 'Collection', concerns: :commentable
+  resources :folders, controller: 'sources', type: 'Folder', concerns: :commentable
+  resources :letters, controller: 'sources', type: 'Letter', concerns: :commentable
+  resources :contracts, controller: 'sources', type: 'Contract', concerns: :commentable
+  resources :photos, controller: 'sources', type: 'Photo', concerns: :commentable, except: :show
+  resources :photos, concerns: :commentable, only: :show
   
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1 do
       resources :artefacts, only: [:index, :show] do
-        collection do
-          get 'search'
-        end 
+        get 'search', on: :collection 
       end
+      resources :sources, only: [:index, :show] do
+        get 'search', on: :collection
+      end 
     end
   end
   

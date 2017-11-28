@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  slug: MyString
+  identifier_stable: MyString
+  identifier_temp: MyString
+  type: 
+  type_data: 
+  parent_id: 1
+  remarks: MyText
+
+two:
+  slug: MyString
+  identifier_stable: MyString
+  identifier_temp: MyString
+  type: 
+  type_data: 
+  parent_id: 1
+  remarks: MyText

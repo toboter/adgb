@@ -1,4 +1,4 @@
-<%= simple_form_for(@photo) do |f| %>
+<%= simple_form_for(@photo_import) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
@@ -23,6 +23,6 @@
 
   <div class="form-actions">
     <%= f.submit class: 'btn btn-primary' %>
-    <%= link_to 'Cancel', (@photo.new_record? ? photos_path : @photo), class: "btn btn-default" %>
+    <%= link_to 'Cancel', (@photo_import.new_record? ? photo_imports_path : @photo_import), class: "btn btn-default" %>
   </div>
 <% end %>

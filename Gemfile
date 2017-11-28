@@ -64,6 +64,10 @@ gem 'rest-client'
 gem 'cancancan'
 gem 'browser'
 gem 'toastr-rails'
+gem "jsonb_accessor", "~> 1.0.0"
+gem 'searchkick' 
+gem 'closure_tree'
+gem "chartkick"
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.

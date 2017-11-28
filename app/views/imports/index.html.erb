@@ -35,7 +35,7 @@
 
 <div class="well">
   <strong>Datei auswählen, welche die Daten der Artefakt-Phototabelle enthält.</strong><br>
-  <small>Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.</small>
+  <small>Bestehende Datensätze (key: [p_bab_rel, p_rel]) werden aktualisiert, nicht vorhandene neu erstellt.</small>
   <%= form_tag artefacts_photos_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_photos_file %>
     <%= submit_tag "Import" %>
@@ -52,5 +52,5 @@
     <%= submit_tag "Import" %>
   <% end %>
   <br>
-  <strong>Attributes: </strong><%= Photo.col_attr.map{|c| c.camelize }.join(', ') %>
+  <strong>Attributes: </strong><%= PhotoImport.col_attr.map{|c| c.camelize }.join(', ') %>
 </div>

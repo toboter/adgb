@@ -23,3 +23,17 @@
   previously treated in a book, Olof Pedersén, Archive und Bibliotheken in Babylon, ADOG 25, 2005. 
   The information in Koldewey-artefacts is available as Open Access.
 </p>
+
+<div class="row" style="margin:60px 0;">
+  <%= content_tag :div, class: 'col-md-4' do %>
+    <%= pie_chart Archive.all.map{|a| [a.name, a.descendants.count] }.to_h %>
+  <% end %>
+  <%= content_tag :div, class: 'col-md-8' do %>
+    <%= column_chart Source.where.not(type: ['Archive', 'Collection', 'Folder']).group(:type).count %>
+  <% end %>
+  <%= content_tag :div, class: 'col-md-12 tag-cloud' do %>
+    <% tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| %>
+      <%= link_to tag.name, '', id: tag.name, class: css_class %>
+    <% end %>
+  <% end if @tags %>
+</div>

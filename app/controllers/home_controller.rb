@@ -1,11 +1,6 @@
 class HomeController < ApplicationController
 
   def index
-  end
-
-  def api
-  end
-
-  def help
+    @tags = nil
   end
 end

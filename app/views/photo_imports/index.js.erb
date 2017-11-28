@@ -1,7 +1,7 @@
 $("#page-result-info").empty();
 $("#pagination-results").remove(); 
-<% js = escape_javascript(render(partial: 'photos/list', locals: { photos: @photos })) %>
+<% js = escape_javascript(render(partial: 'photo_imports/list', locals: { photos: @photos })) %>
 $("#filterrific_results").html("<%= js %>");
-$("#page-result-info").html("<%= escape_javascript(page_entries_info @photos, model: 'Photo') %>");
+$("#page-result-info").html("<%= escape_javascript(page_entries_info @photos, model: 'PhotoImport') %>");
 $('#show-target').empty();
 $('#show-target').append('<%= j render(partial: 'photos/show', locals: {photo: @photos.first, images: @images}) %>');

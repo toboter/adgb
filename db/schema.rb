@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170926100048) do
+ActiveRecord::Schema.define(version: 20171127203331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20170926100048) do
     t.string   "p_rel"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "source_id"
     t.index ["p_bab_rel"], name: "index_artefact_photos_on_p_bab_rel", using: :btree
     t.index ["p_rel"], name: "index_artefact_photos_on_p_rel", using: :btree
   end
@@ -128,6 +129,18 @@ ActiveRecord::Schema.define(version: 20170926100048) do
     t.index ["commentator_id"], name: "index_comments_on_commentator_id", using: :btree
   end
 
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string   "slug",                      null: false
+    t.integer  "sluggable_id",              null: false
+    t.string   "sluggable_type", limit: 50
+    t.string   "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
+    t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
+    t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
+  end
+
   create_table "groups", force: :cascade do |t|
     t.string   "name"
     t.string   "provider"
@@ -146,7 +159,7 @@ ActiveRecord::Schema.define(version: 20170926100048) do
     t.index ["user_id"], name: "index_memberships_on_user_id", using: :btree
   end
 
-  create_table "photos", force: :cascade do |t|
+  create_table "photo_imports", force: :cascade do |t|
     t.string   "ph_rel"
     t.string   "ph"
     t.integer  "ph_nr"
@@ -156,8 +169,8 @@ ActiveRecord::Schema.define(version: 20170926100048) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "slug"
-    t.index ["ph_rel"], name: "index_photos_on_ph_rel", unique: true, using: :btree
-    t.index ["slug"], name: "index_photos_on_slug", unique: true, using: :btree
+    t.index ["ph_rel"], name: "index_photo_imports_on_ph_rel", unique: true, using: :btree
+    t.index ["slug"], name: "index_photo_imports_on_slug", unique: true, using: :btree
   end
 
   create_table "record_activities", force: :cascade do |t|
@@ -185,6 +198,29 @@ ActiveRecord::Schema.define(version: 20170926100048) do
     t.index ["resource_type", "resource_id"], name: "index_share_models_on_resource_type_and_resource_id", using: :btree
     t.index ["shared_from_type", "shared_from_id"], name: "index_share_models_on_shared_from_type_and_shared_from_id", using: :btree
     t.index ["shared_to_type", "shared_to_id"], name: "index_share_models_on_shared_to_type_and_shared_to_id", using: :btree
+  end
+
+  create_table "source_hierarchies", id: false, force: :cascade do |t|
+    t.integer "ancestor_id",   null: false
+    t.integer "descendant_id", null: false
+    t.integer "generations",   null: false
+    t.index ["ancestor_id", "descendant_id", "generations"], name: "source_anc_desc_idx", unique: true, using: :btree
+    t.index ["descendant_id"], name: "source_desc_idx", using: :btree
+  end
+
+  create_table "sources", force: :cascade do |t|
+    t.string   "slug"
+    t.string   "identifier_stable"
+    t.string   "identifier_temp"
+    t.string   "type"
+    t.jsonb    "type_data"
+    t.integer  "parent_id"
+    t.text     "remarks"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["identifier_stable"], name: "index_sources_on_identifier_stable", using: :btree
+    t.index ["parent_id"], name: "index_sources_on_parent_id", using: :btree
+    t.index ["slug"], name: "index_sources_on_slug", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

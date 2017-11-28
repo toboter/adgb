@@ -16,7 +16,7 @@ class ImportsController < ApplicationController
   end
 
   def artefacts_photos
-    ArtefactPhoto.destroy_all
+   # ArtefactPhoto.destroy_all
     ArtefactPhoto.import(params[:artefacts_photos_file])
     redirect_to imports_url, notice: "ArtefactsPhotos table imported."
   end
@@ -28,7 +28,7 @@ class ImportsController < ApplicationController
   end
 
   def photos
-    Photo.import(params[:photos_file])
+    PhotoImport.import(params[:photos_file])
     redirect_to imports_url, notice: "Photos table imported."
   end
 end

@@ -11,7 +11,6 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery.turbolinks
 //= require jquery_ujs
 //= require bootstrap
 //= require select2-full
@@ -21,8 +20,9 @@
 //= require bootstrap-markdown-bundle
 //= require underscore
 //= require gmaps/google
+//= require Chart.bundle
+//= require chartkick
 //= require turbolinks
-//= require turbolinks-compatibility
 //= require_tree .
 
 /*global toastr*/

@@ -10,19 +10,26 @@ class Ability
       can [:edit, :update, :destroy], Artefact, Artefact do |s|
         s.editable_by?(user)
       end
-      can :show, Photo, Photo do |s|
+      can :show, PhotoImport, PhotoImport do |s|
         s.readable_by?(user)
       end
-      can [:edit, :update, :destroy], Photo, Photo do |s|
+      can [:edit, :update, :destroy], PhotoImport, PhotoImport do |s|
+        s.editable_by?(user)
+      end
+      can :show, Source, Source do |s|
+        s.readable_by?(user)
+      end
+      can [:edit, :update, :destroy], Source, Source do |s|
         s.editable_by?(user)
       end
 
-      can [:new, :create], [Photo, Artefact] if user.is_admin? || user.is_creator?
+      can [:new, :create], [PhotoImport, Artefact, Source] if user.is_admin? || user.is_creator?
 
-      can :import, [Artefact, Photo, ArtefactPhoto, ArtefactPerson, ArtefactReference] if user.is_admin? || user.is_creator?
+      can :import, [Artefact, PhotoImport, ArtefactPhoto, ArtefactPerson, ArtefactReference] if user.is_admin? || user.is_creator?
     else
       can :show, Artefact, published?: true
-      can :show, Photo, published?: true
+      can :show, PhotoImport, published?: true
+      can :show, Source, published?: true
     end
     can :index, [ArtefactPerson, ArtefactReference]
   end

@@ -1,0 +1,21 @@
+<div id="_results">
+  <div class="collapse" id="record-access-settings">
+    share_multiple_with(Source) %>
+  </div>
+
+  <div class="list-group">
+    <% sources.each do |source| %>
+      <%= link_to sti_source_path(source.type, source), remote: !browser.device.mobile?, class: "list-group-item" do %>
+        <%= content_tag :div, style: "" do %>
+          <%= fa_icon(source.try(:icon)) %>
+          <strong><%= source.name %></strong>
+          <br/>
+          <%= source.type %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <div id="pagination-results">
+    <%= will_paginate sources, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
+  </div>
+</div>
