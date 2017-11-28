@@ -1,5 +1,8 @@
-$("#init-pagination").remove();
+$("#page-result-info").empty();
 $("#pagination-results").remove(); 
 <% js = escape_javascript(render(partial: 'artefacts/list', locals: { artefacts: @artefacts })) %>
-$("#filterrific_results").html("<%= js %>");
+$("#_results").html("<%= js %>");
 $("#page-result-info").html("<%= escape_javascript(page_entries_info @artefacts, model: 'Artefact') %>");
+$('#show-target').empty();
+$('#show-target').append('<%= j render(partial: 'artefacts/show', locals: {artefact: @artefacts.first}) %>');
+$(window.location.replace("<%= artefacts_path(search: params[:search]) %>"));

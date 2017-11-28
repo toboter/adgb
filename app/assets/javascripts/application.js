@@ -16,7 +16,6 @@
 //= require select2-full
 //= require cocoon
 //= require toastr
-//= require filterrific/filterrific-jquery
 //= require bootstrap-markdown-bundle
 //= require underscore
 //= require gmaps/google

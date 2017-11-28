@@ -57,8 +57,9 @@ gem 'cocoon'
 gem 'will_paginate-bootstrap'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'roo'
-gem 'search_cop'        # https://github.com/mrkamel/search_cop
-gem 'filterrific'
+# gem 'search_cop'        # https://github.com/mrkamel/search_cop
+# gem 'filterrific'
+gem 'has_scope'
 gem 'geoutm'
 gem 'rest-client'
 gem 'cancancan'

@@ -1,6 +1,6 @@
 class Artefact < ApplicationRecord
+  searchkick
   extend FriendlyId
-  include SearchCop
   require 'roo'
   include Nabu
   include Enki
@@ -46,21 +46,6 @@ class Artefact < ApplicationRecord
   
 
   # Scopes
-  
-  filterrific(
-    default_filter_params: { sorted_by: 'bab_desc' },
-    available_filters: col_attr.map{|a| ("with_#{a}_like").to_sym}
-      .concat([
-        :sorted_by, 
-        :search, 
-        :with_photo_like, 
-        :with_person_like,
-        :with_bib_like,
-        :with_published_records,
-        :with_unshared_records,
-        :with_user_shared_to_like
-      ])
-  )
 
   scope :with_published_records, lambda { |flag|
     return nil  if 0 == flag # checkbox unchecked
@@ -96,17 +81,17 @@ class Artefact < ApplicationRecord
    }
 
 
-  scope :sorted_by, lambda { |sort_option|
-    direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
+  def self.sorted_by(sort_option)
+    direction = ((sort_option =~ /desc$/) ? 'desc' : 'asc').to_sym
     case sort_option.to_s
     when /^bab_/
-      order("LOWER(artefacts.grabung) #{ direction }, artefacts.bab #{ direction }, artefacts.bab_ind #{ direction }")
+      { grabung: direction, bab: direction }
     when /^mus_/
-      order("LOWER(artefacts.mus_sig) #{ direction }, artefacts.mus_nr #{ direction }, artefacts.mus_ind #{ direction }")
+      { mus_sig: direction, mus_nr: direction, mus_ind: direction }
     else
       raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
     end
-  }
+  end
 
   def self.options_for_sorted_by
     [
@@ -116,24 +101,9 @@ class Artefact < ApplicationRecord
       ['Museum desc', 'mus_desc']
     ]
   end
-
-  search_scope :search do
-    attributes :bab_rel, :b_join, :b_korr, :mus_sig, :arkiv, :text_in_archiv,
-               :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :code, :grab, :text, :sig, 
-               :diss, :mus_id, :f_obj, :abklatsch, :abguss, :fo_tell, 
-               :fo_text, :inhalt, :period, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr,
-               :fo1, :fo2, :fo3, :fo4, :mas1, :mas2, :mas3, :standort_alt, :standort, :utmx, :utmxx, :utmy, :utmyy
-    attributes :excavation => "grabung"
-    attributes :excavation_number => "bab"
-    attributes :excavation_number_index => "bab_ind"
-    attributes :person => ["people.person", "people.titel"]
-    attributes :photo => "photos.identifier_stable"
-    attributes :illustration => ["illustrations.p_rel", "illustrations.position"]
-    attributes :reference => ["references.ver", "references.publ"]
-  end
- 
   
 
+  
   # KOD lookup
 
   KOD_MATERIAL = {

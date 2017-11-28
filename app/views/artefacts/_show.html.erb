@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-body">
 
-    <% if artefact %>
+    <% if artefact.present? %>
       <%= content_tag :p, fa_icon('link')+' '+link_to(artefact_url(artefact), artefact_url(artefact)) %>
 
       <%= link_to(fa_icon("edit", text: 'Edit'), edit_artefact_path(artefact), class: 'btn btn-sm btn-warning pull-right', style: 'margin-top: 5px;') if can? :edit, artefact %>

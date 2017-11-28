@@ -10,9 +10,6 @@ class SourcesController < ApplicationController
   def index
     sort_order = Source.sorted_by(params[:sorted_by].presence || 'ident_name_asc') if Source.any?
     query = params[:search]
-    if params[:filters]
-      raise params[:filters]
-    end
     # .to_sym.presence || Source.all_jsonb_attributes+Source.column_names
     # if params[:search]
     #   query = params[:search].split(':').last.presence || params[:search]

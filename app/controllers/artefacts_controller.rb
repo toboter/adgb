@@ -10,27 +10,33 @@ class ArtefactsController < ApplicationController
   # GET /artefacts
   # GET /artefacts.json
   def index
-    @filterrific = initialize_filterrific(
-      Artefact.visible_for(current_user),
-      params[:filterrific],
-      select_options: {
-        sorted_by: Artefact.options_for_sorted_by
-      },
-      persistence_id: 'shared_key',
-    ) or return
-    @artefacts = @filterrific.find.paginate(:page => params[:page], :per_page => session[:per_page]).eager_load({illustrations: :photo}, :references, :people)
+    sort_order = Artefact.sorted_by(params[:sorted_by].presence || 'bab_asc') if Artefact.any?
+    query = params[:search]
+    
+    @artefact_ids = Artefact.visible_for(current_user).all.ids
+    @artefacts = Artefact
+      .search (query.presence || '*'), 
+        where: {id: @artefact_ids},
+        page: params[:page], 
+        per_page: session[:per_page], 
+        order: sort_order,
+        aggs: [:type]
+      
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def mapview
-    @filterrific = initialize_filterrific(
-      Artefact.visible_for(current_user),
-      session[:filterrific],
-      select_options: {
-        sorted_by: Artefact.options_for_sorted_by
-      },
-      persistence_id: 'shared_key',
-    ) or return
-    @artefacts = @filterrific.find
+    query = params[:search]
+    @artefact_ids = Artefact.visible_for(current_user).all.ids
+    
+    @artefacts = Artefact
+      .search (query.presence || '*'), 
+        where: {id: @artefact_ids},
+        aggs: [:type]
+
     @gmhash = Gmaps4rails.build_markers(@artefacts) do |artefact, marker|
       if artefact.utm?
         marker.lat artefact.latitude
