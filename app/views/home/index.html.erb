@@ -24,13 +24,24 @@
   The information in Koldewey-artefacts is available as Open Access.
 </p>
 
-<div class="row" style="margin:60px 0;">
-  <%= content_tag :div, class: 'col-md-4' do %>
-    <%= pie_chart Archive.all.map{|a| [a.name, a.descendants.count] }.to_h %>
+<div class="row" style="margin:30px 0;">
+  <h3 class="text-center col-md-12">Distribution of objects in *adgb*</h3>
+  <%= content_tag :div, class: 'col-md-7' do %>
+    <%= column_chart Artefact.group(:kod).having("count(kod) > 1000").count %>
+    <p class="text-muted text-center">Grouped, coded artefacts with a minimum of 1000 records each.</p>
   <% end %>
-  <%= content_tag :div, class: 'col-md-8' do %>
+  <%= content_tag :div, class: 'col-md-5' do %>
     <%= column_chart Source.where.not(type: ['Archive', 'Collection', 'Folder']).group(:type).count %>
+    <p class="text-muted text-center">Grouped sources (types with content only).</p>
   <% end %>
+</div>
+<div class="row" style="margin:30px 0;">
+  <h3 class="text-center col-md-12">Koldewey Excavation between 1899 and 1917</h3>
+  <%= content_tag :div, class: 'col-md-12' do %>
+    <%= line_chart Artefact.group(:gr_jahr).having(gr_jahr: 1899..1917).count, colors: ["orange", "#999"] %>
+    <p class="text-muted text-center">Count of excavated artefacts over the years.</p>
+  <% end %>
+
   <%= content_tag :div, class: 'col-md-12 tag-cloud' do %>
     <% tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| %>
       <%= link_to tag.name, '', id: tag.name, class: css_class %>
