@@ -3,25 +3,33 @@ class ArtefactsController < ApplicationController
   require 'json'
 
   load_and_authorize_resource
-  skip_load_resource only: [:index, :mapview]
-  skip_authorize_resource only: [:index, :mapview]
+  skip_load_resource only: [:index, :filter, :mapview]
+  skip_authorize_resource only: [:index, :filter, :mapview]
 
 
   # GET /artefacts
   # GET /artefacts.json
   def index
     sort_order = Artefact.sorted_by(params[:sorted_by].presence || 'bab_asc') if Artefact.any?
-    query = params[:search]
+    query = params[:search].presence || '*'
     
-    @artefact_ids = Artefact.visible_for(current_user).all.ids
-    @artefacts = Artefact
-      .search (query.presence || '*'), 
-        where: {id: @artefact_ids},
+    artefacts = Artefact
+    .visible_for(current_user)
+    .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+
+    @artefacts =
+      Artefact.search(query,
+        where: {id: artefacts.ids},
         page: params[:page], 
         per_page: session[:per_page], 
-        order: sort_order,
-        aggs: [:type]
-      
+        order: sort_order, 
+        misspellings: {below: 1}
+      ) do |body|
+        body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+      end
+
+
+
     respond_to do |format|
       format.html
       format.js
@@ -29,13 +37,18 @@ class ArtefactsController < ApplicationController
   end
 
   def mapview
-    query = params[:search]
-    @artefact_ids = Artefact.visible_for(current_user).all.ids
+    query = params[:search].presence || '*'
+    artefacts = Artefact
+      .visible_for(current_user)
+      .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
     
-    @artefacts = Artefact
-      .search (query.presence || '*'), 
-        where: {id: @artefact_ids},
-        aggs: [:type]
+    @artefacts =
+      Artefact.search(query,
+        where: {id: artefacts.ids},
+        misspellings: {below: 1}
+      ) do |body|
+        body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+      end
 
     @gmhash = Gmaps4rails.build_markers(@artefacts) do |artefact, marker|
       if artefact.utm?

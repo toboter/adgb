@@ -20,108 +20,7 @@
           <%= select_tag 'sorted_by', options_for_select(Artefact.options_for_sorted_by, params[:sorted_by]), class: 'form-control pull-right', onchange: "this.form.submit()" %>
         </div>
       </div>
-    <% end %>
-    <%= form_tag artefacts_path, method: :get do %>
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" style="margin-top:10px;">
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="typeFilterHeading">
-            <h4 class="panel-title">
-              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#typeFilter" aria-expanded="false" aria-controls="typeFilter">
-                Filters
-              </a>
-            </h4>
-          </div>
-          <div id="typeFilter" class="panel-collapse collapse" role="tabpanel" aria-labelledby="typeFilterHeading">
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <%= content_tag :div do %>
-                    <div class="form-inline">
-                      <%= search_field_tag('with_grabung_like', params[:with_grabung_like], placeholder: 'Grabung', class: 'form-control') %>
-                      <%= search_field_tag('with_bab_like', params[:with_bab_like], placeholder: 'Bab', class: 'form-control') %>
-                      <%= search_field_tag('with_bab_ind_like', params[:with_bab_ind_like], placeholder: 'Bab index', class: 'form-control') %>
-                    </div>
-                    <%= search_field_tag('with_b_join_like', params[:with_b_join_like], placeholder: 'Bjoin', class: 'form-control') %>
-                    <%= search_field_tag('with_b_korr_like', params[:with_b_korr_like], placeholder: 'Bkorr', class: 'form-control') %>
-                  <% end %>
-
-                  <%= content_tag :div do %>
-                    <div class="form-inline">
-                      <%= search_field_tag('with_mus_sig_like', placeholder: 'Museum Sig', class: 'filterrific-periodically-observed form-control') %>
-                      <%= search_field_tag('with_mus_nr_like', placeholder: 'Museum Nr', class: 'filterrific-periodically-observed form-control') %>
-                      <%= search_field_tag('with_mus_ind_like', placeholder: 'Museum Index', class: 'filterrific-periodically-observed form-control') %>
-                    </div>
-                    <%= search_field_tag(:with_m_join_like, placeholder: 'Museum Join', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_m_korr_like, placeholder: 'Museum Korr', class: 'filterrific-periodically-observed form-control') %>
-                  <% end %>
-
-                  <%= content_tag :div, style: 'padding-top: 5px;' do %>
-                    <%= search_field_tag(:with_photo_like, placeholder: 'Photo', class: 'filterrific-periodically-observed form-control') %>
-                  <% end %>
-                      
-                  <%= content_tag :div, style: 'padding-top: 5px;' do %>
-                    <%= search_field_tag(:with_f_obj_like, placeholder: 'Fundobj', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_abklatsch_like, placeholder: 'Abkl./Zeich', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_abguss_like, placeholder: 'Gipsabguß', class: 'filterrific-periodically-observed form-control') %>
-                    <div class="form-inline">
-                      <%= search_field_tag(:with_kod_like, placeholder: 'Code', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                      <%= search_field_tag(:with_grab_like, placeholder: 'Grab', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                      <%= search_field_tag(:with_text_like, placeholder: 'Text', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                      <%= search_field_tag(:with_sig_like, placeholder: 'Bild', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                    </div>
-                    <div class="form-inline">
-                      <%= search_field_tag(:with_mas1_like, placeholder: 'Maß 1', class: 'filterrific-periodically-observed form-control') %>
-                      <%= search_field_tag(:with_mas2_like, placeholder: 'Maß 2', class: 'filterrific-periodically-observed form-control') %>
-                      <%= search_field_tag(:with_mas3_like, placeholder: 'Maß 3', class: 'filterrific-periodically-observed form-control') %>        
-                    </div>
-                  <% end %>
-                      
-                  <%= content_tag :div, style: 'padding-top: 5px;' do %>
-                    <%= search_field_tag(:with_period_like, placeholder: 'Period', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_arkiv_like, placeholder: 'Archiv', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_text_in_archiv_like, placeholder: 'Text in Archiv', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_inhalt_like, placeholder: 'Inhalt', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_person_like, placeholder: 'Person name', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_jahr_like, placeholder: 'Jahr', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_datum_like, placeholder: 'Datum', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_zeil2_like, placeholder: 'Zeil2', class: 'filterrific-periodically-observed form-control') %>
-                    <%= search_field_tag(:with_zeil1_like, placeholder: 'Zeil1', class: 'filterrific-periodically-observed form-control') %>
-                  <% end %>
-                      
-                </div>
-
-                <div class="col-md-6">
-                  <%= content_tag :div do %>
-                    <%= search_field_tag(:with_fo_tell_like, placeholder: 'Tell', class: 'filterrific-periodically-observed form-control') %>
-                    <%= content_tag :div, class: 'form-inline' do %>
-                      <%= search_field_tag(:with_fo1_like, placeholder: '1', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                      <%= search_field_tag(:with_fo2_like, placeholder: '2', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                      <%= search_field_tag(:with_fo3_like, placeholder: '3', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                      <%= search_field_tag(:with_fo4_like, placeholder: '4', class: 'filterrific-periodically-observed form-control', style: 'width: 24%;') %>
-                    <% end %>
-                    <%= search_field_tag(:with_fo_text_like, placeholder: 'Fundumstände', class: 'filterrific-periodically-observed form-control') %>
-                    <%= content_tag :div, class: 'form-inline' do %>
-                      <%= search_field_tag(:with_gr_datum_like, placeholder: 'Grabungsdatum', class: 'filterrific-periodically-observed form-control') %>
-                      <%= search_field_tag(:with_gr_jahr_like, placeholder: 'Grabungsjahr', class: 'filterrific-periodically-observed form-control') %>
-                    <% end %>
-                    <%= content_tag :div, class: 'form-inline' do %>
-                      <%= search_field_tag(:with_utmx_like, placeholder: 'UTM E', class: 'filterrific-periodically-observed form-control') %>
-                      <%= search_field_tag(:with_utmxx_like, placeholder: 'UTM E precision', class: 'filterrific-periodically-observed form-control') %>
-                    <% end %>
-                    <%= content_tag :div, class: 'form-inline' do %>
-                      <%= search_field_tag(:with_utmy_like, placeholder: 'UTM N', class: 'filterrific-periodically-observed form-control') %>
-                      <%= search_field_tag(:with_utmyy_like, placeholder: 'UTM N precision', class: 'filterrific-periodically-observed form-control') %>
-                    <% end %>
-                  <% end %>
-                  <%= content_tag :div, style: 'padding-top: 5px;' do %>
-                    <%= search_field_tag(:with_bib_like, placeholder: 'Bibliography', class: 'filterrific-periodically-observed form-control') %>
-                  <% end %>
-                </div>
-                  
-              </div>
-            </div>
-          </div>
-        </div>
         <%= content_tag :div, class: 'panel panel-default' do %>
           <div class="panel-heading" role="tab" id="AdminFilterHeading">
             <h4 class="panel-title">
@@ -135,16 +34,16 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <%= check_box_tag :with_published_records, '', params[:with_published_records] %>
+                    <%= check_box_tag :with_published_records, true, params[:with_published_records], onchange: "this.form.submit()" %>
                     <%= label_tag(:with_published_records, 'Published records only') %>
                   </div>
                   <div class="form-group">
-                    <%= check_box_tag :with_unshared_records, '', params[:with_unshared_records] %>
+                    <%= check_box_tag :with_unshared_records, true, params[:with_unshared_records], onchange: "this.form.submit()" %>
                     <%= label_tag(:with_unshared_records, 'Records not shared to anyone') %>
                   </div>
                   <div class="form-group">
                     <%= label_tag(:with_user_shared_to_like, 'Records shared to') %>
-                    <%= select_tag(:with_user_shared_to_like, options_from_collection_for_select(User.all, 'id', 'name', params[:with_user_shared_to_like]), include_blank: '- Any -', class: 'form-control') %>
+                    <%= select_tag(:with_user_shared_to_like, options_from_collection_for_select(User.all, 'id', 'name', params[:with_user_shared_to_like]), include_blank: '- Any -', class: 'form-control', onchange: "this.form.submit()") %>
                     <p class="text-muted">Results also include groups a user belongs to</p>
                   </div>
                 </div>
@@ -172,7 +71,7 @@
         <%= link_to fa_icon('plus', text: 'Artefact'), new_artefact_path, class: 'btn btn-success' if can?(:create, Artefact) %>
         <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
       <% end %>
-      <%= link_to fa_icon('map', text: 'Show Map'), mapview_artefacts_path, class: 'btn btn-default', remote: true, data: {toggle: "modal", target: '#mapviewModal'} %>
+      <%= link_to fa_icon('map', text: 'Show Map'), mapview_artefacts_path(params: params), class: 'btn btn-default', remote: true, data: {toggle: "modal", target: '#mapviewModal'} %>
       
     <% end %>
   </div>

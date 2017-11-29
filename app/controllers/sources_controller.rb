@@ -9,21 +9,22 @@ class SourcesController < ApplicationController
   # GET /sources.json
   def index
     sort_order = Source.sorted_by(params[:sorted_by].presence || 'ident_name_asc') if Source.any?
-    query = params[:search]
-    # .to_sym.presence || Source.all_jsonb_attributes+Source.column_names
-    # if params[:search]
-    #   query = params[:search].split(':').last.presence || params[:search]
-    #   fields = [params[:search].split(':').first]
-    # end
-    @visible_sources_ids = Source.visible_for(current_user).all.ids
-    @sources = Source
-      .search (query.presence || '*'), 
-        where: {id: @visible_sources_ids},
-        page: params[:page], 
-        per_page: session[:per_page], 
-        order: sort_order,
-        aggs: [:type]
-      
+    query = params[:search].presence || '*'
+
+    sources = Source
+      .visible_for(current_user)
+      .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+
+    @sources =
+        Source.search(query,
+          where: {id: sources.ids},
+          page: params[:page], 
+          per_page: session[:per_page], 
+          order: sort_order, 
+          misspellings: {below: 1}
+        ) do |body|
+          body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+        end
 
     respond_to do |format|
       format.html

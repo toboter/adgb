@@ -1,5 +1,6 @@
 class Artefact < ApplicationRecord
   searchkick
+  include Filterable
   extend FriendlyId
   require 'roo'
   include Nabu
@@ -7,6 +8,8 @@ class Artefact < ApplicationRecord
 
   friendly_id :bab_rel, use: :slugged
   before_save :set_code, :set_latitude, :set_longitude
+  # after_commit :reindex_descendants
+
 
   validates :bab_rel, presence: true
 
@@ -58,6 +61,7 @@ class Artefact < ApplicationRecord
   }
 
   scope :with_user_shared_to_like, lambda { |user_id|
+    return nil if user_id.blank?
     user = User.find(user_id)
     accessible_by_records(user)
   }
@@ -101,7 +105,24 @@ class Artefact < ApplicationRecord
       ['Museum desc', 'mus_desc']
     ]
   end
-  
+
+
+
+  # Indexing and search
+
+  def search_data
+    attributes.merge(
+      references: references.map{|r| r},
+      people: people.map{|p| p},
+      photos: photos.map{|p| p}
+    )
+  end
+
+  # def reindex_descendants
+  #   descendants.each do |subject|
+  #     subject.reindex
+  #   end
+  # end
 
   
   # KOD lookup
