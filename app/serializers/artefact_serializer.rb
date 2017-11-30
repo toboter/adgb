@@ -1,6 +1,7 @@
 class ArtefactSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   
+  attribute :id
   attributes :type, :bab_rel
   attributes :full_entry
   attributes :grabung, :bab, :bab_ind, :b_join, :b_korr
@@ -14,7 +15,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   
   
   def type
-    'Koldewey-Artefact'
+    'ExcavatedObject'
   end
 
   def links

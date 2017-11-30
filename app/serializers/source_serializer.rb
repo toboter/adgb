@@ -1,6 +1,7 @@
 class SourceSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
+  attribute :id
   attributes :type, :subtype
   attributes :identifier_stable, :identifier_temp, :type, :type_data, :remarks
   belongs_to :parent, serializer: SourceSerializer
@@ -8,7 +9,7 @@ class SourceSerializer < ActiveModel::Serializer
   attribute :full_entry
 
   def type
-    'Source'
+    'DocumentationObject'
   end
 
   def subtype
@@ -18,11 +19,11 @@ class SourceSerializer < ActiveModel::Serializer
   def links
     {
       self: api_source_url(object, host: Rails.application.secrets.host),
-      human: subject_url(object, host: Rails.application.secrets.host)
+      human: source_url(object, host: Rails.application.secrets.host)
     }
   end
 
   def full_entry
-    'tbd'
+    'undefined'
   end
 end

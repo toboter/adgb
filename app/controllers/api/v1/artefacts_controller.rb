@@ -5,15 +5,22 @@ class Api::V1::ArtefactsController < ActionController::API
   before_action :set_user
 
   def index
-    render json: Artefact.visible_for(@user)
+    artefacts = Artefact.visible_for(@user).paginate(page: params[:page], per_page: 30)
+    render json: artefacts, each_serializer: ArtefactSerializer
   end
 
   def show
-    render json: Artefact.visible_for(@user).find(params[:id]), serializer: ArtefactSerializer
+    artefact = Artefact.visible_for(@user).friendly.find(params[:id])
+    render json: artefact, serializer: ArtefactSerializer
   end
 
   def search
-    render json: Artefact.visible_for(@user).search(params[:q]), each_serializer: ArtefactSerializer
+    artefact_ids = Artefact.visible_for(@user).all.ids
+    results = Artefact.search(params[:q], 
+      where: {id: artefact_ids},
+      page: params[:page], 
+      per_page: 30)
+    render json: results, each_serializer: ArtefactSerializer
   end
 
   
