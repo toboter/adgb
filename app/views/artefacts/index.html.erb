@@ -71,7 +71,7 @@
         <%= link_to fa_icon('plus', text: 'Artefact'), new_artefact_path, class: 'btn btn-success' if can?(:create, Artefact) %>
         <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
       <% end %>
-      <%= link_to fa_icon('map', text: 'Show Map'), mapview_artefacts_path(params: params), class: 'btn btn-default', remote: true, data: {toggle: "modal", target: '#mapviewModal'} %>
+      <%= link_to fa_icon('map', text: 'Show Map'), mapview_artefacts_path(search: params[:search]), class: 'btn btn-default', remote: true, data: {toggle: "modal", target: '#mapviewModal'} %>
       
     <% end %>
   </div>

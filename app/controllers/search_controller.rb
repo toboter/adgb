@@ -27,8 +27,8 @@ class SearchController < ApplicationController
 
   def batch_multiple_searches(term, indices)
     indices.map do |index|
-      #index_ids = index.visible_for(current_user).ids
-      index.search(term, execute: false) #, where: {id: index_ids}
+      index_ids = index.visible_for(current_user).all.ids
+      index.search(term, execute: false, where: {id: index_ids})
     end
   end
 
