@@ -1,1 +1,37 @@
-<%= render @search_results %>
+<div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+  <div class="col-md-12">
+    <%= form_tag search_path, method: :get, class: "" do %>
+      <div class="input-group">
+        <span class="input-group-addon"><%= link_to fa_icon('search'), '' %></span>
+        <%= search_field_tag 'search', params[:search], placeholder: "Search", class: "form-control" %>
+      </div>
+    <% end %>
+    <small>
+      <%= pluralize(@results.total_count, 'result') %>
+      <%= pluralize(@results.took, 'millisecond') %>
+    </small>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <ul class="list-group">
+      <%= render @search_results %>
+    </ul>
+  </div>
+
+  <div class="col-md-5 col-md-offset-1">
+    <%= @photo_results %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div id="pagination-results">
+      <%= will_paginate @search_results, renderer: BootstrapPagination::Rails %>
+    </div>
+    <div style="margin-top: 20px; margin-bottom: 10px;">
+      <%= render 'shared/per_page' %>
+    </div>
+  </div>
+</div>

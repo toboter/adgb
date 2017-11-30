@@ -114,7 +114,8 @@ class Artefact < ApplicationRecord
     attributes.merge(
       references: references.map{|r| r},
       people: people.map{|p| p},
-      photos: photos.map{|p| p}
+      photos: photos.map{|p| p},
+      type: 'Artefakt'
     )
   end
 

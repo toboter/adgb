@@ -1,1 +1,4 @@
-<%= photo.name %>
+<li class="list-group-item">
+  <%= link_to photo.name, photo %><br>
+  <%= content_tag :small, photo.description %>  
+</li>

@@ -22,6 +22,10 @@ class Photo < Source
     jsonb_store_key_mapping_for_type_data.map{|j| j[0].to_sym}
   end
 
+  def search_data
+    attributes.merge(artefacts: artefacts.map{|a| a})
+  end
+
   def icon
     'image'
   end
