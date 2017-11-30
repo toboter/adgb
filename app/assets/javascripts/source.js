@@ -12,9 +12,6 @@ $(document).on('turbolinks:load', function(){
       if (!query.length) return callback();
       $.ajax({
         url: "/sources.json",
-//        beforeSend: function (xhr) {
-//          xhr.setRequestHeader('Authorization', 'Token mNx8PvEeGiDQGQAQk8UAvL9L');
-//        },
         data: { search: query},
         dataType: "json",
         type: 'GET',
@@ -28,7 +25,7 @@ $(document).on('turbolinks:load', function(){
     },
     render: {
       option: function(item, escape) {
-        return `<div>` + escape(item.identifier_stable) + `</div>`
+        return '<div>' + escape(item.identifier_stable) + '</div>'
       }
     }
   });
