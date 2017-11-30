@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/toboter/enki.git
-  revision: 9e4492614b4767f2a734f76efb8b394ae9226149
+  revision: 0d7619948b51e271c0c568df13f3635f13457bc3
   specs:
-    enki (0.1.7.beta)
+    enki (0.1.8.beta)
       rails
       shareable_models
 

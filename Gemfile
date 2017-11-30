@@ -76,7 +76,7 @@ gem 'gmaps4rails'
 gem 'marduk', git: 'https://github.com/toboter/marduk.git'
 
 # Record Sharing
-# gem 'enki', path: '/home/tschmidt/dev/babylon/gem_dev/enki'
+# gem 'enki', path: '/home/tschmidt/dev/gem_dev/enki'
 gem 'enki', git: 'https://github.com/toboter/enki.git'
 
 # Comments
