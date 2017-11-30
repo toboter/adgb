@@ -1,8 +1,8 @@
 <% title @photo.name_tree %>
 
 <% content_for(:buttons) do %>
-  <%= link_to fa_icon('edit', text: 'Edit'), edit_photo_path(@photo), class: 'btn btn-default btn-warning' if can?(:edit, @photo) %>
-  <%= link_to fa_icon('remove', text: 'Delete'), @photo, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' if can?(:destroy, @photo_import) %>
+  <%= link_to fa_icon('edit', text: 'Edit'), edit_photo_path(@photo), class: 'btn btn-default btn-warning text-strong' if can?(:edit, @photo) %>
+  <%= link_to fa_icon('remove', text: 'Delete'), @photo, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger text-strong' if can?(:destroy, @photo) %>
 <% end if can?(:edit, @photo) || can?(:destroy, @photo) %>
 
 <div class="row">

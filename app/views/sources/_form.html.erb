@@ -2,26 +2,37 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= @source.parent.inspect %>
-    <%= f.input :type, disabled: true %>
-    <%= f.input :parent_id, 
-      collection: Source.all-@source.descendants, 
-      label_method: :name_tree, 
-      value_method: :id,
-      selected: @source.parent_id,
-      include_blank: true %>
-
-    <%= f.input :identifier_stable %>
-    <%= f.input :identifier_temp %>
-
-    <% @source.class.jsonb_attributes.each do |p| %>
-      <%= f.input p %>
-    <% end %>
-
-    <%= f.input :remarks %>
+    <div class="row">
+      <div class="col-md-4">
+        <%= f.input :parent_id, collection: [@source.parent], input_html: {id: 'source_parent_id' }, selected: @source.parent_id, label: 'Nesting' %>
+        <%= f.input :identifier_stable %>
+      </div>
+      <div class="col-md-4">
+        <%= f.input :type, disabled: true, input_html: {style: 'margin-bottom:20px;'} %>
+        <%= f.input :identifier_temp %>
+      </div>
+      <div class="col-md-8">
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <% @source.class.jsonb_attributes.each do |p| %>
+          <%= f.input p %>
+        <% end %>
+        <hr>
+        <%= f.input :remarks %>
+      </div>
+    </div>
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <div class="row">
+      <div class="col-md-6">
+        <hr>
+        <%= f.submit class: 'btn btn-primary text-strong' %>
+        <%= link_to 'Cancel', (@source.new_record? ? sources_path : @source), class: "btn btn-default text-strong" %>
+      </div>
+    </div>
   </div>
 <% end %>

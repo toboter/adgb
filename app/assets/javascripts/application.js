@@ -13,7 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
-//= require select2-full
 //= require cocoon
 //= require toastr
 //= require bootstrap-markdown-bundle
@@ -21,6 +20,7 @@
 //= require gmaps/google
 //= require Chart.bundle
 //= require chartkick
+//= require selectize
 //= require turbolinks
 //= require_tree .
 

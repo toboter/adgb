@@ -5,7 +5,7 @@
       <%= content_tag :p, fa_icon('link')+' '+link_to(sti_source_url(source.type, source), sti_source_path(source.type, source)) %>
       <%= content_tag :p, fa_icon(source.icon)+' '+link_to(source.type, sti_source_path(source.type)) %>
 
-      <%= link_to(fa_icon("edit", text: 'Edit'), sti_source_path(source.type, source, :edit), class: 'btn btn-sm btn-warning pull-right', style: 'margin-top: 5px;') if can? :edit, source %>
+      <%= link_to(fa_icon("edit", text: 'Edit'), sti_source_path(source.type, source, :edit), class: 'btn btn-sm btn-warning text-strong pull-right', style: 'margin-top: 5px;') if can? :edit, source %>
       <%= content_tag :h3, link_to("#{source.name_tree}", sti_source_path(source.type, source)) %>
   
       <table class="table table-striped">

@@ -51,14 +51,12 @@ gem 'bootstrap-sass', '~> 3.3.6'
 gem 'jquery-turbolinks'
 gem 'simple_form'
 gem 'friendly_id'
-gem "select2-rails"     # https://select2.github.io/examples.html
+gem "selectize-rails"
 gem "font-awesome-rails"
 gem 'cocoon'
 gem 'will_paginate-bootstrap'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'roo'
-# gem 'search_cop'        # https://github.com/mrkamel/search_cop
-# gem 'filterrific'
 gem 'geoutm'
 gem 'rest-client'
 gem 'cancancan'

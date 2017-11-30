@@ -9,8 +9,6 @@
  * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
- *= require select2
- *= require select2-bootstrap
  *= require bootstrap-markdown
  */
 
@@ -18,6 +16,8 @@
 @import "bootstrap";
 @import "font-awesome";
 @import "toastr";
+@import 'selectize';
+@import 'selectize.bootstrap3';
 
 html {
   position: relative;
@@ -47,6 +47,10 @@ body {
 .col-centered{
     float: none;
     margin: 0 auto;
+}
+
+.text-strong {
+  font-weight: bold;
 }
 
 .artefact {

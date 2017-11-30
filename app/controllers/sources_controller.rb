@@ -28,6 +28,7 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.json { render json: @sources }
       format.js
     end
   end
