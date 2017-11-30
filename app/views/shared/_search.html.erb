@@ -1,6 +1,0 @@
-<%= form_tag artefacts_path, :method => 'get', class: "" do %>
-  <div class="input-group">
-    <span class="input-group-addon"><%= link_to fa_icon('search'), help_path(anchor: 'searching') %></span>
-    <%= search_field_tag 'filterrific[search]', '', placeholder: "Search", class: "form-control" %>
-  </div>
-<% end %>

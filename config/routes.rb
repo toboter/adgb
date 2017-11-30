@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   
   resources :photo_imports
   
+  
   resources :artefacts, concerns: :commentable do
     collection do
       put :add_multiple_accessors
@@ -47,7 +48,7 @@ Rails.application.routes.draw do
   end
   
   get '/api', to: 'home#api'
-  get '/help', to: 'home#help'
+  get '/search', to: 'search#index'
 
   root 'home#index' 
 end

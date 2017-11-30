@@ -9,7 +9,12 @@
 
 <div class="row" style="margin:60px 0;">
   <div class="col-md-9 col-centered">
-    <%= render "shared/search" %>
+    <%= form_tag search_path, method: :get, class: "" do %>
+      <div class="input-group">
+        <span class="input-group-addon"><%= link_to fa_icon('search'), '' %></span>
+        <%= search_field_tag 'search', '', placeholder: "Search", class: "form-control" %>
+      </div>
+    <% end %>
   </div>
 </div>
 
