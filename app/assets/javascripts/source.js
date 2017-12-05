@@ -12,7 +12,7 @@ $(document).on('turbolinks:load', function(){
       if (!query.length) return callback();
       $.ajax({
         url: "/sources.json",
-        data: { search: query},
+        data: { search: query },
         dataType: "json",
         type: 'GET',
         error: function(res){

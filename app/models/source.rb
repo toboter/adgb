@@ -87,13 +87,17 @@ class Source < ApplicationRecord
 
   def self.sorted_by(sort_option)
     direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
-    case sort_option.to_s
-    when /^ident_name_/
-      { slug: direction.to_sym }
-    when /^created_at_/
-      { created_at: direction.to_sym }
-    else
-      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
+    unless sort_option.nil?
+      case sort_option.to_s
+      when /^ident_name_/
+        { slug: direction.to_sym }
+      when /^created_at_/
+        { created_at: direction.to_sym }
+      when /^updated_at_/
+        { updated_at: direction }
+      else
+        raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
+      end
     end
   end
    
@@ -102,7 +106,9 @@ class Source < ApplicationRecord
       ['Ident (a-z)', 'ident_name_asc'],
       ['Ident (z-a)', 'ident_name_desc'],
       ['Created (newest first)', 'created_at_desc'],
-      ['Created (oldest first)', 'created_at_asc']
+      ['Created (oldest first)', 'created_at_asc'],
+      ['Updated asc', 'updated_at_asc'],
+      ['Updated desc', 'updated_at_desc']
     ]
   end
 

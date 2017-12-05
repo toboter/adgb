@@ -1,12 +1,12 @@
-class Api::V1::SourcesController < ActionController::API
-  require 'rest-client'
-  require 'json'
-
-  before_action :set_user
+class Api::V1::SourcesController < Api::V1::BaseController
 
   def index
-    sources = Source.visible_for(@user).paginate(page: params[:page], per_page: 30)
-    render json: sources, each_serializer: SourceSerializer
+    sort_order = Source.sorted_by(params[:sort].presence || 'updated_at_desc')
+    sources = Source.visible_for(@user).order(sort_order)
+    sources = sources.where("updated_at > ?", params[:since]) if params[:since]
+    sources = sources.paginate(page: params[:page][:number], per_page: params[:page][:size] || 30)
+
+    render json: sources, meta: pagination_dict(sources), each_serializer: SourceSerializer
   end
 
   def show
@@ -15,17 +15,20 @@ class Api::V1::SourcesController < ActionController::API
   end
   
   def search
+    query = params[:q]
+    sort_order = Source.sorted_by(params[:sort].presence || nil)
     source_ids = Source.visible_for(@user).all.ids
     results = Source.search(params[:q], 
       where: {id: source_ids},
-      page: params[:page], 
-      per_page: 30)
-    render json: results, each_serializer: SourceSerializer
+      page: params[:page][:number], 
+      per_page: params[:page][:size] || 30, 
+      order: sort_order, 
+      misspellings: false
+    ) do |body|
+      body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+    end
+    render json: results, meta: pagination_dict(results), each_serializer: SourceSerializer
+
   end
 
-  private
-  def set_user
-    token = request.headers['Authorization'] ? request.headers['Authorization'].split(' ').last : params[:access_token]
-    @user = token.present? ? User.find_by_token(token) : nil
-  end
 end

@@ -1,16 +1,18 @@
 class SourceSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
+  type 'DocumentationObject'
 
-  attribute :id
-  attributes :type, :subtype
-  attributes :identifier_stable, :identifier_temp, :type, :type_data, :remarks
-  belongs_to :parent, serializer: SourceSerializer
+  attributes :id, :subtype, :identifier_stable, :identifier_temp, :published?
+  attribute :creator do 
+    {
+      id: object.record_creator.id,
+      name: object.record_creator.name,
+      url: 'babili profile url'
+    }
+  end 
+  attributes :type_data, :remarks
   attributes :links
   attribute :full_entry
-
-  def type
-    'DocumentationObject'
-  end
 
   def subtype
     object.type
@@ -18,10 +20,13 @@ class SourceSerializer < ActiveModel::Serializer
 
   def links
     {
-      self: api_source_url(object, host: Rails.application.secrets.host),
-      human: source_url(object, host: Rails.application.secrets.host)
+      self: api_source_url(object),
+      html_url: source_url(object),
+      parent_url: api_source_url(object.parent)
     }
   end
+
+  attribute(:accessor_uids) { object.record_accessors.map(&:uid)}
 
   def full_entry
     'undefined'
