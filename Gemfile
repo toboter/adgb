@@ -66,14 +66,11 @@ gem "jsonb_accessor", "~> 1.0.0"
 gem 'searchkick' 
 gem 'closure_tree'
 gem "chartkick"
+gem 'omniauth-oauth2'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
 gem 'gmaps4rails'
-
-# Auth & Babili
-# gem 'marduk', path: '/home/tschmidt/dev/gem_dev/marduk'
-gem 'marduk', git: 'https://github.com/toboter/marduk.git'
 
 # Record Sharing
 # gem 'enki', path: '/home/tschmidt/dev/gem_dev/enki'

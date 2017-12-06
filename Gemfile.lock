@@ -7,17 +7,6 @@ GIT
       shareable_models
 
 GIT
-  remote: https://github.com/toboter/marduk.git
-  revision: 10a36b1bbc9a0546363070f63eb79c4ceee9c2f6
-  specs:
-    marduk (0.2.1.beta)
-      active_model_serializers (~> 0.10.0)
-      omniauth-oauth2
-      rails
-      rest-client
-      simple_form
-
-GIT
   remote: https://github.com/toboter/nabu.git
   revision: 782c2b5e5cc65e8c94c760a90f84db105e9f26d2
   specs:
@@ -319,8 +308,8 @@ DEPENDENCIES
   jquery-turbolinks
   jsonb_accessor (~> 1.0.0)
   listen (~> 3.0.5)
-  marduk!
   nabu!
+  omniauth-oauth2
   pg (~> 0.18)
   puma (~> 3.10)
   rails (~> 5.1.4)

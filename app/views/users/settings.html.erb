@@ -1,0 +1,76 @@
+<% title "You are logged in as #{current_user.name}", false %>
+
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <%= content_tag :strong, "You are logged in as #{current_user.name}" %>
+      </div>
+      <div class="panel-body">
+        <p>
+          Personal API Access Token for this application is: <strong><%= current_user.token %></strong>
+        </p>
+        <div id="current-user-app-accessibilities" style="margin-top:30px">
+          <%= content_tag :h5, "Current accessibilities are:" %>
+          <ul>
+            <%= content_tag :li, 'manage everything' if current_user.is_admin? %>
+            <%= content_tag :li, 'create records' if current_user.is_creator? %>
+            <%= content_tag :li, 'read published records or records shared with you' if current_user %>
+            <%= content_tag :li, "read records shared with your groups: #{content_tag :strong, current_user.group_list}".html_safe if current_user.groups.any? %>
+            <%= content_tag :li, 'update records where edit accessibilities have been assigned to you or your groups' if current_user %>
+            <%= content_tag :li, 'remove records which you have created or you have update abilities' if current_user %>
+            <%= content_tag :li, 'comment on records' if current_user.app_commentator %>
+            <%= content_tag :li, 'publish records' if current_user.is_publisher? %>
+          </ul>
+        </div>
+        <div id ="current-user-search-accessibilities" style="margin-top:30px">
+          <%= content_tag :h5, "Connected repositories:" %>
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <td>Name</td>
+                <td>Search-URL</td>
+                <td>Owner</td>
+                <td>Connectivity provider</td>
+            </thead>
+            <tbody>
+              <% for app in current_user_repos do %>
+                <%= content_tag :tr do %>
+                  <%= content_tag :td, link_to(content_tag(:strong, app.name), "#{app.host}#{':'+app.port.to_s if app.port}", target: :blank) %>
+                  <%= content_tag :td, app.url %>
+                  <%= content_tag :td, link_to(app.owner.display_name, '') %>
+                  <%= content_tag :td, link_to("Babili", app.provider_presentation_human) %>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-muted">
+          Personal access token for Babili is: <strong><%= @access_token.token %></strong>
+        </p>
+      </div>
+
+      <div class="panel-footer">
+        <%= link_to fa_icon('caret-square-o-up', text: 'Recreate application token and send to babili'), add_token_to_babili_users_path, class: 'btn btn-xs btn-warning' %>
+        <%= link_to fa_icon('caret-square-o-down', text: 'Renew your accessibilities through babili'), get_accessibilities_users_path, class: 'btn btn-xs btn-info' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-7">
+    <div class="panel panel-default text-muted">
+      <div class="panel-heading">
+        <%= content_tag :strong, "Your notification settings" %>
+      </div>
+      <div class="panel-body">
+        todo
+      </div>
+
+    </div>
+  </div>
+</div>

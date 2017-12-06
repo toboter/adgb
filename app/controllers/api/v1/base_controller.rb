@@ -2,7 +2,7 @@ class Api::V1::BaseController < ActionController::API
   require 'rest-client'
   require 'json'
 
-  before_action :set_user
+  before_action :set_token, :set_user
 
 
   def pagination_dict(collection)
@@ -15,10 +15,23 @@ class Api::V1::BaseController < ActionController::API
     }
   end
 
+  def oauth_client
+    @oauth_client ||= OAuth2::Client.new(Rails.application.secrets.client_id, 
+      Rails.application.secrets.client_secret, 
+      site: Rails.application.secrets.provider_site)
+  end
+  
+  def access_token
+    @access_token ||= OAuth2::AccessToken.new(oauth_client, @token) if @token
+  end
+
   private
+  def set_token
+    @token = request.headers['Authorization'] ? request.headers['Authorization'].split(' ').last : params[:access_token]
+  end
+
   def set_user
-    token = request.headers['Authorization'] ? request.headers['Authorization'].split(' ').last : params[:access_token]
-    @user = User.find_by_token(token)
+    @user = User.find_by_token(@token)
   end
 
 end
