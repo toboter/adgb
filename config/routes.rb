@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   resources :letters, controller: 'sources', type: 'Letter', concerns: :commentable
   resources :contracts, controller: 'sources', type: 'Contract', concerns: :commentable
   resources :photos, controller: 'sources', type: 'Photo', concerns: :commentable, except: :show
-  resources :photos, concerns: :commentable, only: :show
+  resources :photos, controller: 'photos', concerns: :commentable, only: :show
   
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1 do
