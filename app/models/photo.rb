@@ -23,7 +23,10 @@ class Photo < Source
   end
 
   def search_data
-    attributes.merge(artefacts: artefacts.map{|a| a})
+    attributes.merge(
+      artefacts: artefacts.map{|a| a},
+      ancestors: ancestors.map{|a| a},
+      full_id: self_and_ancestors.reverse.map{ |t| t.name })
   end
 
   def icon

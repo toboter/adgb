@@ -2,6 +2,7 @@
   <div class="panel-body">
     <% if photo.present? %>
       <%= content_tag :p, fa_icon('link')+' '+link_to(photo_url(photo), photo_url(photo)) %>
+      <%= content_tag :p, fa_icon(photo.icon)+' '+link_to(photo.type, sti_source_path(photo.type)) %>
 
       <%= link_to(fa_icon("edit", text: 'Edit'), edit_photo_path(photo), class: 'btn btn-sm btn-warning text-strong pull-right', style: 'margin-top: 5px;') if can? :edit, photo %>
       <%= content_tag :h3, link_to("#{photo.name_tree}", photo_path(photo)) %>

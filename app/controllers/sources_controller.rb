@@ -16,7 +16,7 @@ class SourcesController < ApplicationController
       .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
     @sources =
-        Source.search(query,
+        type_class.search(query,
           where: {id: sources.ids},
           page: params[:page], 
           per_page: session[:per_page], 
@@ -37,6 +37,11 @@ class SourcesController < ApplicationController
   # GET /sources/1.json
   def show
 
+    respond_to do |format|
+      format.html
+      format.json { render json: @source, serializer: SourceSerializer }
+      format.js
+    end
   end
 
   # GET /sources/new

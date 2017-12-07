@@ -19,6 +19,13 @@ class PhotosController < ApplicationController
 
     # Artefact.visible_for(current_user).map{ |a| a.illustrations }  where.not?
     @occurences = @photo.occurences.where(artefact: Artefact.visible_for(current_user).all).order(position: :asc)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @photo, serializer: SourceSerializer }
+      format.js
+    end
+
   end
 
 end
