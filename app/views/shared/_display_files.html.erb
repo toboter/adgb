@@ -23,5 +23,11 @@
     <% end %>
   <% end %>
 <% else %>
-  no files for <%= parent.name %> found in <%= Rails.application.secrets.media_host %>
+  <%= content_tag :div, class: 'row' do %>
+    <%= content_tag :div, class: 'col-md-6' do %>
+      <%= content_tag :div, class: 'thumbnail', style: 'height:100px;' do %>
+        <p><small>no files for <%= parent.name %> found in <%= Rails.application.secrets.media_host %></small></p>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>

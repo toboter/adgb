@@ -6,6 +6,18 @@
 <% end if can?(:edit, @photo) || can?(:destroy, @photo) %>
 
 <div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <%= content_tag :li, link_to('All sources', sources_path) %>      
+      <% @photo.ancestors.reverse.each do |e| %>
+        <%= content_tag :li, link_to(e.name, e) %>
+      <% end %>
+      <%= content_tag :li, @photo.name, class: 'active' %>
+    </ol>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-md-6">
     <%= render partial: 'shared/display_files', locals: {files: @files, parent: @photo, size: 'size_640'} %>
   </div>

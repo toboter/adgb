@@ -1,15 +1,24 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <% if photo %>
+    <% if photo.present? %>
       <%= content_tag :p, fa_icon('link')+' '+link_to(photo_url(photo), photo_url(photo)) %>
 
       <%= link_to(fa_icon("edit", text: 'Edit'), edit_photo_path(photo), class: 'btn btn-sm btn-warning text-strong pull-right', style: 'margin-top: 5px;') if can? :edit, photo %>
       <%= content_tag :h3, link_to("#{photo.name_tree}", photo_path(photo)) %>
       
       <%= render partial: 'shared/display_files', locals: {files: (@files.present? ? (@files.map{ |f| f if f['type'] == 'Image' }.compact.take(1)) : @files), parent: photo, size: 'size_320'} %>
-      <p class="text-muted">
-        <%= photo.description %>
-      </p>
+      
+      <table class="table table-striped">
+        <tbody>
+          <% photo.type_data.each do |k,v|%>
+            <%= content_tag :tr do %>
+              <th><%= k.humanize %>:</th>
+              <td><%= link_to v, sources_path(search: v) %></td>
+            <% end if v.present? %>
+          <% end if photo.type_data %>
+
+        </tbody>
+      </table>
       <%= content_tag :span, link_to("#{fa_icon('file')} #{@files.length-1} more files".html_safe, photo), class: 'pull-right' if @files.present? %>
     <% end %>
   </div>

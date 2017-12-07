@@ -1,2 +1,2 @@
 $('#show-target').empty();
-$('#show-target').append('<%= j render(partial: 'sources/show', locals: {source: @source}) %>');
+$('#show-target').append('<%= j render(partial: "#{@source.class.name.downcase.pluralize}/show", locals: {@source.class.name.downcase.to_sym => @source}) %>');

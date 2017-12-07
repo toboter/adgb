@@ -15,7 +15,6 @@ class Source < ApplicationRecord
   validates :identifier_stable, uniqueness: { scope: :type }
 
 
-
   # virtual attributes
 
   def self.types
@@ -46,7 +45,9 @@ class Source < ApplicationRecord
   # Indexing and search
 
   def search_data
-    attributes.merge(ancestors: ancestors.map{|a| a})
+    attributes.merge(
+      ancestors: ancestors.map{|a| a},
+      full_id: self_and_ancestors.reverse.map{ |t| t.name })
   end
 
   def reindex_descendants

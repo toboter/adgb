@@ -4,5 +4,5 @@ $("#pagination-results").remove();
 $("#_results").html("<%= js %>");
 $("#page-result-info").html("<%= escape_javascript(page_entries_info @sources, model: 'Source') %>");
 $('#show-target').empty();
-$('#show-target').append('<%= j render(partial: 'sources/show', locals: {source: @sources.first}) %>');
+$('#show-target').append('<%= j render(partial: "#{@sources.first.class.name.downcase.pluralize}/show", locals: {@sources.first.class.name.downcase.to_sym => @sources.first}) %>');
 $(window.location.replace("<%= sources_path(search: params[:search]) %>"));

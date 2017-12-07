@@ -10,10 +10,10 @@ class SearchController < ApplicationController
       execute: false, where: {id: source_ids})
     artefacts = Artefact.search(query, 
       execute: false, where: {id: artefact_ids})
-
+      
     @results = Searchkick.search(query, 
       index_name: [Source, Artefact],
-      where: { _or: [{ _type: ['source', 'photo', 'letter'], id: source_ids }, { _type: 'artefact', id: artefact_ids }]},
+      where: { _or: [{ _type: Source.types.map!{|c| c.downcase.strip}, id: source_ids }, { _type: 'artefact', id: artefact_ids }]},
       misspellings: {below: 1}
       ) do |body|
         body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }

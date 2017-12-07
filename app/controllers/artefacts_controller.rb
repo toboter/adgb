@@ -10,7 +10,7 @@ class ArtefactsController < ApplicationController
   # GET /artefacts
   # GET /artefacts.json
   def index
-    sort_order = Artefact.sorted_by(params[:sorted_by].presence || 'bab_asc') if Artefact.any?
+    sort_order = Artefact.sorted_by(params[:sorted_by].presence || nil) if Artefact.any?
     query = params[:search].presence || '*'
     
     artefacts = Artefact

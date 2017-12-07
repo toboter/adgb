@@ -1,4 +1,6 @@
 class Artefact < ApplicationRecord
+  # https://github.com/ankane/searchkick/issues/642
+  # showing more than 10000 results on index
   searchkick
   include Filterable
   extend FriendlyId
@@ -135,7 +137,7 @@ class Artefact < ApplicationRecord
   # KOD lookup
 
   KOD_MATERIAL = {
-    "A" => "Asphalt", 
+    "A" => "Asphalt",
     "B" => "Bestattung(sbeigabe)",
     "G" => "Glas",
     "H" => "Holz",
@@ -146,18 +148,17 @@ class Artefact < ApplicationRecord
     "T" => "Ton",
     "W" => "Wandputz/Estrich",
     "X" => "Probe",
-    "Z" => "Ziegel",
     "-" => "unbestimmt",
-    "?" => "unbestimmt",
+    "?" => "unbestimmt"
   }
 
-  KOD_ART = {
+  KOD_GRUPPE = {
     "A" => "Altar",
     "B" => "Bulle/Gefäßverschluss",
     "C" => "Glocke",
     "D" => "Brenndreieck",
     "E" => "Gewicht",
-    "F" => "Figur/Figürliches",
+    "F" => "Figur/Fibel",
     "G" => "Gefäß",
     "J" => "Schmuck/Perle(n)",
     "K" => "Knopf/Knauf",
@@ -165,20 +166,30 @@ class Artefact < ApplicationRecord
     "M" => "Münze",
     "O" => "Ring/Reif",
     "P" => "Platte",
+    "R" => "Zylinder",
     "S" => "Siegel",
     "T" => "Tafel",
     "W" => "Wirtel",
-    "Z" => "Zylinder",
-    # "G" => "(glasiert)",
-    "H" => "(Dach, hellenistisch)",
-    "Q" => "(Kunststein)",
-    "R" => "(reliefiert)",
-    "?" => "unbestimmt",
+    "Z" => "Ziegel",
+    "-" => "unbestimmt",
     nil => "unbestimmt"
   }
 
+  KOD_BEARBEITUNG = {
+    "G" => "glasiert",
+    "H" => "Dach/Hegemon",
+    "R" => "reliefiert",
+    nil => nil
+  } 
+ 
   def kod_to_values
-    kod.present? ? (kod.split(' ').map{ |key| [Artefact::KOD_MATERIAL[key[0]], Artefact::KOD_ART[key[1]]] }.join(', ')) : 'unbestimmt'
+    if kod.present? 
+      kod.split(' ')
+        .map{ |key| [Artefact::KOD_MATERIAL[key[0]], Artefact::KOD_GRUPPE[key[1]], Artefact::KOD_BEARBEITUNG[key[2]]].compact }
+        .join(', ')
+    else
+      'unbestimmt'
+    end
   end
 
   def set_code
@@ -245,3 +256,49 @@ class Artefact < ApplicationRecord
 
 
 end
+
+
+
+
+  # nicht mehr aktuell seit 2017-12-06
+  # KOD_MATERIAL = {
+  #   "A" => "Asphalt", 
+  #   "B" => "Bestattung(sbeigabe)",
+  #   "G" => "Glas",
+  #   "H" => "Holz",
+  #   "K" => "Knochen/Muschel",
+  #   "M" => "Metall",
+  #   "Q" => "Quarzkeramik",
+  #   "S" => "Stein",
+  #   "T" => "Ton",
+  #   "W" => "Wandputz/Estrich",
+  #   "X" => "Probe",
+  #   "Z" => "Ziegel",
+  #   "-" => "unbestimmt",
+  #   "?" => "unbestimmt",
+  # }
+  #  KOD_ART = {
+  #   "A" => "Altar",
+  #   "B" => "Bulle/Gefäßverschluss",
+  #   "C" => "Glocke",
+  #   "D" => "Brenndreieck",
+  #   "E" => "Gewicht",
+  #   "F" => "Figur/Figürliches",
+  #   "G" => "Gefäß",
+  #   "J" => "Schmuck/Perle(n)",
+  #   "K" => "Knopf/Knauf",
+  #   "L" => "Lampe",
+  #   "M" => "Münze",
+  #   "O" => "Ring/Reif",
+  #   "P" => "Platte",
+  #   "S" => "Siegel",
+  #   "T" => "Tafel",
+  #   "W" => "Wirtel",
+  #   "Z" => "Zylinder",
+  #   # "G" => "(glasiert)",
+  #   "H" => "(Dach, hellenistisch)",
+  #   "Q" => "(Kunststein)",
+  #   "R" => "(reliefiert)",
+  #   "?" => "unbestimmt",
+  #   nil => "unbestimmt"
+  # }

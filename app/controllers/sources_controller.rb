@@ -8,7 +8,7 @@ class SourcesController < ApplicationController
   # GET /sources
   # GET /sources.json
   def index
-    sort_order = Source.sorted_by(params[:sorted_by].presence || !params[:search].present? ? 'ident_name_asc' : nil ) if Source.any?
+    sort_order = Source.sorted_by(params[:sorted_by].presence || nil ) if Source.any?
     query = params[:search].presence || '*'
 
     sources = Source
