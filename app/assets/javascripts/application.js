@@ -37,4 +37,5 @@ $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip()
     });
 
+    $('.flex-images').flexImages({rowHeight: 200});
 });

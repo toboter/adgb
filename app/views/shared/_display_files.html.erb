@@ -1,18 +1,13 @@
 <% if files.present? %>
-  <%= content_tag :div, class: ('row' if size == 'thumb_160') do %>
+  <%= content_tag :div, class: 'row' do %>
     <% for file in files do %>
-      <%= content_tag :div, class: ('col-md-6' if size == 'thumb_160') do %>
+      <%= content_tag :div, class: 'col-md-6' do %>
         <%= content_tag :div, class: 'thumbnail', id: "file-#{file['oid']}" do %>
           <%= image_tag "#{file['files'][size]['url']}&access_token=#{@commons.user_access_token}", style: 'width:100%;', id: "file-#{file['oid']}-#{file['type'].underscore}" if file['type'] == 'Image' %>
           <%= content_tag :div, class: 'caption', id: "file-#{file['oid']}-caption" do %>
             <%= content_tag :h4 do %>
               <%= file['name'] if file['name'] %>
               <%= link_to fa_icon('external-link 1x'), file['links']['human'], target: :_blank, class: 'pull-right btn btn-sm btn-default' %>
-            <% end %>
-            <%= content_tag :p do %>
-              <% file['tags'].split(',').each do |t| %>
-                <span class="label label-default"><%= t %></span>
-              <% end if file['tags'] %>
             <% end %>
             <%= content_tag :p, class: 'small' do %>
               &copy; <%= file['file_copyright'] %> <%= file['file_copyright_details'] %>

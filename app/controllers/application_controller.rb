@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   before_action :check_token!
   before_action :init_session_per_page
+  before_action :set_paper_trail_whodunnit
 
   around_action :set_current_user
 

@@ -2,6 +2,12 @@ class Artefact < ApplicationRecord
   # https://github.com/ankane/searchkick/issues/642
   # showing more than 10000 results on index
   searchkick
+  has_paper_trail ignore: [:slug, :latitude, :longitude, :locked], 
+    meta: {
+      version_name: :name, 
+      changed_characters_length: :changed_characters,
+      total_characters_length: :total_characters
+    }
   include Filterable
   extend FriendlyId
   require 'roo'
@@ -12,6 +18,27 @@ class Artefact < ApplicationRecord
   before_save :set_code, :set_latitude, :set_longitude
   # after_commit :reindex_descendants
 
+
+  def changed_characters
+    total = 0
+    self.changes.each do |k,v|
+      unless k.in?(['id', 'slug', 'latitude', 'longitude', 'locked', 'created_at', 'updated_at'])
+        ocl = v[0].to_s.length
+        ncl = v[1].to_s.length
+        changes = ocl > ncl ? ocl - ncl : ncl - ocl
+        total = total + changes
+      end
+    end
+    return total
+  end
+
+  def total_characters
+    total = 0
+    self.attributes.each do |k,v|
+      total = total + v.to_s.length unless k.in?(['id', 'slug', 'latitude', 'longitude', 'locked', 'created_at', 'updated_at'])
+    end
+    return total
+  end
 
   validates :bab_rel, presence: true
 

@@ -1,113 +1,112 @@
-<div id="_results">
-  <div class="collapse" id="record-access-settings">
-    <%= share_multiple_with(Artefact) if can?(:create, Artefact) || can_create? %>
-  </div>
-
-  <% for artefact in @artefacts do %>
-    <div class="artefact" id="artefact-<%= artefact.id %>">
-      <div class="row bordered">
-        <div class="col-md-6">
-          <%= content_tag :div, id: "excavation-#{artefact.id}" do %>
-            <%= content_tag :strong, 'Grabungsnummer: ' %>
-            <%= linebreak_before_and_show_if_exists(artefact.bab_name, false) %>
-            <%= linebreak_before_and_show_if_exists(artefact.b_join) %>
-            <%= linebreak_before_and_show_if_exists(artefact.b_korr) %>
-          <% end if artefact.bab_name.present? %>
-          <%= content_tag :div, id: "museum-#{artefact.id}" do %>
-            <%= content_tag :strong, 'Museumsnummer: ' %>
-            <%= linebreak_before_and_show_if_exists(artefact.mus_name, false) %>
-            <%= linebreak_before_and_show_if_exists(artefact.m_join) %>
-            <%= linebreak_before_and_show_if_exists(artefact.m_korr) %>
-          <% end if artefact.mus_name.present? %>
-
-          <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
-            <strong><em>Photos</em></strong>
-            <%= link_to fa_icon('info'), 'javascript:;',
-                  class: 'label label-info', 
-                  data: {toggle: 'tooltip', placement: 'top'}, 
-                  title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
-            <br>
-            <%= artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
-          <% end if artefact.illustrations.any? %>
-          
-          <%= content_tag :div, id: "description-#{artefact.id}", style: 'padding-top: 5px;' do %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.f_obj, 'Fundobj: '), false) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abkl./Zeich.: ')) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.abguss, 'Gipsabguß: ')) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.code, 'Full code: ')) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.kod, 'Code: ')) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.grab, 'Grab: '), false) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.text, 'Text: '), false) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.sig, 'Bild: '), false) %>
-            <%= content_tag :span do %>
-            <br>
-              <strong>Maße: </strong>
-              <%= linebreak_before_and_show_if_exists(artefact.mas1, false) %><%= ';' if artefact.mas2 || artefact.mas3 %>
-              <%= linebreak_before_and_show_if_exists(artefact.mas2, false) %><%= ';' if artefact.mas3 %>
-              <%= linebreak_before_and_show_if_exists(artefact.mas3, false) %>         
-            <% end if artefact.mas1.present? || artefact.mas2.present? || artefact.mas3.present? %>
-          <% end %>
-
-          <%= content_tag :div, id: "text-description-#{artefact.id}", style: 'padding-top: 5px;' do %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.period, 'Periode: '), false) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.arkiv, 'Archiv: ')) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.text_in_archiv, ': '), false) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.inhalt, 'Inhalt: ')) %>
-            <%= content_tag :span do %>
-              <strong>Personen: </strong>
-              <%= artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') %>
-            <% end  if artefact.people.any? %>
-            <%= content_tag :strong, '<br>Datum: '.html_safe if artefact.jahr.present? || artefact.datum.present? %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.jahr, ''), false) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.datum, "#{', ' if artefact.jahr.present?}"), false) %>
-            
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil2, 'Zeil2: ')) %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil1, 'Zeil1: ')) %>
-          <% end %>
-        </div>
-
-        <div class="col-md-6">
-          <%= content_tag :div, id: "fundort-#{artefact.id}" do %>
-            <strong><em>Fundort</em></strong>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.fo_tell, 'Tell: ')) %>
-            <%= content_tag :span do %>
-              <%= linebreak_before_and_show_if_exists(artefact.fo1, false) %>
-              <%= linebreak_before_and_show_if_exists(artefact.fo2, false) %>
-              <%= linebreak_before_and_show_if_exists(artefact.fo3, false) %>
-              <%= linebreak_before_and_show_if_exists(artefact.fo4, false) %>
-            <% end if artefact.fo1.present? || artefact.fo2.present? || artefact.fo3.present? || artefact.fo4.present? %>
-            <%= linebreak_before_and_show_if_exists(with_description(artefact.fo_text, ''), false) %>
-            <%= content_tag :div do %>
-              <strong>Ausgrabungsdatum: </strong>
-              <%= linebreak_before_and_show_if_exists(artefact.gr_datum, false) %>
-              <%= linebreak_before_and_show_if_exists(artefact.gr_jahr, false) %>
-            <% end if artefact.gr_datum || artefact.gr_jahr %>
-            <%= content_tag :p do %>
-              <strong>UTM E </strong>
-              <%= artefact.utmx %> (<%= artefact.utmxx %>) 
-              <strong>N </strong>
-              <%= artefact.utmy %> (<%= artefact.utmyy %>)
-              <small>
-                <%= link_to fa_icon('external-link', text: 'gmaps'), "http://maps.google.com/maps?t=k&q=loc:#{artefact.latitude}+#{artefact.longitude}", target: :_blank %>
-              </small>
-            <% end if artefact.utm? %>
-          <% end %>
-        </div>
-         
-        <div class="col-md-12">
-          <%= content_tag :div, id: "biblio-#{artefact.id}", style: 'padding-top: 5px;' do %>
-            <strong>Bibliographie: </strong>
-            <%= artefact.references.map{ |r| r.title }.join('; ') %>
-          <% end if artefact.references.any? %>
-          
-          <%= content_tag :div, style: 'padding-top: 10px;' do %>
-            <%= link_to fa_icon('eye', text: 'ansehen'), artefact  %>
-            <span class="badge pull-right"></span>
-          <% end %>
-        </div>
-      </div>
+<div id="_results" class="row artefacts-list">
+  <div class="col-md-12">
+    <div class="collapse" id="record-access-settings">
+      <%= share_multiple_with(Artefact) if can?(:create, Artefact) || can_create? %>
     </div>
-  <% end %>
+
+    <ul class="list-group">
+    <% @artefacts.each do |artefact| %>
+      <li class="list-group-item artefact" id="artefact-<%= artefact.id %>">
+        <div class="row">
+          <div class="col-md-3">
+            <%= content_tag :div, id: "excavation-#{artefact.id}" do %>
+              <%= link_to linebreak_before_and_show_if_exists(artefact.bab_name, false), artefact, class: 'text-strong', title: 'Grabungsnummer', data: {toggle: 'tooltip', placement: 'right'} %>
+              <%= linebreak_before_and_show_if_exists(artefact.b_join) %>
+              <%= linebreak_before_and_show_if_exists(artefact.b_korr) %>
+            <% end if artefact.bab_name.present? %>
+            <%= content_tag :div, id: "museum-#{artefact.id}" do %>
+              <%= link_to linebreak_before_and_show_if_exists(artefact.mus_name, false), artefact, class: 'text-strong', title: 'Museumsnummer', data: {toggle: 'tooltip', placement: 'right'} %>
+              <%= linebreak_before_and_show_if_exists(artefact.m_join) %>
+              <%= linebreak_before_and_show_if_exists(artefact.m_korr) %>
+            <% end if artefact.mus_name.present? %>
+
+            <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
+              <span class="text-strong text-gray">Photos</span>
+              <%= link_to fa_icon('info'), 'javascript:;',
+                    class: 'label label-info', 
+                    data: {toggle: 'tooltip', placement: 'top'}, 
+                    title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+              <br>
+              <%= artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
+            <% end if artefact.illustrations.any? %>
+          </div>
+          <div class="col-md-3">
+            <%= content_tag :div, id: "description-#{artefact.id}", style: 'padding-top: 5px;' do %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.f_obj, 'Fundobj: '), false) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abkl./Zeich.: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.abguss, 'Gipsabguß: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.code, 'Code: ')) %>
+              [<%= linebreak_before_and_show_if_exists(artefact.kod, false) %>]
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.grab, 'Grab: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.text, 'Text: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.sig, 'Bild: ')) %>
+              <%= content_tag :span do %>
+              <br>
+                <strong>Maße: </strong>
+                <%= linebreak_before_and_show_if_exists(artefact.mas1, false) %><%= ';' if artefact.mas2 || artefact.mas3 %>
+                <%= linebreak_before_and_show_if_exists(artefact.mas2, false) %><%= ';' if artefact.mas3 %>
+                <%= linebreak_before_and_show_if_exists(artefact.mas3, false) %>         
+              <% end if artefact.mas1.present? || artefact.mas2.present? || artefact.mas3.present? %>
+            <% end %>
+          </div>
+          <div class="col-md-3">
+            <%= content_tag :div, id: "text-description-#{artefact.id}", style: 'padding-top: 5px;' do %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.period, 'Periode: '), false) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.arkiv, 'Archiv: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.text_in_archiv, ': '), false) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.inhalt, 'Inhalt: ')) %>
+              <%= content_tag :span do %>
+                <strong>Personen: </strong>
+                <%= artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') %>
+              <% end  if artefact.people.any? %>
+              <%= content_tag :strong, '<br>Datum: '.html_safe if artefact.jahr.present? || artefact.datum.present? %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.jahr, ''), false) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.datum, "#{', ' if artefact.jahr.present?}"), false) %>
+              
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil2, 'Zeil2: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil1, 'Zeil1: ')) %>
+            <% end %>
+          </div>
+
+          <div class="col-md-3">
+            <%= content_tag :div, id: "fundort-#{artefact.id}" do %>
+              <strong>Fundort</strong>
+              <%= linebreak_before_and_show_if_exists(artefact.fo_tell, false) %>
+              <%= content_tag :span do %>
+                <%= linebreak_before_and_show_if_exists(artefact.fo1, false) %>
+                <%= linebreak_before_and_show_if_exists(artefact.fo2, false) %>
+                <%= linebreak_before_and_show_if_exists(artefact.fo3, false) %>
+                <%= linebreak_before_and_show_if_exists(artefact.fo4, false) %>
+              <% end if artefact.fo1.present? || artefact.fo2.present? || artefact.fo3.present? || artefact.fo4.present? %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.fo_text, ''), false) %>
+              <%= content_tag :div do %>
+                <strong>Ausgrabungsdatum: </strong>
+                <%= linebreak_before_and_show_if_exists(artefact.gr_datum, false) %>
+                <%= linebreak_before_and_show_if_exists(artefact.gr_jahr, false) %>
+              <% end if artefact.gr_datum || artefact.gr_jahr %>
+              <%= content_tag :p do %>
+                <strong>UTM E </strong>
+                <%= artefact.utmx %> (<%= artefact.utmxx %>) 
+                <strong>N </strong>
+                <%= artefact.utmy %> (<%= artefact.utmyy %>)<br>
+                <small>
+                  <%= link_to fa_icon('external-link', text: 'Google Maps'), "http://maps.google.com/maps?t=k&q=loc:#{artefact.latitude}+#{artefact.longitude}", target: :_blank %>
+                </small>
+              <% end if artefact.utm? %>
+            <% end %>
+          </div>
+          
+          <div class="col-md-12">
+            <%= content_tag :div, id: "biblio-#{artefact.id}", style: 'padding-top: 5px;' do %>
+              <span class="text-strong text-gray">Bibliographie: </span>
+              <%= artefact.references.map{ |r| r.title }.join('; ') %>
+            <% end if artefact.references.any? %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+    </ul>
+  </div>
 </div>
 
 <div id="init-pagination">

@@ -4,7 +4,6 @@ module ApplicationHelper
     @show_header = show_header
   end
 
-
   def can_create?
     current_user && (current_user.app_creator || current_user.app_admin)
   end

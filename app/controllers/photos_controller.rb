@@ -22,7 +22,6 @@ class PhotosController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @photo, serializer: SourceSerializer }
       format.js
     end
 

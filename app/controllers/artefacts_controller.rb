@@ -3,8 +3,9 @@ class ArtefactsController < ApplicationController
   require 'json'
 
   load_and_authorize_resource
-  skip_load_resource only: [:index, :filter, :mapview]
-  skip_authorize_resource only: [:index, :filter, :mapview]
+  skip_load_resource only: [:index, :mapview]
+  skip_authorize_resource only: [:index, :mapview]
+  layout 'artefact', except: [:index, :mapview, :edit, :new]
 
 
   # GET /artefacts
@@ -82,6 +83,12 @@ class ArtefactsController < ApplicationController
     else 
       @files = []
     end
+    @versions = @artefact.versions.order(created_at: :asc)
+    @contributions = Hash.new(0)
+    @artefact.versions.each do |v|
+      @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
+    end
+
   end
 
   # GET /artefacts/new
@@ -97,11 +104,10 @@ class ArtefactsController < ApplicationController
   # POST /artefacts.json
   def create
     @artefact = Artefact.new(artefact_params)
-    @artefact.creator = current_user
 
     respond_to do |format|
       if @artefact.save
-        format.html { redirect_to @artefact, notice: 'Artefact was successfully created.' }
+        format.html { redirect_to @artefact, notice: "Artefact was successfully created." }
         format.json { render :show, status: :created, location: @artefact }
       else
         format.html { render :new }
@@ -115,10 +121,36 @@ class ArtefactsController < ApplicationController
   def update
     respond_to do |format|
       if @artefact.update(artefact_params)
-        format.html { redirect_to @artefact, notice: 'Artefact was successfully updated.' }
+        format.html { redirect_to @artefact, notice: "Artefact was successfully updated. #{undo_link}" }
         format.json { render :show, status: :ok, location: @artefact }
       else
         format.html { render :edit }
+        format.json { render json: @artefact.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def publish
+    respond_to do |format|
+      if !@artefact.locked? && @artefact.update(locked: true)
+        @artefact.versions.create(event: 'publish', whodunnit: current_user.id)
+        format.html { redirect_to @artefact, notice: "Artefact was successfully published. #{undo_link}" }
+        format.json { render :show, status: :ok, location: @artefact }
+      else
+        format.html { redirect_to @artefact, notice: "An error occured." }
+        format.json { render json: @artefact.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def unlock
+    respond_to do |format|
+      if @artefact.locked? && @artefact.update(locked: false)
+        @artefact.versions.create(event: 'reopen', whodunnit: current_user.id)
+        format.html { redirect_to @artefact, notice: "Artefact was successfully unlocked." }
+        format.json { render :show, status: :ok, location: @artefact }
+      else
+        format.html { redirect_to @artefact, notice: "An error occured." }
         format.json { render json: @artefact.errors, status: :unprocessable_entity }
       end
     end
@@ -129,20 +161,20 @@ class ArtefactsController < ApplicationController
   def destroy
     @artefact.destroy
     respond_to do |format|
-      format.html { redirect_to artefacts_url, notice: 'Artefact was successfully removed.' }
+      format.html { redirect_to artefacts_url, notice: "Artefact was successfully removed. #{undo_link}" }
       format.json { head :no_content }
     end
   end
 
   private
 
-    def load_filterrific_set
-
+    def undo_link
+      view_context.link_to("undo", revert_version_path(@artefact.versions.last), method: :post)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def artefact_params
-      params.require(:artefact).permit(:filterrific, :bab_rel, :grabung, :bab, :bab_ind, :b_join, :b_korr, :mus_sig, :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :grab, :text, :sig, :diss, :mus_id, :standort_alt, :standort, :mas1, :mas2, :mas3, :f_obj, :abklatsch, :abguss, :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text, :utmx, :utmxx, :utmy, :utmyy, :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr, :creator_id, accessor_ids: [], references_attributes: [:id, :ver, :publ, :jahr, :seite, :_destroy], illustrations_attributes: [:id, :ph, :ph_nr, :ph_add, :position, :p_rel, :_destroy], people_attributes: [:id, :person, :titel, :_destroy])
+      params.require(:artefact).permit(:locked, :bab_rel, :grabung, :bab, :bab_ind, :b_join, :b_korr, :mus_sig, :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :grab, :text, :sig, :diss, :mus_id, :standort_alt, :standort, :mas1, :mas2, :mas3, :f_obj, :abklatsch, :abguss, :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text, :utmx, :utmxx, :utmy, :utmyy, :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr, :creator_id, accessor_ids: [], references_attributes: [:id, :ver, :publ, :jahr, :seite, :_destroy], illustrations_attributes: [:id, :ph, :ph_nr, :ph_add, :position, :p_rel, :_destroy], people_attributes: [:id, :person, :titel, :_destroy])
     end
     
 end

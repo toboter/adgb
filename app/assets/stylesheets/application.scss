@@ -10,12 +10,14 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *= require bootstrap-markdown
+ *= require jquery.flex-images
  */
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "font-awesome";
 @import "toastr";
+@import "version";
 @import 'selectize';
 @import 'selectize.bootstrap3';
 
@@ -53,12 +55,50 @@ body {
   font-weight: bold;
 }
 
+.text-small {
+  font-size: small;
+}
+.text-gray {
+  color: #586069 !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.table-simple {
+  border: 1px solid #ddd;
+}
+
+.--spacious {
+  margin-top: 30px;
+}
+
 .artefact {
-  margin: 0 15px 5px 15px;
+  h2 {
+    font-size: 21px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .nav-tabs {
+    margin-bottom: 10px;
+    span.buttons {
+      @extend .pull-right;
+      margin-top:5px;
+    }
+  }
+  .flex-images {
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
   .bordered {
     border: 1px solid #c5c5c5;
     padding: 5px 0;
   }
+}
+
+.artefacts-list {
+  
 }
 
 #map img { 

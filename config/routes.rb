@@ -17,13 +17,16 @@ Rails.application.routes.draw do
   
   resources :photo_imports
   
-  
-  resources :artefacts, concerns: :commentable do
+  post "versions/:id/revert" => "versions#revert", :as => "revert_version"
+  resources :artefacts, concerns: :commentable, model_name: 'Artefact' do
     collection do
       put :add_multiple_accessors
       delete :remove_multiple_accessors
       get :mapview
     end
+    resources :versions
+    put :publish, on: :member
+    put :unlock, on: :member
   end
   resources :artefact_people, only: :index, path: 'people', as: 'people'
   resources :artefact_references, only: :index, path: 'references', as: 'references'

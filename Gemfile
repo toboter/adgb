@@ -67,6 +67,8 @@ gem 'searchkick'
 gem 'closure_tree'
 gem "chartkick"
 gem 'omniauth-oauth2'
+gem 'paper_trail'
+gem 'diffy'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.

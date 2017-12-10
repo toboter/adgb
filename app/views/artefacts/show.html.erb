@@ -1,9 +1,15 @@
 <% title @artefact.name %>
 
 <% content_for(:buttons) do %>
-  <%= link_to fa_icon('edit', text: 'Edit'), edit_artefact_path(@artefact), class: 'btn btn-warning' if can?(:edit, @artefact) %>
-  <%= link_to fa_icon('remove', text: 'Delete'), @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' if can?(:destroy, @artefact) %>
-<% end if can?(:edit, @artefact) || can?(:destroy, @artefact) %>
+  <% if @artefact.locked? %>
+    This object is currently locked. <%= 'Because it is published.' if @artefact.versions.last.event == 'publish' if @artefact.versions.any? %>
+    <%= link_to fa_icon('unlock', text: 'Unlock'), unlock_artefact_path(@artefact), method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:unlock, @artefact) %>
+  <% else %>
+    <%= link_to fa_icon('check-square-o', text: 'Publish'), publish_artefact_path(@artefact), method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:publish, @artefact) %>
+  <% end %>
+  <%= link_to fa_icon('edit', text: 'Edit'), edit_artefact_path(@artefact), class: 'btn btn-warning btn-sm text-strong' if can?(:edit, @artefact) %>
+  <%= link_to fa_icon('remove', text: 'Delete'), @artefact, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm text-strong' if can?(:destroy, @artefact) %>
+<% end unless @version %>
 
 <% content_for :head do %>
   <script src="//maps.google.com/maps/api/js?key=<%= Rails.application.secrets.gmaps_api_key %>"></script>
@@ -12,108 +18,101 @@
 
 
 <div class="row">
-  <div class="col-md-6">
-    <table class="table table-striped">
-      <tbody>
-        <%= table_row(@artefact.bab_name, 'Excavation No') %>
-        <%= table_row(@artefact.b_join, 'Grabung Joins') %>
-        <%= table_row(@artefact.b_korr, 'Grabung Korrektur') %>
-        <%= table_row(@artefact.mus_name, 'Museum No') %>
-        <%= table_row(@artefact.m_join, 'Museum Joins') %>
-        <%= table_row(@artefact.m_korr, 'Museum Korrektur') %>
-
-        <%= table_row(@artefact.kod, 'Code') %>
-        <%= table_row(@artefact.grab, 'Grab') %>
-        <%= table_row(@artefact.text, 'Text') %>
-        <%= table_row(@artefact.sig, 'Sig') %>
-
-        <%= table_row(@artefact.f_obj, 'Beschreibung') %>
-        <%= table_row(@artefact.abklatsch, 'Abklatsch') %>
-        <%= table_row(@artefact.abguss, 'Abguss') %>
-        <%= table_row(@artefact.period, 'Periode') %>
-        <%= table_row("#{@artefact.mas1}#{';' if @artefact.mas2 || @artefact.mas3} #{@artefact.mas2}#{';' if @artefact.mas3} #{@artefact.mas3}".html_safe, 'Maße') if @artefact.mas1.present? || @artefact.mas2.present? || @artefact.mas3.present? %>
-
-        <%= table_row(@artefact.fo_tell, 'Tell') %>
-        <%= table_row("#{@artefact.fo1} #{@artefact.fo2} #{@artefact.fo3} #{@artefact.fo4}", 'Areal') %>
-        <%= table_row(@artefact.fo_text, 'Fundumstände') %>
-        <%= table_row("#{@artefact.gr_datum}#{@artefact.gr_jahr}", 'Grabungsdatum') %>
-        <%= table_row("<strong>E</strong> #{@artefact.utmx} (#{@artefact.utmxx}) <strong>N</strong> #{@artefact.utmy} (#{@artefact.utmyy})".html_safe, 'UTM') if @artefact.utm? %>
-
-        <%= content_tag :tr do %>
-          <th>
-            Photos
-            <%= link_to fa_icon('info'), 'javascript:;',
-                  class: 'label label-info', 
-                  data: {toggle: 'tooltip', placement: 'top'}, 
-                  title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
-          </th>
-          <td><%= @artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %></td>
-        <% end if @artefact.illustrations.any? %>
-        <%= content_tag :tr do %>
+  <div class="col-md-12">
+    <%= content_tag :div, class: 'flex-images' do %>
+      <% @files.each do |file| %>
+        <%= content_tag :div, class: 'item', data: {w: file['files']['size_320']['width'], h: file['files']['size_320']['height']} do %>
+          <%= image_tag("#{file['files']['size_320']['url']}&access_token=#{@commons.user_access_token}") %>
+          <div class="over">
+            <%= file['name'] if file['name'] %>
+            <%= link_to fa_icon('external-link', text: 'Commons'), file['links']['human'], target: :_blank, class: 'pull-right' %><br>
+            <%= content_tag :small do %>
+              &copy; <%= file['file_copyright'] %> <%= file['file_copyright_details'] %>
+            <% end if file['file_copyright'] %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end if @files.present? %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-7">
+    <%= content_tag :div, id: 'data', class: '' do %>
+      <table class="table table-striped">
+        <tbody>
+          <%= table_row(@artefact.bab_name, 'Excavation No') %>
+          <%= table_row(@artefact.b_join, 'Grabung Joins') %>
+          <%= table_row(@artefact.b_korr, 'Grabung Korrektur') %>
+          <%= table_row(@artefact.mus_name, 'Museum No') %>
+          <%= table_row(@artefact.m_join, 'Museum Joins') %>
+          <%= table_row(@artefact.m_korr, 'Museum Korrektur') %>
+          <%= table_row(@artefact.kod, 'Code') %>
+          <%= table_row(@artefact.grab, 'Grab') %>
+          <%= table_row(@artefact.text, 'Text') %>
+          <%= table_row(@artefact.sig, 'Sig') %>
+          <%= table_row(@artefact.f_obj, 'Beschreibung') %>
+          <%= table_row(@artefact.abklatsch, 'Abklatsch') %>
+          <%= table_row(@artefact.abguss, 'Abguss') %>
+          <%= table_row(@artefact.period, 'Periode') %>
+          <%= table_row("#{@artefact.mas1}#{';' if @artefact.mas2 || @artefact.mas3} #{@artefact.mas2}#{';' if @artefact.mas3} #{@artefact.mas3}".html_safe, 'Maße') if @artefact.mas1.present? || @artefact.mas2.present? || @artefact.mas3.present? %>
+          <%= table_row(@artefact.fo_tell, 'Tell') %>
+          <%= table_row("#{@artefact.fo1} #{@artefact.fo2} #{@artefact.fo3} #{@artefact.fo4}", 'Areal') %>
+          <%= table_row(@artefact.fo_text, 'Fundumstände') %>
+          <%= table_row("#{@artefact.gr_datum}#{@artefact.gr_jahr}", 'Grabungsdatum') %>
+          <%= table_row("<strong>E</strong> #{@artefact.utmx} (#{@artefact.utmxx}) <strong>N</strong> #{@artefact.utmy} (#{@artefact.utmyy})".html_safe, 'UTM') if @artefact.utm? %>
+          <%= content_tag :tr do %>
+            <th>
+              Photos
+              <%= link_to fa_icon('info'), 'javascript:;',
+                class: 'label label-info', 
+                data: {toggle: 'tooltip', placement: 'top'}, 
+                title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+            </th>
+            <td><%= @artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %></td>
+          <% end if @artefact.illustrations.any? %>
+          <%= content_tag :tr do %>
             <th>Bibliographie: </th>
             <td><%= @artefact.references.map{ |r| r.title }.join('; ') %></td>
-        <% end if @artefact.references.any? %>
+          <% end if @artefact.references.any? %>
 
-        <%= table_row(@artefact.inhalt, 'Textinhalt') %>
-        <%= table_row(@artefact.arkiv, 'Archiv') %>
-        <%= table_row(@artefact.text_in_archiv, 'Text in Archiv') %>
-        <%= table_row(@artefact.jahr, 'Jahr') %>
-        <%= table_row(@artefact.datum, 'Datum') %>
-        <%= table_row(@artefact.zeil2, 'Zeil2') %>
-        <%= table_row(@artefact.zeil1, 'Zeil1') %>
-        <%= content_tag :tr do %>
-          <th>Personen: </th>
-          <td><%= @artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') %></td>
-        <% end if @artefact.people.any? %>
-        <%= content_tag :div do %>
-          <%= table_row(@artefact.diss, 'Dissov Id') %>
-          <%= table_row(@artefact.mus_id, 'Museums Id') %>
-          <%= table_row(@artefact.standort, 'Standort') %>
-          <%= table_row(@artefact.standort_alt, 'Standort (alt)') %>
-        <% end if can? :edit, @artefact %>         
-      </tbody>
-    </table>
+          <%= table_row(@artefact.inhalt, 'Textinhalt') %>
+          <%= table_row(@artefact.arkiv, 'Archiv') %>
+          <%= table_row(@artefact.text_in_archiv, 'Text in Archiv') %>
+          <%= table_row(@artefact.jahr, 'Jahr') %>
+          <%= table_row(@artefact.datum, 'Datum') %>
+          <%= table_row(@artefact.zeil2, 'Zeil2') %>
+          <%= table_row(@artefact.zeil1, 'Zeil1') %>
+          <%= content_tag :tr do %>
+            <th>Personen: </th>
+            <td><%= @artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') %></td>
+          <% end if @artefact.people.any? %>
+          <%= content_tag :div do %>
+            <%= table_row(@artefact.diss, 'Dissov Id') %>
+            <%= table_row(@artefact.mus_id, 'Museums Id') %>
+            <%= table_row(@artefact.standort, 'Standort') %>
+            <%= table_row(@artefact.standort_alt, 'Standort (alt)') %>
+          <% end if can? :edit, @artefact %>         
+        </tbody>
+      </table>
+    <% end %>
+    <%= shared_with(@artefact) %>
   </div>
 
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-          <%= content_tag :li, link_to(fa_icon('photo', text: "Photos"), '#images', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
-          <%= content_tag :li, link_to(fa_icon('map', text: "Map"), '#map', aria: {controls: 'map'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
-          <%= content_tag :li, link_to(fa_icon('comments', text: "Comments <span class='badge'>#{@artefact.root_comments.count}</span>".html_safe), '#comments', aria: {controls: 'comments'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
-          <%= content_tag :li, link_to(fa_icon('share-alt', text: "Sharing"), '#sharing', aria: {controls: 'sharing'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
-        </ul>
+  <div class="col-md-5">
+    <%= content_tag :div, id: 'contributors' do %>
+      <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>
+      <p class="text-small text-muted text-center" style="margin-top:10px;">Changed characters by contributor.</p>
+    <% end %>
 
-        <div class="tab-content">
-
-          <%= content_tag :div, id: 'images', role: 'tabpanel', class: 'tab-pane active', style: 'padding-top:20px;' do %>
-            <%= render partial: 'shared/display_files', locals: {files: @files, parent: @artefact, size: 'size_320'} %>
-          <% end %>
-
-          <%= content_tag :div, id: 'map', role: 'tabpanel', class: 'tab-pane', style: 'padding-top:20px;' do %>
-            <%= content_tag :div, style: 'width: 100%;', class: "thumbnail" do %>
-              <div id="map-render" style='width: 100%; height: 400px;'></div>
-            <% end if @artefact.utm? %>      
-          <% end %>
-
-          <%= content_tag :div, id: 'comments', role: 'tabpanel', class: 'tab-pane' do %>
-            <%= commentables_for(@artefact) %>
-          <% end %>
-
-          <%= content_tag :div, id: 'sharing', role: 'tabpanel', class: 'tab-pane', style: 'padding-top:10px;' do %>
-            <%= shared_with(@artefact) %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+    <%= content_tag :div, style: 'width: 100%;', class: "thumbnail --spacious" do %>
+      <div id="map-render" style='width: 100%; height: 400px;'></div>
+    <% end if @artefact.utm? %>      
   </div>
 </div>
 
 <% if @artefact.utm? %>
   <script type="text/javascript">
-    $('a[href="#map"]').on('shown.bs.tab', function (e) {
+    $(function (e) {
       handler = Gmaps.build('Google');
       handler.buildMap({
           provider: {

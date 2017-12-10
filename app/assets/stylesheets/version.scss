@@ -1,0 +1,44 @@
+.versions-listing {
+  padding-left: 60px;
+  div.version-group-title {
+    margin-top:10px;
+    margin-bottom:10px;
+    i {
+      margin-left: -35px;
+    }
+    span.heading {
+      margin-left: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .version-group {
+    td.versions-group-item {
+      position: relative;
+      div.version-avatar-cell {
+        float: left;
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+      div.version-main-cell {
+        margin-left: 70px;
+        a.toggle-link {
+          @extend .btn;
+          @extend .btn-default;
+          background-color: #ccc;
+          border: none;
+          font-weight: bold;
+          padding: 1px 7px;
+          line-height: 16px;
+        }
+        .version-changeset {
+          margin-top: 15px;
+        }
+      }
+      div.version-links-cell {
+      }
+    }
+  }
+}

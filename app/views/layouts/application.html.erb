@@ -68,16 +68,24 @@
         </div>
 
         <div class="col-sm-9 col-md-10 main">
-          <%= content_tag :div, class: "page-header" do %>
-            <h1 class="">
-              <%= yield(:title) if content_for?(:title) %>
-              <div class="pull-right">
-                <%= yield(:buttons) if content_for?(:buttons) %>
-              </div>
-            </h1>
-          <% end if content_for?(:buttons) || content_for?(:title) && @show_header %>
-                 
-          <%= yield %>
+          <% if content_for?(:content) %>
+          
+            <%= yield(:content) %>
+
+          <% else %>
+
+            <%= content_tag :div, class: "page-header" do %>
+              <h1 class="">
+                <%= yield(:title) if content_for?(:title) %>
+                <div class="pull-right">
+                  <%= yield(:buttons) if content_for?(:buttons) %>
+                </div>
+              </h1>
+            <% end if content_for?(:buttons) || content_for?(:title) && @show_header %>
+
+            <%= yield %>
+
+          <% end %>
 
         </div>
       </div>

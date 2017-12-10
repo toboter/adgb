@@ -7,8 +7,9 @@ class Ability
       can :show, Artefact, Artefact do |s|
         s.readable_by?(user)
       end
-      can [:edit, :update, :destroy], Artefact, Artefact do |s|
-        s.editable_by?(user)
+      can :unlock, Artefact if user.is_admin?
+      can [:edit, :update, :publish, :destroy], Artefact, Artefact do |s|
+        s.editable_by?(user) && !s.locked?
       end
       can :show, PhotoImport, PhotoImport do |s|
         s.readable_by?(user)
