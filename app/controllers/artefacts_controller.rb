@@ -83,10 +83,12 @@ class ArtefactsController < ApplicationController
     else 
       @files = []
     end
-    @versions = @artefact.versions.order(created_at: :asc)
+    
     @contributions = Hash.new(0)
+    @growth = Hash.new(0)
     @artefact.versions.each do |v|
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
+      @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
 
   end

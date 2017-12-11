@@ -1,5 +1,11 @@
 class Source < ApplicationRecord
   searchkick
+  has_paper_trail ignore: [:slug, :locked, :type_data, :updated_at], 
+    meta: {
+      version_name: :name, 
+      changed_characters_length: :changed_characters,
+      total_characters_length: :total_characters
+    }
   include Filterable
   extend FriendlyId
   include Nabu
@@ -14,6 +20,26 @@ class Source < ApplicationRecord
   validates :identifier_stable, presence: { message: "can't be blank. At least use a temporary identifier, next field." }, unless: -> {identifier_temp.present?}
   validates :identifier_stable, uniqueness: { scope: :type }
 
+  def changed_characters
+    total = 0
+    self.changes.each do |k,v|
+      unless k.in?(['id', 'slug', 'locked', 'created_at', 'updated_at', 'type_data', 'type', 'parent_id'])
+        ocl = v[0].to_s.length
+        ncl = v[1].to_s.length
+        changes = ocl > ncl ? ocl - ncl : ncl - ocl
+        total = total + changes
+      end
+    end
+    return total
+  end
+
+  def total_characters
+    total = 0
+    self.attributes.each do |k,v|
+      total = total + v.to_s.length unless k.in?(['id', 'slug', 'locked', 'created_at', 'updated_at', 'type_data', 'type', 'parent_id'])
+    end
+    return total
+  end
 
   # virtual attributes
 

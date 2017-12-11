@@ -1,4 +1,4 @@
 <li class="list-group-item">
-  <%= link_to folder.name, folder %><br>
+  <%= link_to fa_icon(folder.icon, text: folder.name), folder, class: 'text-strong' %><br>
   <%= content_tag :small, 'description' %>  
 </li>

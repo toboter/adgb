@@ -1,15 +1,29 @@
 <% title "#{@source.name_tree}" %>
 
 <% content_for(:buttons) do %>
-  <%= link_to sti_source_path(@source.type, @source, :edit), class: 'btn btn-warning' do %>
-    <%= fa_icon("edit") %>
-    <%= "Edit" %>
-  <% end if can? :edit, @source %>
-  <%= link_to @source, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' do %>
-    <%= fa_icon("remove") %>
-    <%= "Delete" %>
-  <% end if can? :destroy, @source %>
-<% end if current_user %>
+  <% if @source.locked? %>
+    This object is currently locked. <%= 'Because it is published.' if @source.versions.last.event == 'publish' if @source.versions.any? %>
+    <%= link_to fa_icon('unlock', text: 'Unlock'), [:unlock, @source], method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:unlock, @source) %>
+  <% else %>
+    <%= link_to fa_icon('check-square-o', text: 'Publish'), [:publish, @source], method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:publish, @source) %>
+  <% end %>
+  <%= content_tag :div, class: "btn-group" do %>
+    <button type="button" class="btn btn-success btn-sm text-strong dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <%= fa_icon("plus") %> New <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <% for type in @source.class.subtypes do %>
+        <%= content_tag :li, link_to(type, sti_source_path(type, nil, :new, parent_id: @source.id)) %>
+      <% end %>
+    </ul>
+  <% end if can?(:create, Source) %>
+  <%= link_to fa_icon("edit", text: 'Edit'), sti_source_path(@source.type, @source, :edit), 
+    class: 'btn btn-warning btn-sm text-strong' if can?(:edit, @source) %>
+  <%= link_to fa_icon("remove", text: 'Delete'), @source, 
+    method: :delete, 
+    data: { confirm: 'Are you sure?' }, 
+    class: 'btn btn-danger btn-sm text-strong' if can?(:destroy, @source) %>
+<% end unless @version%>
 
 
 <div class="row">
@@ -32,16 +46,30 @@
         <%= @source.name %>
       <% end %>
       <%= content_tag :p, @source.remarks, class: 'text-muted' if @source.remarks %>
+      <%= render 'shared/display_files' if @files.present? %>
       <table class="table table-striped">
         <tbody>
+            <tr>
+              <th>Full identifier</th>
+              <td><%= @source.name_tree %></td>
+            </tr>
+            <tr>
+              <th>Link:</th>
+              <td><%= link_to fa_icon('link', text: polymorphic_url(@source)), polymorphic_url(@source) %> </td>
+            </tr>
             <% @source.type_data.each do |k,v|%>
               <%= content_tag :tr do %>
                 <th><%= k.humanize %>:</th>
                 <td><%= link_to v, sources_path(search: v) %></td>
               <% end if v %>
             <% end if @source.type_data %>
+            <%= content_tag :tr do %>
+              <th>References</th>
+              <td><%= @ref.map{ |r| r.title }.join(', ').html_safe %></td>
+            <% end if @ref.present? %>
         </tbody>
       </table>
+      <%= shared_with(@source) %>
     <% end %>
 
     <%= render partial: "child", collection: @source.children %>
@@ -49,75 +77,57 @@
 
   <div class="col-md-5">
 
-    <%= content_tag :div do %>
-      <%= content_tag :div, class: "btn-group" do %>
-        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <%= fa_icon("plus") %> New <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <% for type in @source.class.subtypes do %>
-            <%= content_tag :li, link_to(type, sti_source_path(type, nil, :new, parent_id: @source.id)) %>
-          <% end %>
-        </ul>
-      <% end if can? :new, Source %>
-      <%= content_tag :div, class: 'pull-right' do %>
-      <% end if @source.present? %>
-      <div class="clearfix"></div>
-    <hr>
-    <% end %>
-
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-          <%= content_tag :li, link_to('Identity', '#identity', aria: {controls: 'identity'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
-          <%= content_tag :li, link_to("Comments <span class='badge'>#{@source.root_comments.count}</span>".html_safe, '#comments', aria: {controls: 'comments'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
-          <%= content_tag :li, link_to(fa_icon('share-alt', text: "Sharing"), '#sharing', aria: {controls: 'sharing'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
-        </ul>
-
-        <div class="tab-content">
-          <%= content_tag :div, id: 'identity', role: 'tabpanel', class: 'tab-pane active' do %>
-            
-            <%= content_tag :div, class: "", style: 'padding-top:20px;' do %>
-
-            <% end %>
-
-            <%= content_tag :table, class: 'table table-bordered' do %>
-              <tbody>
-                  <tr>
-                    <th>Ident:</th>
-                    <td><%= @source.name_tree %></td>
-                  </tr>
-                  <tr>
-                    <th>Self:</th>
-                    <td><%= link_to fa_icon('link', text: source_url(@source)), source_url(@source) %> </td>
-                  </tr>
-              </tbody>
-            <% end %>
-          <% end %>
-
-          <%= content_tag :div, id: 'comments', role: 'tabpanel', class: 'tab-pane' do %>
-            <%= commentables_for(@source) %>
-          <% end %>
-
-          <%= content_tag :div, id: 'sharing', role: 'tabpanel', class: 'tab-pane' do %>
-            <%= shared_with(@source) %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <%= content_tag :div, id: "similar-objects" do %>
-      <h4>Similar objects</h4>
-      <div class="list-group">
-        <% @source.similar.each do |source| %>
-          <%= link_to source, class: 'list-group-item' do %>
-            <%= source.name_tree %><br>
-            <small><%= source.type %></small>
-          <% end %>
+      <%= content_tag :div, id: 'stats' do %>
+        <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>
+        <p class="text-small text-muted text-center" style="margin-top:10px;">
+          Changed characters by contributor.
+          <%= link_to 'View more stats', "#collapse-stats-on-#{@source.id}", 
+            data: { toggle: 'collapse' }, 
+            aria: {expanded: 'false', controls: "collapse-stats-on-#{@source.id}"}, 
+            class: 'toggle-link', 
+            role: 'button' %>
+        </p>
+        <%= content_tag :div, class: 'collapse more-stats', id: "collapse-stats-on-#{@source.id}" do %>
+          <%= line_chart(@growth, height: '180px') %>
+          <p class="text-small text-muted text-center" style="margin-top:10px;">Total characters changes.</p>
         <% end %>
-      </div>
-    <% end if @source.similar.any? %>
+      <% end %>
+
+
+      <%= content_tag :div, id: "similar-objects", class: '--spacious' do %>
+        <h4>Similar objects</h4>
+        <div class="list-group">
+          <%= render @source.similar %>
+        </div>
+      <% end if @source.similar.any? %>
+
+      <%= content_tag :div, id: 'image-positions' do %>
+        <table class="table table-bordered table-responsive">
+          <thead>
+            <tr>
+              <td></td>
+              <td>Object</td>
+              <td>
+                Position 
+                <%= link_to fa_icon('info'), 'javascript:;',
+                  class: 'label label-info', 
+                  data: {toggle: 'tooltip', placement: 'left'}, 
+                  title: 'First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+                </td>
+            </tr>
+          </thead>
+          <tbody>
+            <% @occurences.each_with_index do |occ, index| %>
+              <tr>
+                <td><%= index+1 %></td>
+                <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact %></td>
+                <td><%= occ.position %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end if @source.type = 'Photo' && @occurences.present? %>
+    
   </div>
 
 </div>

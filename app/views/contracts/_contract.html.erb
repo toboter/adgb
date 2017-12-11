@@ -1,4 +1,4 @@
 <li class="list-group-item">
-  <%= link_to contract.name, contract %><br>
+  <%= link_to fa_icon(contract.icon, text: contract.name), contract, class: 'text-strong' %><br>
   <%= content_tag :small, 'description' %>  
 </li>

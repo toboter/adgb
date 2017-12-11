@@ -19,20 +19,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <%= content_tag :div, class: 'flex-images' do %>
-      <% @files.each do |file| %>
-        <%= content_tag :div, class: 'item', data: {w: file['files']['size_320']['width'], h: file['files']['size_320']['height']} do %>
-          <%= image_tag("#{file['files']['size_320']['url']}&access_token=#{@commons.user_access_token}") %>
-          <div class="over">
-            <%= file['name'] if file['name'] %>
-            <%= link_to fa_icon('external-link', text: 'Commons'), file['links']['human'], target: :_blank, class: 'pull-right' %><br>
-            <%= content_tag :small do %>
-              &copy; <%= file['file_copyright'] %> <%= file['file_copyright_details'] %>
-            <% end if file['file_copyright'] %>
-          </div>
-        <% end %>
-      <% end %>
-    <% end if @files.present? %>
+    <%= render 'shared/display_files' if @files.present? %>
   </div>
 </div>
 <div class="row">
@@ -99,9 +86,20 @@
   </div>
 
   <div class="col-md-5">
-    <%= content_tag :div, id: 'contributors' do %>
+    <%= content_tag :div, id: 'stats' do %>
       <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>
-      <p class="text-small text-muted text-center" style="margin-top:10px;">Changed characters by contributor.</p>
+      <p class="text-small text-muted text-center" style="margin-top:10px;">
+        Changed characters by contributor.
+        <%= link_to 'View more stats', "#collapse-stats-on-#{@artefact.id}", 
+          data: { toggle: 'collapse' }, 
+          aria: {expanded: 'false', controls: "collapse-stats-on-#{@artefact.id}"}, 
+          class: 'toggle-link', 
+          role: 'button' %>
+      </p>
+      <%= content_tag :div, class: 'collapse more-stats', id: "collapse-stats-on-#{@artefact.id}" do %>
+        <%= line_chart(@growth, height: '180px') %>
+        <p class="text-small text-muted text-center" style="margin-top:10px;">Total characters changes.</p>
+      <% end %>
     <% end %>
 
     <%= content_tag :div, style: 'width: 100%;', class: "thumbnail --spacious" do %>

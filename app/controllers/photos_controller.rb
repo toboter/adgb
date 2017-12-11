@@ -2,8 +2,10 @@ class PhotosController < ApplicationController
   require 'rest-client'
   require 'json'
   load_and_authorize_resource
+  layout 'source', only: :show
   
   def show
+    @source = @photo
     aph = "#{@photo.serie}#{@photo.number}"
     @ref = ArtefactReference.where(ph_rel: aph)
     @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)

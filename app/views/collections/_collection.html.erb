@@ -1,4 +1,4 @@
 <li class="list-group-item">
-  <%= link_to collection.name, collection %><br>
+  <%= link_to fa_icon(collection.icon, text: collection.name), collection, class: 'text-strong' %><br>
   <%= content_tag :small, 'description' %>  
 </li>

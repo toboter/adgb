@@ -20,8 +20,8 @@
     </ul>
   </div>
 
-  <div class="col-md-5 col-md-offset-1">
-    <%= @photo_results %>
+  <div class="col-md-6">
+    <%= render 'shared/display_files' if @files.present? %>
   </div>
 </div>
 

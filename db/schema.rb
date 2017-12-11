@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171209141636) do
+ActiveRecord::Schema.define(version: 20171210012542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,6 +219,7 @@ ActiveRecord::Schema.define(version: 20171209141636) do
     t.text "remarks"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "locked", default: false, null: false
     t.index ["identifier_stable"], name: "index_sources_on_identifier_stable"
     t.index ["parent_id"], name: "index_sources_on_parent_id"
     t.index ["slug"], name: "index_sources_on_slug"

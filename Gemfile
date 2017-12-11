@@ -69,6 +69,7 @@ gem "chartkick"
 gem 'omniauth-oauth2'
 gem 'paper_trail'
 gem 'diffy'
+gem 'magnific-popup-rails', '~> 1.1.0'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.

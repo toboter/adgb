@@ -10,6 +10,7 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *= require bootstrap-markdown
+ *= require magnific-popup
  *= require jquery.flex-images
  */
 
@@ -74,7 +75,7 @@ body {
   margin-top: 30px;
 }
 
-.artefact {
+.artefact, .source {
   h2 {
     font-size: 21px;
     font-weight: 600;

@@ -1,4 +1,4 @@
 <li class="list-group-item">
-  <%= link_to photo.name, photo %><br>
+  <%= link_to fa_icon(photo.icon, text: photo.name), photo, class: 'text-strong' %><br>
   <%= content_tag :small, photo.description %>  
 </li>

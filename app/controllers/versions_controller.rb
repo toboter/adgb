@@ -5,8 +5,8 @@ class VersionsController < ApplicationController
     @versions = @parent.versions
     @versions_by_month = @versions.order(created_at: :desc).group_by { |t| t.created_at.strftime('%d %m %Y') }
 
-    instance_variable_set("@#{@parent.class.name.underscore}", @parent)
-    render layout: @parent.class.name.underscore
+    instance_variable_set("@#{@parent.class.base_class.name.underscore}", @parent)
+    render layout: @parent.class.base_class.name.underscore
   end
 
   def show

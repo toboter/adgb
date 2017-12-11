@@ -20,8 +20,9 @@ class Ability
       can :show, Source, Source do |s|
         s.readable_by?(user)
       end
-      can [:edit, :update, :destroy], Source, Source do |s|
-        s.editable_by?(user)
+      can :unlock, Source if user.is_admin?
+      can [:edit, :update, :publish, :destroy], Source, Source do |s|
+        s.editable_by?(user) && !s.locked?
       end
 
       can [:new, :create], [PhotoImport, Artefact, Source] if user.is_admin? || user.is_creator?

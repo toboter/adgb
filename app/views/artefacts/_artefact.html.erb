@@ -1,4 +1,4 @@
 <li class="list-group-item">
-  <%= link_to artefact.name, artefact %><br>
+  <%= link_to fa_icon('file-text-o', text: artefact.name), artefact, class: 'text-strong' %><br>
   <%= content_tag :small, artefact.f_obj %>
 </li>
