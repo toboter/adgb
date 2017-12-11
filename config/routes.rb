@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     resources :comments, only: [:index, :new, :create, :destroy]
   end
   # 'concerns: :commentable' needs to be added to any resource where nabu is included.
+  
+  post "versions/:id/revert" => "versions#revert", :as => "revert_version"
   concern :versionable do
     resources :versions
     put :publish, on: :member
@@ -22,18 +24,22 @@ Rails.application.routes.draw do
   
   resources :photo_imports
   
-  post "versions/:id/revert" => "versions#revert", :as => "revert_version"
   resources :artefacts, concerns: [:commentable, :versionable], model_name: 'Artefact' do
     collection do
       put :add_multiple_accessors
       delete :remove_multiple_accessors
       get :mapview
+      post :publish
+      post :unlock
     end
   end
   resources :artefact_people, only: :index, path: 'people', as: 'people'
   resources :artefact_references, only: :index, path: 'references', as: 'references'
 
-  resources :sources
+  resources :sources do
+    post :publish, on: :collection
+    post :unlock, on: :collection
+  end
   resources :archives, controller: 'sources', type: 'Archive', model_name: 'Archive', concerns: [:commentable, :versionable]
   resources :collections, controller: 'sources', type: 'Collection', model_name: 'Collection', concerns: [:commentable, :versionable]
   resources :folders, controller: 'sources', type: 'Folder', model_name: 'Folder', concerns: [:commentable, :versionable]

@@ -3,7 +3,7 @@ class ArtefactsController < ApplicationController
   require 'json'
 
   load_and_authorize_resource
-  skip_load_resource only: [:index, :mapview]
+  skip_load_resource only: [:index, :mapview, :publish, :unlock]
   skip_authorize_resource only: [:index, :mapview]
   layout 'artefact', except: [:index, :mapview, :edit, :new]
 
@@ -28,8 +28,6 @@ class ArtefactsController < ApplicationController
       ) do |body|
         body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
       end
-
-
 
     respond_to do |format|
       format.html
@@ -134,26 +132,98 @@ class ArtefactsController < ApplicationController
 
   def publish
     respond_to do |format|
-      if !@artefact.locked? && @artefact.update(locked: true)
-        @artefact.versions.create(event: 'publish', whodunnit: current_user.id)
-        format.html { redirect_to @artefact, notice: "Artefact was successfully published. #{undo_link}" }
-        format.json { render :show, status: :ok, location: @artefact }
+      if params[:id]
+        @artefact = Artefact.friendly.find(params[:id])
+        if !@artefact.locked? && @artefact.update(locked: true, paper_trail_event: 'publish')
+          format.html { redirect_to @artefact, notice: "Artefact was successfully published. #{undo_link}" }
+          format.json { render :show, status: :ok, location: artefact }
+        else
+          format.html { redirect_to @artefact, notice: "An error occured." }
+          format.json { render json: @artefact.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { redirect_to @artefact, notice: "An error occured." }
-        format.json { render json: @artefact.errors, status: :unprocessable_entity }
+        query = params[:search].presence || '*'
+        artefacts = Artefact
+          .visible_for(current_user)
+          .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+        
+        sk_results = Artefact.search(query, 
+          where: { id: artefacts.ids },
+          per_page: 10000,
+          misspellings: {below: 1}
+          ) do |body|
+            body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+          end
+        
+        results = Artefact.where(id: sk_results.map(&:id))
+        
+        @published_length = 0
+        results.in_batches.each do |records|
+          records_length = records.where(locked: false).each do |r|
+            r.locked = true
+            r.paper_trail_event = 'publish'
+            r.save
+          end
+          # versions = records.map {|record| "(#{record.id},'#{record.class.base_class.name}','publish','#{current_user.id}',now(),now())" }
+          # ActiveRecord::Base.connection.execute("INSERT INTO versions (item_id, item_type, event, whodunnit, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
+          @published_length = @published_length + records_length.count
+        end
+        if @published_length > 0
+          format.html { redirect_to artefacts_path(search: params[:search]), notice: "Successfully published #{@published_length} artefacts." }
+          format.json { render :index, status: :ok }
+        else
+          format.html { redirect_to artefacts_path(search: params[:search]), notice: "An error occured." }
+          format.json { render :index, status: :unprocessable_entity }
+        end
       end
     end
   end
 
   def unlock
     respond_to do |format|
-      if @artefact.locked? && @artefact.update(locked: false)
-        @artefact.versions.create(event: 'reopen', whodunnit: current_user.id)
-        format.html { redirect_to @artefact, notice: "Artefact was successfully unlocked." }
-        format.json { render :show, status: :ok, location: @artefact }
+      if params[:id]
+        @artefact = Artefact.friendly.find(params[:id])
+        if @artefact.locked? && @artefact.update(locked: false, paper_trail_event: 'reopen')
+          format.html { redirect_to @artefact, notice: "Artefact was successfully unlocked." }
+          format.json { render :show, status: :ok, location: @artefact }
+        else
+          format.html { redirect_to @artefact, notice: "An error occured." }
+          format.json { render json: @artefact.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { redirect_to @artefact, notice: "An error occured." }
-        format.json { render json: @artefact.errors, status: :unprocessable_entity }
+        query = params[:search].presence || '*'
+        artefacts = Artefact
+          .visible_for(current_user)
+          .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+        
+        sk_results = Artefact.search(query, 
+          where: { id: artefacts.ids },
+          per_page: 10000,
+          misspellings: {below: 1}
+          ) do |body|
+            body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+          end
+        
+        results = Artefact.where(id: sk_results.map(&:id))
+        
+        @unlocked_length = 0
+        results.in_batches.each do |records|
+          records_length = records.where(locked: true).each do |r|
+            r.locked = false
+            r.paper_trail_event = 'reopen'
+            r.save
+          end
+          # versions = records.map {|record| "(#{record.id},'#{record.class.base_class.name}','publish','#{current_user.id}',now(),now())" }
+          # ActiveRecord::Base.connection.execute("INSERT INTO versions (item_id, item_type, event, whodunnit, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
+          @unlocked_length = @unlocked_length + records_length.count
+        end
+        if @unlocked_length > 0
+          format.html { redirect_to artefacts_path(search: params[:search]), notice: "Successfully reopened #{@unlocked_length} artefacts." }
+          format.json { render :index, status: :ok }
+        else
+          format.html { redirect_to artefacts_path(search: params[:search]), notice: "An error occured." }
+          format.json { render :index, status: :unprocessable_entity }
+        end
       end
     end
   end

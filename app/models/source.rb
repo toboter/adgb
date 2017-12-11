@@ -1,6 +1,6 @@
 class Source < ApplicationRecord
   searchkick
-  has_paper_trail ignore: [:slug, :locked, :type_data, :updated_at], 
+  has_paper_trail ignore: [:slug, :type_data, :updated_at], 
     meta: {
       version_name: :name, 
       changed_characters_length: :changed_characters,

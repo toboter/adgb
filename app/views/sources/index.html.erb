@@ -83,6 +83,6 @@
 
     <%= content_tag :div, id: "show-target", data: {spy: 'affix', 'offset-top': "60"} do %>
       <%= render partial: "#{@sources.first.class.name.downcase.pluralize}/show", locals: { @sources.first.class.name.downcase.to_sym => @sources.first }%>
-    <% end if !browser.device.mobile? &&  @sources.any? %>
+    <% end if !browser.device.mobile? && @sources.any? %>
   </div>
 </div>

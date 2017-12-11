@@ -3,7 +3,8 @@
     <div class="collapse" id="record-access-settings">
       <%= share_multiple_with(Artefact) if can?(:create, Artefact) || can_create? %>
     </div>
-
+    <%= render partial: 'shared/publish', locals: {klass: Artefact} %>
+    <%= render partial: 'shared/unlock', locals: {klass: Artefact} %>
     <ul class="list-group">
     <% @artefacts.each do |artefact| %>
       <li class="list-group-item artefact" id="artefact-<%= artefact.id %>">

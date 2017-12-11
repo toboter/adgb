@@ -2,7 +2,8 @@
   <div class="collapse" id="record-access-settings">
     <%= share_multiple_with(Source) %>
   </div>
-
+  <%= render partial: 'shared/publish', locals: {klass: Source} %>
+  <%= render partial: 'shared/unlock', locals: {klass: Source} %>
   <div class="list-group">
     <% sources.each do |source| %>
       <%= link_to sti_source_path(source.type, source), remote: !browser.device.mobile?, class: "list-group-item" do %>

@@ -2,7 +2,7 @@ class Artefact < ApplicationRecord
   # https://github.com/ankane/searchkick/issues/642
   # showing more than 10000 results on index
   searchkick
-  has_paper_trail ignore: [:slug, :latitude, :longitude, :locked], 
+  has_paper_trail ignore: [:slug, :latitude, :longitude], 
     meta: {
       version_name: :name, 
       changed_characters_length: :changed_characters,
