@@ -2,9 +2,12 @@
 
 <% content_for(:buttons) do %>
   <% if @source.locked? %>
-    This object is currently locked. <%= 'Because it is published.' if @source.versions.last.event == 'publish' if @source.versions.any? %>
+    This object is currently locked. <%= 'Because it is published.' if @source.published? %>
     <%= link_to fa_icon('unlock', text: 'Unlock'), [:unlock, @source], method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:unlock, @source) %>
   <% else %>
+    <button type="button" class="btn btn-default btn-sm text-strong" data-toggle="modal" data-target="#access-settings">
+      <%= fa_icon('eye', text: 'Accessibility') %>
+    </button>
     <%= link_to fa_icon('check-square-o', text: 'Publish'), [:publish, @source], method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:publish, @source) %>
   <% end %>
   <%= content_tag :div, class: "btn-group" do %>
@@ -69,9 +72,7 @@
             <% end if @ref.present? %>
         </tbody>
       </table>
-      <%= shared_with(@source) %>
     <% end %>
-
     <%= render partial: "child", collection: @source.children %>
   </div>
 
@@ -97,9 +98,9 @@
       <%= content_tag :div, id: "similar-objects", class: '--spacious' do %>
         <h4>Similar objects</h4>
         <div class="list-group">
-          <%= render @source.similar %>
+          <%= render @source_similar %>
         </div>
-      <% end if @source.similar.any? %>
+      <% end if @source_similar.any? %>
 
       <%= content_tag :div, id: 'image-positions' do %>
         <table class="table table-bordered table-responsive">
@@ -131,3 +132,23 @@
   </div>
 
 </div>
+
+<% content_for :modals do %>
+  <!-- Modal -->
+  <div class="modal fade" id="access-settings" tabindex="-1" role="dialog" aria-labelledby="access-settings-heading">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="access-settings-heading">Accessibility settings</h4>
+        </div>
+        <div class="modal-body">
+          <%= render partial: 'grants/list', locals: { resource: @source } %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default text-strong" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

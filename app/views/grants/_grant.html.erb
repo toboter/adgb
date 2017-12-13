@@ -1,0 +1,12 @@
+<%= content_tag :li, id: "grant_#{grant.id}", class: "list-group-item" do %>
+  <%= fa_icon('share-alt') %> Granted to
+  <%= content_tag :span, grant.shared_to.name, class: 'text-strong' %>
+  <% if current_user && grant.resource.editable_by?(current_user) %>
+    <%= link_to fa_icon('trash', text: 'Revoke'), send("#{grant.resource.class.name.underscore}_grant_path", grant.resource, grant.id), method: :delete, remote: true, class: 'btn btn-default text-strong btn-sm pull-right' unless grant.resource.created_by?(grant.shared_to) && !can?(:revoke_access, grant.resource) %>
+
+    <%= simple_form_for grant, url: send("#{grant.resource.class.name.underscore}_grant_path", grant.resource, grant.id), method: :put, as: :grant, remote: true do |f| %>
+      <%= f.input :edit, as: :boolean, label: 'can edit', input_html: { :onchange => "$(this.form).submit();", id: "grant_edit_#{f.object.id}" }, disabled: grant.resource.created_by?(grant.shared_to) %>
+      <!-- f.input :share_to_children, as: :boolean, label: 'share to children', input_html: { :onchange => "$(this.form).submit();"} if grant.resource.class.method_defined?(:children) && grant.resource.children.any? %> -->
+    <% end unless grant.resource.created_by?(grant.shared_to) && !can?(:update_access, grant.resource) %>
+  <% end %>
+<% end %>

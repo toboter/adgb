@@ -4,7 +4,7 @@ class ArtefactsController < ApplicationController
 
   load_and_authorize_resource
   skip_load_resource only: [:index, :mapview, :publish, :unlock]
-  skip_authorize_resource only: [:index, :mapview]
+  skip_authorize_resource only: [:index, :mapview, :publish, :unlock]
   layout 'artefact', except: [:index, :mapview, :edit, :new]
 
 
@@ -88,6 +88,7 @@ class ArtefactsController < ApplicationController
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
+    @artefact_similar = @artefact.similar(fields: [:kod, :bab], where: {id: Artefact.visible_for(current_user).all.ids})
 
   end
 
@@ -134,6 +135,7 @@ class ArtefactsController < ApplicationController
     respond_to do |format|
       if params[:id]
         @artefact = Artefact.friendly.find(params[:id])
+        authorize! :publish, @artefact
         if !@artefact.locked? && @artefact.update(locked: true, paper_trail_event: 'publish')
           format.html { redirect_to @artefact, notice: "Artefact was successfully published. #{undo_link}" }
           format.json { render :show, status: :ok, location: artefact }
@@ -142,6 +144,7 @@ class ArtefactsController < ApplicationController
           format.json { render json: @artefact.errors, status: :unprocessable_entity }
         end
       else
+        authorize! :publish_multiple, Artefact
         query = params[:search].presence || '*'
         artefacts = Artefact
           .visible_for(current_user)
@@ -183,6 +186,7 @@ class ArtefactsController < ApplicationController
     respond_to do |format|
       if params[:id]
         @artefact = Artefact.friendly.find(params[:id])
+        authorize! :unlock, @artefact
         if @artefact.locked? && @artefact.update(locked: false, paper_trail_event: 'reopen')
           format.html { redirect_to @artefact, notice: "Artefact was successfully unlocked." }
           format.json { render :show, status: :ok, location: @artefact }
@@ -191,6 +195,7 @@ class ArtefactsController < ApplicationController
           format.json { render json: @artefact.errors, status: :unprocessable_entity }
         end
       else
+        authorize! :unlock_multiple, Artefact
         query = params[:search].presence || '*'
         artefacts = Artefact
           .visible_for(current_user)

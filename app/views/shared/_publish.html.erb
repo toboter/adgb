@@ -1,4 +1,4 @@
-<%= form_tag [:publish, klass], method: :post do %>
+<%= form_tag [:publish, klass], method: :post, style: 'display:inline' do %>
   <%= hidden_field_tag "search", params[:search] %>
   <%= hidden_field_tag "with_user_shared_to_like", params[:with_user_shared_to_like] %>
   <%= hidden_field_tag "with_unshared_records", params[:with_unshared_records] %>

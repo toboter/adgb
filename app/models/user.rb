@@ -16,6 +16,11 @@ class User < ApplicationRecord
     Thread.current[:current_user] = usr
   end
 
+  def self.search(search)
+    wildcard_search = "%#{search}%"
+    where("name LIKE ?", wildcard_search)
+  end
+
   # overrides sharer can_edit?
   def can_edit?(resource)
     check_resource(resource)

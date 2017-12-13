@@ -6,4 +6,8 @@ class Group < ApplicationRecord
   
   validates :name, uniqueness: { case_sensitive: false }
 
+  def self.search(search)
+    wildcard_search = "%#{search}%"
+    where("name LIKE ?", wildcard_search)
+  end
 end

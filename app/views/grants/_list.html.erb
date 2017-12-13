@@ -1,0 +1,17 @@
+<div class="row">
+  <%= form_tag [resource, :grants], remote: true, class: 'form-inline' do %>
+    <div class="col-md-7">
+      <%= select_tag 'share_to', options_for_select(''), include_blank: true, data: {url: url_for([:candidates, resource, :grants])} %>
+    </div>
+    <div class="col-md-5">
+      <span class="pull-right">
+      <%= submit_tag 'Allow write', class: 'btn btn-default text-strong' %>
+      <%= submit_tag 'Allow read', class: 'btn btn-default text-strong' %>
+      </span>
+    </div>
+  <% end if can?(:grant_access, resource) %>
+</div>
+
+<ul id="grants" class="list-group --spacious">
+  <%= render partial: 'grants/grant', collection: resource.shares.order(created_at: :desc) %>
+</ul>

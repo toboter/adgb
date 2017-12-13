@@ -9,7 +9,8 @@ class Source < ApplicationRecord
   include Filterable
   extend FriendlyId
   include Nabu
-  include Enki
+  include Visibility
+
   has_closure_tree
 
   after_commit :reindex_descendants
@@ -88,18 +89,18 @@ class Source < ApplicationRecord
 
   scope :with_published_records, lambda { |flag|
     return nil  if 0 == flag # checkbox unchecked
-    published_records
+    published
   }
 
   scope :with_unshared_records, lambda { |flag|
     return nil  if 0 == flag # checkbox unchecked
-    inaccessible_records
+    inaccessible
   }
 
   scope :with_user_shared_to_like, lambda { |user_id|
     return nil if user_id.blank?
     user = User.find(user_id)
-    accessible_by_records(user)
+    accessible_by(user)
   }
 
   scope :archives, -> { where(type: 'Archive') } 

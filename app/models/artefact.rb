@@ -12,7 +12,7 @@ class Artefact < ApplicationRecord
   extend FriendlyId
   require 'roo'
   include Nabu
-  include Enki
+  include Visibility
 
   friendly_id :bab_rel, use: :slugged
   before_save :set_code, :set_latitude, :set_longitude
@@ -81,18 +81,18 @@ class Artefact < ApplicationRecord
 
   scope :with_published_records, lambda { |flag|
     return nil  if 0 == flag # checkbox unchecked
-    published_records
+    published
   }
 
   scope :with_unshared_records, lambda { |flag|
     return nil  if 0 == flag # checkbox unchecked
-    inaccessible_records
+    inaccessible
   }
 
   scope :with_user_shared_to_like, lambda { |user_id|
     return nil if user_id.blank?
     user = User.find(user_id)
-    accessible_by_records(user)
+    accessible_by(user)
   }
 
   col_attr.map do |a|

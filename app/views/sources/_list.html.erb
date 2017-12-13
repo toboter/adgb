@@ -1,9 +1,11 @@
 <div id="_results">
-  <div class="collapse" id="record-access-settings">
-    <%= share_multiple_with(Source) %>
-  </div>
-  <%= render partial: 'shared/publish', locals: {klass: Source} %>
-  <%= render partial: 'shared/unlock', locals: {klass: Source} %>
+  <% if can?(:grant_multiple_access, Source) || can?(:revoke_multiple_access, Source) %>
+    <button type="button" class="btn btn-default btn-sm text-strong" data-toggle="modal" data-target="#access-settings">
+      <%= fa_icon('eye', text: 'Accessibility') %>
+    </button>
+  <% end %>
+  <%= render partial: 'shared/publish', locals: {klass: Source} if can?(:publish_multiple, Source) %>
+  <%= render partial: 'shared/unlock', locals: {klass: Source} if can?(:unlock_multiple, Source) %>
   <div class="list-group">
     <% sources.each do |source| %>
       <%= link_to sti_source_path(source.type, source), remote: !browser.device.mobile?, class: "list-group-item" do %>
@@ -20,3 +22,24 @@
     <%= will_paginate sources, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
   </div>
 </div>
+
+<% content_for :modals do %>
+  <div id="access-settings" class="modal fade" role="dialog" aria-labelledby="access-settings-heading" aria-hidden="true">
+    <div class="modal-dialog  modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="access-settings-heading">Accessibility settings</h4>
+        </div>
+        <div class="modal-body">
+          <%= render partial: 'grants/grant_multiple', locals: {model: Source} if can?(:grant_multiple_access, Source) %>
+          <br>
+          <%= render partial: 'grants/revoke_multiple', locals: {model: Source} if can?(:revoke_multiple_access, Source) %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default text-strong" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

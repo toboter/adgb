@@ -1,10 +1,12 @@
 <div id="_results" class="row artefacts-list">
   <div class="col-md-12">
-    <div class="collapse" id="record-access-settings">
-      <%= share_multiple_with(Artefact) if can?(:create, Artefact) || can_create? %>
-    </div>
-    <%= render partial: 'shared/publish', locals: {klass: Artefact} %>
-    <%= render partial: 'shared/unlock', locals: {klass: Artefact} %>
+    <% if can?(:grant_multiple_access, Artefact) || can?(:revoke_multiple_access, Artefact) %>
+      <button type="button" class="btn btn-default btn-sm text-strong" data-toggle="modal" data-target="#access-settings">
+        <%= fa_icon('eye', text: 'Accessibility') %>
+      </button>
+    <% end %>
+    <%= render partial: 'shared/publish', locals: {klass: Artefact} if can?(:publish_multiple, Artefact) %>
+    <%= render partial: 'shared/unlock', locals: {klass: Artefact} if can?(:unlock_multiple, Artefact) %>
     <ul class="list-group">
     <% @artefacts.each do |artefact| %>
       <li class="list-group-item artefact" id="artefact-<%= artefact.id %>">
@@ -113,3 +115,24 @@
 <div id="init-pagination">
   <%= will_paginate artefacts, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
 </div>
+
+<% content_for :modals do %>
+  <div id="access-settings" class="modal fade" role="dialog" aria-labelledby="access-settings-heading" aria-hidden="true">
+    <div class="modal-dialog  modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="access-settings-heading">Accessibility settings</h4>
+        </div>
+        <div class="modal-body">
+          <%= render partial: 'grants/grant_multiple', locals: {model: Artefact} if can?(:grant_multiple_access, Artefact) %>
+          <br>
+          <%= render partial: 'grants/revoke_multiple', locals: {model: Artefact} if can?(:revoke_multiple_access, Artefact) %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default text-strong" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,12 +1,4 @@
 GIT
-  remote: https://github.com/toboter/enki.git
-  revision: 0d7619948b51e271c0c568df13f3635f13457bc3
-  specs:
-    enki (0.1.8.beta)
-      rails
-      shareable_models
-
-GIT
   remote: https://github.com/toboter/nabu.git
   revision: 782c2b5e5cc65e8c94c760a90f84db105e9f26d2
   specs:
@@ -305,7 +297,6 @@ DEPENDENCIES
   cocoon
   coffee-rails (~> 4.2)
   diffy
-  enki!
   font-awesome-rails
   friendly_id
   geoutm
@@ -328,6 +319,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   searchkick
   selectize-rails
+  shareable_models
   simple_form
   spring
   spring-watcher-listen (~> 2.0.0)

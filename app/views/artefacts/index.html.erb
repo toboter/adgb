@@ -7,7 +7,7 @@
 
 
 <div class="row">
-  <div class="col-md-12" style="margin:10px 0;">
+  <div class="col-md-12" style="margin-top:10px;">
     <%= form_tag artefacts_path, method: :get, remote: true do %>
       <div class="form-inline row">
         <div class="form-group col-md-8 col-sm-8">
@@ -62,17 +62,15 @@
       <span id="page-result-info">
         <%= page_entries_info @artefacts, model: 'Artefact' %>
       </span>
-      <%= link_to('Reset', artefacts_path, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
+      <span class="pull-right">
+        <%= link_to fa_icon('map', text: 'Show Map'), mapview_artefacts_path(search: params[:search]), class: 'btn btn-default btn-sm text-strong', style:'margin-top: -2px;line-height:1;', remote: true, data: {toggle: "modal", target: '#mapviewModal'} %>
+        <%= link_to('Reset', artefacts_path, class: 'btn btn-sm btn-default', style:'margin-top: -2px;line-height:1;') %>
+      </span>
     </div>
   </div>
   <div class="col-md-5">
     <%= content_tag :div, class: '' do %>
-      <%  if can?(:create, Artefact) || can_administrate? %>
-        <%= link_to fa_icon('plus', text: 'Artefact'), new_artefact_path, class: 'btn btn-success' if can?(:create, Artefact) %>
-        <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
-      <% end %>
-      <%= link_to fa_icon('map', text: 'Show Map'), mapview_artefacts_path(search: params[:search]), class: 'btn btn-default', remote: true, data: {toggle: "modal", target: '#mapviewModal'} %>
-      
+      <%= link_to fa_icon('plus', text: 'Artefact'), new_artefact_path, class: 'btn btn-success text-strong pull-right' if can?(:create, Artefact) %>
     <% end %>
   </div>
 </div>
@@ -99,4 +97,5 @@
       </div>
     </div>
   </div>
+ 
 <% end %>

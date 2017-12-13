@@ -7,8 +7,8 @@ class Ability
       can :show, Artefact, Artefact do |s|
         s.readable_by?(user)
       end
-      can :unlock, Artefact if user.is_admin?
-      can [:edit, :update, :publish, :destroy], Artefact, Artefact do |s|
+      can [:publish_multiple, :unlock, :unlock_multiple, :grant_multiple_access, :revoke_multiple_access], Artefact if user.is_admin?
+      can [:edit, :update, :publish, :destroy, :grant_access, :update_access, :revoke_access], Artefact, Artefact do |s|
         s.editable_by?(user) && !s.locked?
       end
       can :show, PhotoImport, PhotoImport do |s|
@@ -20,8 +20,8 @@ class Ability
       can :show, Source, Source do |s|
         s.readable_by?(user)
       end
-      can :unlock, Source if user.is_admin?
-      can [:edit, :update, :publish, :destroy], Source, Source do |s|
+      can [:publish_multiple, :unlock, :unlock_multiple, :grant_multiple_access, :revoke_multiple_access], Source if user.is_admin?
+      can [:edit, :update, :publish, :destroy, :grant_access, :update_access, :revoke_access], Source, Source do |s|
         s.editable_by?(user) && !s.locked?
       end
 

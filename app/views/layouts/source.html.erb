@@ -5,7 +5,7 @@
     <ul class="nav nav-tabs" role="tablist">
       <%= content_tag :li, link_to(fa_icon('info', text: "Object data"), @source, aria: {controls: 'data'}, role: 'tab'), role: 'presentation', class: ('active' if current_page?(@source)) %>
       <%= content_tag :li, link_to(fa_icon('history', text: "Versions"), [@source, :versions], aria: {controls: 'history'}, role: 'tab'), role: 'presentation', class: ('active' if current_page?([@source, :versions])) %>
-      <%= content_tag :li, link_to(fa_icon('exclamation-circle', text: "Comments"), [@source, :comments], aria: {controls: 'history'}, role: 'tab'), role: 'presentation', class: ('active' if current_page?([@source, :comments])) %>
+      <%= content_tag :li, link_to(fa_icon('exclamation-circle', text: "Comments"), [@source, :comments], aria: {controls: 'comments'}, role: 'tab'), role: 'presentation', class: ('active' if current_page?([@source, :comments])) %>
       <%= content_tag :span, yield(:buttons), class: 'buttons' %>
 
     </ul>

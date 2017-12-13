@@ -11,8 +11,9 @@ class VersionsController < ApplicationController
 
   def show
     @version = @parent.versions.find(params[:id]).reify
-    @artefact = @version
-    render 'artefacts/show'
+    instance_variable_set("@#{@parent.class.base_class.name.underscore}", @version)
+
+    render "#{@parent.class.base_class.name.underscore.pluralize}/show"
   end
 
   def revert

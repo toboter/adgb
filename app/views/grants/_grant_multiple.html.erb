@@ -1,0 +1,21 @@
+<div class="clearfix">
+      <strong>Share records:</strong>
+      <%= form_tag [:grant_multiple, model], method: :post do %>
+        <%= hidden_field_tag "search", params[:search] %>
+        <%= hidden_field_tag "with_user_shared_to_like", params[:with_user_shared_to_like] %>
+        <%= hidden_field_tag "with_unshared_records", params[:with_unshared_records] %>
+        <%= hidden_field_tag "with_published_records", params[:with_published_records] %>
+        <ul class="list-group">
+          <% (User.all + Group.all).each do |a| %>
+              <li class="list-group-item">
+                <%= a.name.present? ? a.name : "no name given (id: #{a.uid})" %>
+                <span class="pull-right">
+                  <%= check_box_tag 'accessors[]', [a.id, a.class.name] %> read
+                  <small><%= check_box_tag 'can_edit[]', [a.id, a.class.name] %> can edit</small>
+                </span>
+              </li>
+          <% end %>
+        </ul>
+        <%= submit_tag "Add", class: 'btn btn-default pull-right' %>
+      <% end %> 
+</div>

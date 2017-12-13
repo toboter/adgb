@@ -70,6 +70,7 @@ gem 'omniauth-oauth2'
 gem 'paper_trail'
 gem 'diffy'
 gem 'magnific-popup-rails', '~> 1.1.0'
+gem 'shareable_models'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
@@ -77,7 +78,7 @@ gem 'gmaps4rails'
 
 # Record Sharing
 # gem 'enki', path: '/home/tschmidt/dev/gem_dev/enki'
-gem 'enki', git: 'https://github.com/toboter/enki.git'
+# gem 'enki', git: 'https://github.com/toboter/enki.git'
 
 # Comments
 # gem 'nabu', path: '/home/tschmidt/dev/babylon/gem_dev/nabu'

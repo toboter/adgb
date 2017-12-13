@@ -1,8 +1,12 @@
 class PhotoImport < ApplicationRecord
   extend FriendlyId
   require 'roo'
-  include Enki
+  has_paper_trail
+  include Visibility
 
+  def locked?
+    false
+  end
   friendly_id :ph_rel, use: :slugged
   
   has_many :references, class_name: "ArtefactReference", foreign_key: "ph_rel", primary_key: :ph_rel
@@ -20,18 +24,18 @@ class PhotoImport < ApplicationRecord
 
   scope :with_published_records, lambda { |flag|
     return nil  if 0 == flag # checkbox unchecked
-    published_records
+    published
   }
 
   scope :with_unshared_records, lambda { |flag|
     return nil  if 0 == flag # checkbox unchecked
-    inaccessible_records
+    inaccessible
   }
 
   scope :with_user_shared_to_like, lambda { |user_id|
     return nil if user_id.blank?
     user = User.find(user_id)
-    accessible_by_records(user)
+    accessible_by(user)
   }
   
   col_attr.map do |a|

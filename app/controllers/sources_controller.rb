@@ -5,7 +5,7 @@ class SourcesController < ApplicationController
 
   load_and_authorize_resource
   skip_load_resource only: [:index, :create, :publish, :unlock]
-  skip_authorize_resource only: :index
+  skip_authorize_resource only: [:index, :publish, :unlock]
   layout 'source', except: [:index, :edit, :new]
 
   # GET /sources
@@ -31,6 +31,7 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.json { render json: @sources.to_json }
       format.js
     end
   end
@@ -62,6 +63,7 @@ class SourcesController < ApplicationController
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
+    @source_similar = @source.similar(where: {id: Source.visible_for(current_user).all.ids})
 
     respond_to do |format|
       format.html
@@ -113,6 +115,7 @@ class SourcesController < ApplicationController
     respond_to do |format|
       if params[:id]
         @source = Source.friendly.find(params[:id])
+        authorize! :publish, @source
         if !@source.locked? && @source.update(locked: true, paper_trail_event: 'publish')
           format.html { redirect_to @source, notice: "Source was successfully published. #{undo_link}" }
           format.json { render :show, status: :ok, location: source }
@@ -121,6 +124,7 @@ class SourcesController < ApplicationController
           format.json { render json: @source.errors, status: :unprocessable_entity }
         end
       else
+        authorize! :publish_multiple, Source
         query = params[:search].presence || '*'
         sources = Source
           .visible_for(current_user)
@@ -162,6 +166,7 @@ class SourcesController < ApplicationController
     respond_to do |format|
       if params[:id]
         @source = Source.friendly.find(params[:id])
+        authorize! :unlock, @source
         if @source.locked? && @source.update(locked: false, paper_trail_event: 'reopen')
           format.html { redirect_to @source, notice: "Source was successfully unlocked." }
           format.json { render :show, status: :ok, location: @source }
@@ -170,6 +175,7 @@ class SourcesController < ApplicationController
           format.json { render json: @source.errors, status: :unprocessable_entity }
         end
       else
+        authorize! :unlock_multiple, Source
         query = params[:search].presence || '*'
         sources = Source
           .visible_for(current_user)

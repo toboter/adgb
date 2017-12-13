@@ -50,7 +50,6 @@
       <span id="page-result-info">
         <%= page_entries_info @photos, model: 'PhotoImport' %>
       </span>
-      <%= render_filterrific_spinner %>
       <%= link_to('Reset', photo_imports_path, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
     </div>
     <%= render(partial: 'photo_imports/list', locals: { photos: @photos }) %>
