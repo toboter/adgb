@@ -1,7 +1,5 @@
 <% title "You are logged in as #{current_user.name}", false %>
 
-
-
 <div class="row">
   <div class="col-md-12">
     <div class="panel panel-info">
@@ -39,7 +37,7 @@
               <% for app in current_user_repos do %>
                 <%= content_tag :tr do %>
                   <%= content_tag :td, link_to(content_tag(:strong, app.name), "#{app.host}#{':'+app.port.to_s if app.port}", target: :blank) %>
-                  <%= content_tag :td, app.url %>
+                  <%= content_tag :td, app.repository_classes.map{ |c| c.repo_api_url }.join(', ') %>
                   <%= content_tag :td, link_to(app.owner.display_name, '') %>
                   <%= content_tag :td, link_to("Babili", app.provider_presentation_human) %>
                 <% end %>

@@ -24,7 +24,7 @@ class SearchController < ApplicationController
       @photo_results = @results.select { |result| result.try(:type) == 'Photo' }.take(10)
 
       @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
-      @illustrations_url = "#{@commons.url}?q=#{@photo_results.map{|i| "'#{i.name}'"}.join(' OR ')}"
+      @illustrations_url = "#{@commons.repository_classes.first.repo_api_url}?q=#{@photo_results.map{|i| "'#{i.name}'"}.join(' OR ')}"
       if @photo_results.any?
         begin
           response = RestClient.get(@illustrations_url, {:Authorization => "Token #{@commons.user_access_token}"})
