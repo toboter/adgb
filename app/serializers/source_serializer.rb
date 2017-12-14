@@ -5,8 +5,8 @@ class SourceSerializer < ActiveModel::Serializer
   attributes :id, :subtype, :identifier_stable, :identifier_temp, :published?
   attribute :creator do 
     {
-      id: object.record_creator.id,
-      name: object.record_creator.name,
+      id: object.record_creator.try(:id),
+      name: object.record_creator.try(:name),
       url: 'babili profile url'
     }
   end 
@@ -22,7 +22,7 @@ class SourceSerializer < ActiveModel::Serializer
     {
       self: api_source_url(object),
       html_url: source_url(object),
-      parent_url: api_source_url(object.parent)
+      parent_url: object.child? ? api_source_url(object.parent) : nil
     }
   end
 

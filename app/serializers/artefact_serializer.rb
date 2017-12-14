@@ -5,8 +5,8 @@ class ArtefactSerializer < ActiveModel::Serializer
   attributes :id, :bab_rel, :updated_at, :published?
   attribute :creator do 
     {
-      id: object.record_creator.id,
-      name: object.record_creator.name,
+      id: object.record_creator.try(:id),
+      name: object.record_creator.try(:name),
       url: 'babili profile url'
     }
   end 
