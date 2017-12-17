@@ -21,6 +21,7 @@ class ArtefactsController < ApplicationController
     @artefacts =
       Artefact.search(query,
         where: {id: artefacts.ids},
+        fields: [:_all],
         page: params[:page], 
         per_page: session[:per_page], 
         order: sort_order, 

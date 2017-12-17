@@ -21,6 +21,7 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
     results =
       Artefact.search(query,
         where: {id: artefact_ids},
+        fields: [:_all],
         page: params[:page], 
         per_page: params[:per_page] || 30, 
         order: sort_order, 

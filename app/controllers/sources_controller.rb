@@ -21,6 +21,7 @@ class SourcesController < ApplicationController
     @sources =
         type_class.search(query,
           where: {id: sources.ids},
+          fields: [:_all],
           page: params[:page], 
           per_page: session[:per_page], 
           order: sort_order, 
@@ -63,7 +64,7 @@ class SourcesController < ApplicationController
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
-    @source_similar = @source.similar(where: {id: Source.visible_for(current_user).all.ids})
+    @source_similar = @source.similar(fields: [:_all], where: {id: Source.visible_for(current_user).all.ids})
 
     respond_to do |format|
       format.html

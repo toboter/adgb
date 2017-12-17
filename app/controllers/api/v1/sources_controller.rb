@@ -20,6 +20,7 @@ class Api::V1::SourcesController < Api::V1::BaseController
     source_ids = Source.visible_for(@user).all.ids
     results = Source.search(params[:q], 
       where: {id: source_ids},
+      fields: [:_all],
       page: params[:page], 
       per_page: params[:per_page] || 30, 
       order: sort_order, 

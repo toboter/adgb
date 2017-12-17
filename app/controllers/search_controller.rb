@@ -7,12 +7,13 @@ class SearchController < ApplicationController
     artefact_ids = Artefact.visible_for(current_user).all.ids
 
     sources = Source.search(query, 
-      execute: false, where: {id: source_ids})
+      execute: false, where: {id: source_ids}, fields: [:_all])
     artefacts = Artefact.search(query, 
-      execute: false, where: {id: artefact_ids})
+      execute: false, where: {id: artefact_ids}, fields: [:_all])
       
     @results = Searchkick.search(query, 
       index_name: [Source, Artefact],
+      fields: [:_all],
       where: { _or: [{ _type: Source.types.map!{|c| c.downcase.strip}, id: source_ids }, { _type: 'artefact', id: artefact_ids }]},
       misspellings: {below: 1}
       ) do |body|
