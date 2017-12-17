@@ -22,10 +22,19 @@ class Photo < Source
     jsonb_store_key_mapping_for_type_data.map{|j| j[0].to_sym}
   end
 
+  def ph_rel
+    "#{serie}#{number}#{addenda}"
+  end
+
+  def references
+    ArtefactReference.where(ph_rel: ph_rel)
+  end
+
   def search_data
     attributes.merge(
       artefacts: artefacts.map{|a| a},
-      ancestors: ancestors.map{|a| a},
+      ancestors: ancestors.map{|p| p},
+      references: references.map{|r| r},
       full_id: self_and_ancestors.reverse.map{ |t| t.name })
   end
 

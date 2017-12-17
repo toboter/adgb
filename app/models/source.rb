@@ -1,5 +1,5 @@
 class Source < ApplicationRecord
-  searchkick
+  searchkick inheritance: true
   has_paper_trail ignore: [:slug, :type_data, :updated_at], 
     meta: {
       version_name: :name, 
@@ -73,7 +73,7 @@ class Source < ApplicationRecord
 
   def search_data
     attributes.merge(
-      ancestors: ancestors.map{|a| a},
+      ancestors: ancestors.map{|p| p},
       full_id: self_and_ancestors.reverse.map{ |t| t.name })
   end
 
@@ -115,22 +115,24 @@ class Source < ApplicationRecord
 
   def self.sorted_by(sort_option)
     direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
-    unless sort_option.nil?
-      case sort_option.to_s
-      when /^ident_name_/
-        { slug: direction.to_sym }
-      when /^created_at_/
-        { created_at: direction.to_sym }
-      when /^updated_at_/
-        { updated_at: direction }
-      else
-        raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
-      end
+    case sort_option.to_s
+    when /^ident_name_/
+      { slug: direction.to_sym }
+    when /^created_at_/
+      { created_at: direction.to_sym }
+    when /^updated_at_/
+      { updated_at: direction }
+    when /^score_/
+      { _score: direction }
+    else
+      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
     end
   end
    
   def self.options_for_sorted_by
     [
+      ['Relevance asc', 'score_asc'],
+      ['Relevance desc', 'score_desc'],
       ['Ident (a-z)', 'ident_name_asc'],
       ['Ident (z-a)', 'ident_name_desc'],
       ['Created (newest first)', 'created_at_desc'],

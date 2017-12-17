@@ -11,7 +11,7 @@ class SourcesController < ApplicationController
   # GET /sources
   # GET /sources.json
   def index
-    sort_order = Source.sorted_by(params[:sorted_by].presence || nil ) if Source.any?
+    sort_order = Source.sorted_by(params[:sorted_by] ||= 'score_desc' ) if Source.any?
     query = params[:search].presence || '*'
 
     sources = Source
@@ -19,11 +19,11 @@ class SourcesController < ApplicationController
       .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
     @sources =
-        type_class.search(query,
+        Source.search(query,
           where: {id: sources.ids},
           fields: [:_all],
           page: params[:page], 
-          per_page: session[:per_page], 
+          per_page: session[:per_page],
           order: sort_order, 
           misspellings: {below: 1}
         ) do |body|
@@ -41,8 +41,7 @@ class SourcesController < ApplicationController
   # GET /sources/1.json
   def show
     if @source.type == 'Photo'
-      aph = "#{@source.serie}#{@source.number}"
-      @ref = ArtefactReference.where(ph_rel: aph)
+      @ref = @source.references
       @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
       @url = "#{@commons.repository_classes.first.repo_api_url}?q=#{@source.name}&f=match}"
       begin
@@ -64,7 +63,7 @@ class SourcesController < ApplicationController
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
-    @source_similar = @source.similar(fields: [:_all], where: {id: Source.visible_for(current_user).all.ids})
+    @source_similar = @source.similar(fields: [:_all], where: {id: Source.visible_for(current_user).all.ids}, debug: true)
 
     respond_to do |format|
       format.html

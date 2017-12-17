@@ -1,10 +1,5 @@
 <div id="filterrific_results">
 
-
-  <div class="collapse" id="record-access-settings">
-    <%= share_multiple_with(PhotoImport) %>
-  </div>
-
   <div class="list-group">
     <% photos.each do |photo| %>
       <%= link_to photo, remote: !browser.device.mobile?, class: "list-group-item" do %>

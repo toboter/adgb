@@ -116,22 +116,24 @@ class Artefact < ApplicationRecord
 
   def self.sorted_by(sort_option)
     direction = ((sort_option =~ /desc$/) ? 'desc' : 'asc').to_sym
-    unless sort_option.nil?
-      case sort_option.to_s
-      when /^bab_/
-        { grabung: direction, bab: direction }
-      when /^mus_/
-        { mus_sig: direction, mus_nr: direction, mus_ind: direction }
-      when /^updated_at_/
-        { updated_at: direction }
-      else
-        raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
-      end
+    case sort_option.to_s
+    when /^bab_/
+      { grabung: direction, bab: direction }
+    when /^mus_/
+      { mus_sig: direction, mus_nr: direction, mus_ind: direction }
+    when /^updated_at_/
+      { updated_at: direction }
+    when /^score_/
+      { _score: direction }
+    else
+      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
     end
   end
 
   def self.options_for_sorted_by
     [
+      ['Relevance asc', 'score_asc'],
+      ['Relevance desc', 'score_desc'],
       ['Excavation asc', 'bab_asc'],
       ['Excavation desc', 'bab_desc'],
       ['Museum asc', 'mus_asc'],

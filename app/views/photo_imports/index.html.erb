@@ -50,7 +50,6 @@
       <span id="page-result-info">
         <%= page_entries_info @photos, model: 'PhotoImport' %>
       </span>
-      <%= link_to('Reset', photo_imports_path, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
     </div>
     <%= render(partial: 'photo_imports/list', locals: { photos: @photos }) %>
     <div style="margin-top: 20px; margin-bottom: 10px;">
@@ -59,11 +58,6 @@
   </div>
 
   <div class="col-md-5">
-    <%= content_tag :div, class: 'clearfix' do %>
-      <%= link_to fa_icon('share-alt', text: 'Sharing'),"#record-access-settings", class: 'btn btn-warning', data: {toggle: 'collapse'} if can_administrate? %>
-    <hr>
-    <% end if current_user %>
-
     <%= content_tag :div, id: "show-target", data: {spy: 'affix', 'offset-top': "60"} do %>
       <%= render partial: 'photo_imports/show', locals: { photo: @photos.first } %>
     <% end if !browser.device.mobile? %>

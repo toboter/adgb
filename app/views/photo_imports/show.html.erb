@@ -16,7 +16,6 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
           <%= content_tag :li, link_to('Info', '#info', aria: {controls: 'info'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: 'active' %>
-          <%= content_tag :li, link_to(fa_icon('share-alt', text: "Sharing"), '#sharing', aria: {controls: 'sharing'}, role: 'tab', data: {toggle: 'tab'}), role: 'presentation', class: '' %>
         </ul>
 
         <div class="tab-content">
@@ -66,10 +65,6 @@
                 <% end %>
               </tbody>
             </table>
-          <% end %>
-
-          <%= content_tag :div, id: 'sharing', role: 'tabpanel', class: 'tab-pane' do %>
-            <%= shared_with(@photo_import) %>
           <% end %>
         </div>
       </div>

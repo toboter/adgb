@@ -67,7 +67,7 @@
               <% end if v %>
             <% end if @source.type_data %>
             <%= content_tag :tr do %>
-              <th>References</th>
+              <th>References:</th>
               <td><%= @ref.map{ |r| r.title }.join(', ').html_safe %></td>
             <% end if @ref.present? %>
         </tbody>

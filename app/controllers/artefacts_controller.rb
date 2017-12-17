@@ -11,7 +11,7 @@ class ArtefactsController < ApplicationController
   # GET /artefacts
   # GET /artefacts.json
   def index
-    sort_order = Artefact.sorted_by(params[:sorted_by].presence || nil) if Artefact.any?
+    sort_order = Artefact.sorted_by(params[:sorted_by] ||= 'score_desc') if Artefact.any?
     query = params[:search].presence || '*'
     
     artefacts = Artefact
@@ -21,7 +21,7 @@ class ArtefactsController < ApplicationController
     @artefacts =
       Artefact.search(query,
         where: {id: artefacts.ids},
-        fields: [:_all],
+        fields: [:default_fields],
         page: params[:page], 
         per_page: session[:per_page], 
         order: sort_order, 
@@ -45,6 +45,7 @@ class ArtefactsController < ApplicationController
     @artefacts =
       Artefact.search(query,
         where: {id: artefacts.ids},
+        fields: [:default_fields],
         misspellings: {below: 1}
       ) do |body|
         body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
