@@ -4,7 +4,7 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
     sort_order = Artefact.sorted_by(params[:sort].presence || 'updated_at_desc')
     artefacts = Artefact.visible_for(@user).order(sort_order)
     artefacts = artefacts.where("updated_at > ?", params[:since]) if params[:since]
-    artefacts = artefacts.paginate(page: params[:page][:number], per_page: params[:page][:size] || 30)
+    artefacts = artefacts.paginate(page: params[:page], per_page: params[:per_page] || 30)
 
     render json: artefacts, meta: pagination_dict(artefacts), each_serializer: ArtefactSerializer
   end
@@ -16,7 +16,7 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
 
   def search
     query = params[:q]
-    sort_order = Artefact.sorted_by(params[:sort].presence || nil)
+    sort_order = Artefact.sorted_by(params[:sort].presence || 'score_desc')
     artefact_ids = Artefact.visible_for(@user).all.ids
     results =
       Artefact.search(query,

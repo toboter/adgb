@@ -4,7 +4,7 @@ class Api::V1::SourcesController < Api::V1::BaseController
     sort_order = Source.sorted_by(params[:sort].presence || 'updated_at_desc')
     sources = Source.visible_for(@user).order(sort_order)
     sources = sources.where("updated_at > ?", params[:since]) if params[:since]
-    sources = sources.paginate(page: params[:page][:number], per_page: params[:page][:size] || 30)
+    sources = sources.paginate(page: params[:page], per_page: params[:per_page] || 30)
 
     render json: sources, meta: pagination_dict(sources), each_serializer: SourceSerializer
   end
@@ -16,7 +16,7 @@ class Api::V1::SourcesController < Api::V1::BaseController
   
   def search
     query = params[:q]
-    sort_order = Source.sorted_by(params[:sort].presence || nil)
+    sort_order = Source.sorted_by(params[:sort].presence || 'score_desc')
     source_ids = Source.visible_for(@user).all.ids
     results = Source.search(params[:q], 
       where: {id: source_ids},
