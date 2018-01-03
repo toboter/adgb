@@ -36,8 +36,8 @@
           <div class="col-md-3">
             <%= content_tag :div, id: "description-#{artefact.id}", style: 'padding-top: 5px;' do %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.f_obj, 'Fundobj: '), false) %>
-              <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abkl./Zeich.: ')) %>
-              <%= linebreak_before_and_show_if_exists(with_description(artefact.abguss, 'Gipsabguß: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abklatsch: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(artefact.abguss, 'Zeichnung: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.code, 'Code: ')) %>
               [<%= linebreak_before_and_show_if_exists(artefact.kod, false) %>]
               <%= linebreak_before_and_show_if_exists(with_description(artefact.grab, 'Grab: ')) %>

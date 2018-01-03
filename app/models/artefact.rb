@@ -1,4 +1,7 @@
 class Artefact < ApplicationRecord
+
+  # rename_column pending 'abguss' -> 'zeichnung'
+
   # https://github.com/ankane/searchkick/issues/642
   # showing more than 10000 results on index
   searchkick
@@ -187,8 +190,9 @@ class Artefact < ApplicationRecord
     "C" => "Glocke",
     "D" => "Brenndreieck",
     "E" => "Gewicht",
-    "F" => "Figur/Fibel",
+    "F" => "Figur",
     "G" => "Gefäß",
+    "H" => "Fibel",
     "J" => "Schmuck/Perle(n)",
     "K" => "Knopf/Knauf",
     "L" => "Lampe",
