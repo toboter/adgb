@@ -37,11 +37,11 @@ class SessionsController < ApplicationController
     babili_user = JSON.parse(access_token.get('/api/user').body, object_class: OpenStruct)
     babili_accessibilities = JSON.parse(access_token.get("/api/authorizations/clients/#{Rails.application.secrets.client_id}").body, object_class: OpenStruct)
 
-    babili_accessibilities.project_accessors.each do |project|
-      group = Group.where(gid: project.id, provider: 'babili').first_or_create! do |g|
-        g.name = project.name
+    babili_accessibilities.organization_accessors.each do |org|
+      group = Group.where(gid: org.id, provider: 'babili').first_or_create! do |g|
+        g.name = org.name
       end
-      group.users = User.where(uid: project.member_ids, provider: 'babili')
+      group.users = User.where(uid: org.member_ids, provider: 'babili')
     end
 
     user.app_admin = babili_accessibilities.user_permissions.extra.manage
