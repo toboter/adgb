@@ -21,7 +21,7 @@
   
           <%= table_row(artefact.f_obj, 'Beschreibung') %>
           <%= table_row(artefact.abklatsch, 'Abklatsch') %>
-          <%= table_row(artefact.abguss, 'Zeichnung') %>
+          <%= table_row(artefact.zeichnung, 'Zeichnung') %>
           <%= table_row(artefact.period, 'Periode') %>
           <%= table_row("#{artefact.mas1}#{';' if artefact.mas2 || artefact.mas3} #{artefact.mas2}#{';' if artefact.mas3} #{artefact.mas3}".html_safe, 'Maße') if artefact.mas1.present? || artefact.mas2.present? || artefact.mas3.present? %>
   

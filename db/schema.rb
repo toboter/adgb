@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171217162524) do
+ActiveRecord::Schema.define(version: 20180311203025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20171217162524) do
     t.string "mas3"
     t.text "f_obj"
     t.string "abklatsch"
-    t.string "abguss"
+    t.string "zeichnung"
     t.string "fo_tell"
     t.string "fo1"
     t.string "fo2"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20171217162524) do
     t.float "latitude"
     t.float "longitude"
     t.boolean "locked", default: false, null: false
+    t.string "text_solution"
     t.index ["bab_rel"], name: "index_artefacts_on_bab_rel", unique: true
     t.index ["slug"], name: "index_artefacts_on_slug", unique: true
   end

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       post 'artefacts_references'
       post 'artefacts_photos'
       post 'photos'
+      post 'transfer_photos'
     end
   end
   

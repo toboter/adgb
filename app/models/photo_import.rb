@@ -1,7 +1,6 @@
 class PhotoImport < ApplicationRecord
   extend FriendlyId
   require 'roo'
-  has_paper_trail
   include Visibility
 
   def locked?

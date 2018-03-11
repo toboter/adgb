@@ -1,7 +1,5 @@
 class Artefact < ApplicationRecord
 
-  # rename_column pending 'abguss' -> 'zeichnung'
-
   # https://github.com/ankane/searchkick/issues/642
   # showing more than 10000 results on index
   searchkick
@@ -18,7 +16,7 @@ class Artefact < ApplicationRecord
   include Visibility
 
   friendly_id :bab_rel, use: :slugged
-  before_save :set_code, :set_latitude, :set_longitude
+  before_save :set_code, :set_text_solution, :set_latitude, :set_longitude
   # after_commit :reindex_descendants
 
 
@@ -214,7 +212,7 @@ class Artefact < ApplicationRecord
     "R" => "reliefiert",
     nil => nil
   } 
- 
+  
   def kod_to_values
     if kod.present? 
       kod.split(' ')
@@ -224,11 +222,34 @@ class Artefact < ApplicationRecord
       'unbestimmt'
     end
   end
-
+  
   def set_code
     self.code = kod_to_values
   end
 
+  TEXT_SOLUTION = {
+    "a" => "Aramäisch",
+    "a k"  => "Aramäisch, Keilschrift",
+    "e" => "Ägyptisch",
+    "g" => "Griechisch",
+    "h" => "Hettitisch",
+    "i" => "Arabisch",
+    "k" => "Keilschrift",
+    "k a" => "Keilschrift, Aramäisch",
+    "p" => "Persisch",
+    "t" => "Türkisch",
+    "?" => "unbestimmt"
+  }
+
+  def text_to_text_solution
+    if text.present? 
+      Artefact::TEXT_SOLUTION[text]
+    end
+  end
+
+  def set_text_solution
+    self.text_solution = text_to_text_solution
+  end
 
 
   # GEO
@@ -257,11 +278,13 @@ class Artefact < ApplicationRecord
 
 
   # Import/export
-  
+  # Whodunnit muss auf user gesetzt werden 
+  # optional hinzu import neue freigeben für
   def self.import(file, creator_id)
     spreadsheet = open_spreadsheet(file)
     header = spreadsheet.row(1).map{|h| h.underscore }
     @user = User.find(creator_id)
+    PaperTrail.whodunnit = @user.id
     (2..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
       artefact = find_by_bab_rel(row["bab_rel"]) || new

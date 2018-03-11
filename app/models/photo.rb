@@ -43,7 +43,9 @@ class Photo < Source
   end
 
     # set User.current first
-    def self.get_photos_from_photo_import
+    def self.get_photos_from_photo_import(user_id)
+      @user = User.find(user_id)
+      PaperTrail.whodunnit = @user.id
       PhotoImport.all.each do |import|
         photo = Photo.all.type_data_where(serie: import.ph, number: import.ph_nr.to_s, addenda: import.ph_add).first_or_initialize
         photo.identifier_stable = "#{import.ph} #{import.ph_nr}#{import.ph_add}" 

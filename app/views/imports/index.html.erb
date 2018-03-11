@@ -1,10 +1,10 @@
 <div class="well">
-  <strong>Datei auswählen, welche die Daten der Haupttabelle enthält.</strong><br>
+  <strong>1. Datei auswählen, welche die Daten der Haupttabelle enthält.</strong><br>
   <small>Bestehende Datensätze (key: BabRel) werden aktualisiert, nicht vorhandene neu erstellt.</small>
   <%= form_tag artefacts_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_file %>
-    <%= hidden_field_tag :creator_id, current_user %>
-
+    <%= select_tag :creator_id, options_from_collection_for_select(User.all, "id", "name") %>
+    
     <%= submit_tag "Import" %>
   <% end %>
   <br>
@@ -12,7 +12,7 @@
 </div>
 
 <div class="well">
-  <strong>Datei auswählen, welche die Daten der Personentabelle enthält.</strong><br>
+  <strong>2. Datei auswählen, welche die Daten der Personentabelle enthält.</strong><br>
   <small>Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.</small>
   <%= form_tag artefacts_people_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_people_file %>
@@ -23,7 +23,7 @@
 </div>
 
 <div class="well">
-  <strong>Datei auswählen, welche die Daten der Literaturtabelle enthält.</strong><br>
+  <strong>3. Datei auswählen, welche die Daten der Literaturtabelle enthält.</strong><br>
   <small>Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.</small>
   <%= form_tag artefacts_references_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_references_file %>
@@ -34,8 +34,19 @@
 </div>
 
 <div class="well">
-  <strong>Datei auswählen, welche die Daten der Artefakt-Phototabelle enthält.</strong><br>
-  <small>Bestehende Datensätze (key: [p_bab_rel, p_rel]) werden aktualisiert, nicht vorhandene neu erstellt.</small>
+  <strong>4. Datei auswählen, welche die Daten der Photo-Haupttabelle enthält.</strong><br>
+  <small>Bestehende Datensätze (key: PhRel) werden aktualisiert, nicht vorhandene neu erstellt.</small>
+  <%= form_tag photos_imports_path, multipart: true do %>
+    <%= file_field_tag :photos_file %>
+    <%= submit_tag "Import" %>
+  <% end %>
+  <br>
+  <strong>Attributes: </strong><%= PhotoImport.col_attr.map{|c| c.camelize }.join(', ') %>
+</div>
+
+<div class="well">
+  <strong>5. Datei auswählen, welche die Daten der Artefakt-Phototabelle enthält.</strong><br>
+  <small>Bestehende Datensätze werden gelöscht. </small>
   <%= form_tag artefacts_photos_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_photos_file %>
     <%= submit_tag "Import" %>
@@ -45,12 +56,9 @@
 </div>
 
 <div class="well">
-  <strong>Datei auswählen, welche die Daten der Photo-Haupttabelle enthält.</strong><br>
-  <small>Bestehende Datensätze (key: PhRel) werden aktualisiert, nicht vorhandene neu erstellt.</small>
-  <%= form_tag photos_imports_path, multipart: true do %>
-    <%= file_field_tag :photos_file %>
+  <strong>6. Photos in die Quellendatei übertragen und neu verknüpfen.</strong><br>
+  <%= form_tag transfer_photos_imports_path, multipart: true do %>
+    <%= select_tag :transferer_id, options_from_collection_for_select(User.all, "id", "name") %>
     <%= submit_tag "Import" %>
   <% end %>
-  <br>
-  <strong>Attributes: </strong><%= PhotoImport.col_attr.map{|c| c.camelize }.join(', ') %>
 </div>

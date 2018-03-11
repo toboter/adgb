@@ -25,7 +25,7 @@ one:
   mas3: MyString
   f_obj: MyText
   abklatsch: MyString
-  abguss: MyString
+  zeichnung: MyString
   fo_tell: MyString
   fo1: MyString
   fo2: MyString
@@ -70,7 +70,7 @@ two:
   mas3: MyString
   f_obj: MyText
   abklatsch: MyString
-  abguss: MyString
+  zeichnung: MyString
   fo_tell: MyString
   fo1: MyString
   fo2: MyString

@@ -12,7 +12,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   end 
   attributes :full_entry, :grabung, :bab, :bab_ind, :b_join, :b_korr 
   attributes :mus_sig, :mus_nr, :mus_ind, :m_join, :m_korr
-  attributes :mas1, :mas2, :mas3, :kod, :grab, :text, :sig, :f_obj, :abklatsch, :abguss
+  attributes :mas1, :mas2, :mas3, :kod, :grab, :text, :sig, :f_obj, :abklatsch, :zeichnung
   attributes :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text, :gr_datum, :gr_jahr
   attributes :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1
   attributes :standort_alt, :standort, :diss, :mus_id
