@@ -39,10 +39,10 @@
               <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abklatsch: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.zeichnung, 'Zeichnung: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.code, 'Code: ')) %>
-              [<%= linebreak_before_and_show_if_exists(artefact.kod, false) %>]
+              <%= "[#{artefact.kod}]" if artefact.kod.present? %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.grab, 'Grab: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.text_solution, 'Text: ')) %>
-              [<%= linebreak_before_and_show_if_exists(artefact.text, false) %>]
+              <%= "[#{artefact.text}]" if artefact.text.present? %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.sig, 'Bild: ')) %>
               <%= content_tag :span do %>
               <br>

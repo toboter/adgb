@@ -9,7 +9,7 @@ class PhotosController < ApplicationController
     aph = "#{@photo.serie}#{@photo.number}"
     @ref = ArtefactReference.where(ph_rel: aph)
     @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
-    @url = "#{@commons.repository_classes.first.repo_api_url}?q=#{@photo.name}&f=match}"
+    @url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@photo.name}&f=match}"
     begin
       response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
       @files= JSON.parse(response.body)
