@@ -57,7 +57,7 @@ class Source < ApplicationRecord
   # Naming
 
   def name_tree
-    self_and_ancestors.reverse.map{ |t| t.name }.join(' / ')
+    self_and_ancestors.auto_include(false).reverse.map{ |t| t.name }.join(' / ')
   end
 
   def name
@@ -74,7 +74,7 @@ class Source < ApplicationRecord
   def search_data
     attributes.merge(
       ancestors: ancestors.map{|p| p},
-      full_id: self_and_ancestors.reverse.map{ |t| t.name })
+      full_id: self_and_ancestors.auto_include(false).reverse.map{ |t| t.name })
   end
 
   def reindex_descendants

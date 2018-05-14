@@ -17,9 +17,10 @@ class SourcesController < ApplicationController
     sources = Source
       .visible_for(current_user)
       .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+      .auto_include(false)
 
     @sources =
-        Source.search(query,
+        Source.auto_include(false).search(query,
           where: {id: sources.ids},
           fields: [:_all],
           page: params[:page], 

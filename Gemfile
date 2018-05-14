@@ -71,6 +71,8 @@ gem 'paper_trail'
 gem 'diffy'
 gem 'magnific-popup-rails', '~> 1.1.0'
 gem 'shareable_models'
+gem 'acts-as-taggable-on', '~> 5.0'
+gem 'goldiloader'
 
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.

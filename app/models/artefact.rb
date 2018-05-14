@@ -14,6 +14,7 @@ class Artefact < ApplicationRecord
   require 'roo'
   include Nabu
   include Visibility
+  acts_as_taggable
 
   friendly_id :bab_rel, use: :slugged
   before_save :set_code, :set_text_solution, :set_latitude, :set_longitude
@@ -58,6 +59,18 @@ class Artefact < ApplicationRecord
     attribute_names.map {|n| n unless ['id', 'created_at', 'updated_at'].include?(n) }.compact
   end
 
+  def tag_list
+    tags.map{|t|  [t.name, t.uuid, t.url].join(';')  }
+  end
+
+  def tag_list=(values)
+    ctags = []
+    values.split(',').each do |term|
+      ident = term.split(';')
+      ctags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+    end
+    self.tags = ctags
+  end
 
   # Naming
 
@@ -150,18 +163,13 @@ class Artefact < ApplicationRecord
 
   def search_data
     attributes.merge(
-      references: references.map{|r| r},
-      people: people.map{|p| p},
-      photos: photos.map{|p| p},
+      references: references.map(&:title),
+      people: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
+      photos: photos.map(&:name),
+      tags: tags.map(&:name),
       type: 'Artefakt'
     )
   end
-
-  # def reindex_descendants
-  #   descendants.each do |subject|
-  #     subject.reindex
-  #   end
-  # end
 
   
   # KOD lookup

@@ -35,7 +35,7 @@ class Photo < Source
       artefacts: artefacts.map{|a| a},
       ancestors: ancestors.map{|p| p},
       references: references.map{|r| r},
-      full_id: self_and_ancestors.reverse.map{ |t| t.name })
+      full_id: self_and_ancestors.auto_include(false).reverse.map{ |t| t.name })
   end
 
   def icon
@@ -46,8 +46,8 @@ class Photo < Source
     def self.get_photos_from_photo_import(user_id)
       @user = User.find(user_id)
       PaperTrail.whodunnit = @user.id
-      PhotoImport.all.each do |import|
-        photo = Photo.all.type_data_where(serie: import.ph, number: import.ph_nr.to_s, addenda: import.ph_add).first_or_initialize
+      PhotoImport.auto_include(false).all.each do |import|
+        photo = Photo.auto_include(false).all.type_data_where(serie: import.ph, number: import.ph_nr.to_s, addenda: import.ph_add).first_or_initialize
         photo.identifier_stable = "#{import.ph} #{import.ph_nr}#{import.ph_add}" 
         photo.serie = import.ph
         photo.number = import.ph_nr
@@ -57,7 +57,7 @@ class Photo < Source
         photo.remarks = 'Cross import from xlsx'
         photo.slug = nil
         photo.save!
-        ArtefactPhoto.where(p_rel: import.ph_rel).update_all(source_id: photo.id)
+        ArtefactPhoto.auto_include(false).where(p_rel: import.ph_rel).update_all(source_id: photo.id)
       end
     end
 end

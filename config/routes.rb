@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   
   get '/api', to: 'home#api'
   get '/search', to: 'search#index'
+  get '/concepts/search', to: 'concepts#search'
 
   root 'home#index' 
 end

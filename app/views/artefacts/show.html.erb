@@ -28,6 +28,9 @@
 <div class="row">
   <div class="col-md-7">
     <%= content_tag :div, id: 'data', class: '' do %>
+      <div class="tags" style="padding:10px 0;">
+        <%= @artefact.tags.map{|t| content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge')}.join(' ').html_safe %>
+      </div>
       <table class="table table-striped">
         <tbody>
           <%= table_row(@artefact.bab_name, 'Excavation No') %>
@@ -115,7 +118,7 @@
       <div class="list-group">
         <%= render @artefact_similar %>
       </div>
-    <% end if @artefact_similar.any? %> 
+    <% end if @artefact_similar && @artefact_similar.any? %> 
   </div>
 </div>
 

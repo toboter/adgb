@@ -4,6 +4,13 @@
 
   <div class="row">
     <div class="col-md-12">
+      <%= f.input :tag_list, 
+        as: :string,
+        input_html: {
+          value: @artefact.tag_list.join(','),
+          class: 'concepts_selectize' }, 
+        label: "Tags <span class='text-muted' style='font-weight:normal;'>(separate with comma)</span>".html_safe,
+        hint: 'Add tags to categorize the artefact and make it more discoverable.' %>
       <%= f.input :bab_rel %>
       
       <%= f.input :grabung %>
