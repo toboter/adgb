@@ -59,6 +59,6 @@ $(document).ready(function() {
             return openerElement.is('img') ? openerElement : openerElement.find('img');
           }
         }
+    });
     
-      });
 });

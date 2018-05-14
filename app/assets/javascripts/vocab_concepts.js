@@ -31,7 +31,7 @@ $(document).on('turbolinks:load', function(){
       }
     }
   });
-  $('.item').each(function( index ) {
+  $('div.concepts_selectize > div.items > div.item').each(function( index ) {
     $(this).text($( this ).text().split(';')[0]);
   });
 });
