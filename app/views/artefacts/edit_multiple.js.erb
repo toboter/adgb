@@ -1,0 +1,3 @@
+$('#edit-multiple').modal('show');
+<% js = escape_javascript(render(partial: 'artefacts/edit_multiple_form', locals: {edit_artefacts: @edit_artefacts})) %>
+$("#edit-multiple").find(".modal-body").html("<%= js %>");

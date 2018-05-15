@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   resources :artefacts, concerns: [:commentable, :versionable], model_name: 'Artefact' do
     collection do
       get :mapview
+      post :edit_multiple
+      put :update_multiple
       post :publish
       post :unlock
       post :grant_multiple, to: 'grants#grant_multiple'

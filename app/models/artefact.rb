@@ -52,6 +52,7 @@ class Artefact < ApplicationRecord
   has_many :people, class_name: "ArtefactPerson", foreign_key: "n_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
   
+  attr_accessor :add_to_tag_list, :remove_from_tag_list
 
   # virtual attributes
 
@@ -167,7 +168,8 @@ class Artefact < ApplicationRecord
       people: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
       photos: photos.map(&:name),
       tags: tags.map(&:name),
-      type: 'Artefakt'
+      type: 'Artefakt',
+      published: published?
     )
   end
 

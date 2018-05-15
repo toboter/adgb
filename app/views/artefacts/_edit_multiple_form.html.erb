@@ -1,0 +1,31 @@
+<% if edit_artefacts %>
+  <%= form_tag update_multiple_artefacts_path, method: :put do %>
+    <%= simple_fields_for :artefact do |f| %>
+      <%= f.input :add_to_tag_list, 
+        as: :string,
+        input_html: {
+          class: 'concepts_selectize' 
+        }, 
+        label: "Add tags <span class='text-muted' style='font-weight:normal;'>(separate with comma)</span>".html_safe,
+        hint: 'Add tags to categorize the artefact and make it more discoverable. Existing tags will stay untouched.' %>
+      <%= f.input :remove_from_tag_list, 
+        as: :string,
+        input_html: {
+          class: 'concepts_selectize' 
+        }, 
+        label: "Remove tags <span class='text-muted' style='font-weight:normal;'>(separate with comma)</span>".html_safe,
+        hint: 'Remove tags.' %>
+    <% end %>
+    <div class="actions">
+      <%= submit_tag "Update", class: 'btn btn-default text-strong' %>
+    </div>
+    
+    <hr>
+    <% edit_artefacts.each do |artefact| %>
+      <%= hidden_field_tag "artefact_ids[]", artefact.id %>
+      <%= render artefact %>
+    <% end %>
+  <% end %>
+<% else %>
+  Nothing selected
+<% end %>

@@ -3,9 +3,9 @@ class ArtefactsController < ApplicationController
   require 'json'
 
   load_and_authorize_resource
-  skip_load_resource only: [:index, :mapview, :publish, :unlock]
-  skip_authorize_resource only: [:index, :mapview, :publish, :unlock]
-  layout 'artefact', except: [:index, :mapview, :edit, :new]
+  skip_load_resource only: [:index, :mapview, :publish, :unlock, :edit_multiple, :update_multiple]
+  skip_authorize_resource only: [:index, :mapview, :publish, :unlock, :edit_multiple, :update_multiple]
+  layout 'artefact', except: [:index, :mapview, :edit, :new, :edit_multiple]
 
 
   # GET /artefacts
@@ -70,8 +70,8 @@ class ArtefactsController < ApplicationController
   # GET /artefacts/1.json
   def show
     @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
-    @illustrations_url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@artefact.illustrations.map{|i| "'#{i.name}'"}.join(' OR ')}"
-    if @artefact.illustrations.any?
+    if @artefact.illustrations.any? && @commons.collection_classes
+      @illustrations_url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@artefact.illustrations.map{|i| "'#{i.name}'"}.join(' OR ')}"
       begin
         response = RestClient.get(@illustrations_url, {:Authorization => "Token #{@commons.user_access_token}"})
         @files = JSON.parse(response.body)
@@ -103,6 +103,14 @@ class ArtefactsController < ApplicationController
   def edit
   end
 
+  def edit_multiple
+    @edit_artefacts = Artefact.visible_for(current_user).find(params[:artefact_ids]) if params[:artefact_ids]
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
   # POST /artefacts
   # POST /artefacts.json
   def create
@@ -130,6 +138,37 @@ class ArtefactsController < ApplicationController
         format.html { render :edit }
         format.json { render json: @artefact.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def update_multiple
+    # index must be updated!
+    @artefacts = Artefact.visible_for(current_user).find(params[:artefact_ids])
+    count = @artefacts.count
+    add_tags = []
+    artefact_params[:add_to_tag_list].split(',').each do |term|
+      ident = term.split(';')
+      add_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+    end
+    remove_tags = []
+    artefact_params[:remove_from_tag_list].split(',').each do |term|
+      ident = term.split(';')
+      remove_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+    end
+    @artefacts.reject! do |artefact|
+      if can? :update, artefact
+        artefact.tags << add_tags.map{|t| t unless t.in?(artefact.tags)}.compact
+        artefact.tags.destroy(remove_tags.map{|t| t if t.in?(artefact.tags)}.compact)
+        artefact.reindex
+        true
+      else
+        false
+      end
+    end
+    if @artefacts.empty?
+      redirect_to artefacts_path, notice: "#{view_context.pluralize(count, 'Artefact')} successfully updated."
+    else
+      redirect_to artefacts_path, alert: "Something went wrong. Objects: #{@artefacts.inspect}"
     end
   end
 
@@ -253,7 +292,7 @@ class ArtefactsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def artefact_params
-      params.require(:artefact).permit(:locked, :bab_rel, :grabung, :bab, :bab_ind, :b_join, :b_korr, :mus_sig, :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :grab, :text, :sig, :diss, :mus_id, :standort_alt, :standort, :mas1, :mas2, :mas3, :f_obj, :abklatsch, :zeichnung, :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text, :utmx, :utmxx, :utmy, :utmyy, :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr, :creator_id, :tag_list, accessor_ids: [], references_attributes: [:id, :ver, :publ, :jahr, :seite, :_destroy], illustrations_attributes: [:id, :ph, :ph_nr, :ph_add, :position, :p_rel, :_destroy], people_attributes: [:id, :person, :titel, :_destroy])
+      params.require(:artefact).permit(:locked, :bab_rel, :grabung, :bab, :bab_ind, :b_join, :b_korr, :mus_sig, :mus_nr, :mus_ind, :m_join, :m_korr, :kod, :grab, :text, :sig, :diss, :mus_id, :standort_alt, :standort, :mas1, :mas2, :mas3, :f_obj, :abklatsch, :zeichnung, :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text, :utmx, :utmxx, :utmy, :utmyy, :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, :gr_datum, :gr_jahr, :creator_id, :tag_list, :add_to_tag_list, :remove_from_tag_list, accessor_ids: [], references_attributes: [:id, :ver, :publ, :jahr, :seite, :_destroy], illustrations_attributes: [:id, :ph, :ph_nr, :ph_add, :position, :p_rel, :_destroy], people_attributes: [:id, :person, :titel, :_destroy])
     end
     
 end
