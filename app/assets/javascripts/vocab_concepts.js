@@ -3,7 +3,7 @@ $(document).on('turbolinks:load', function(){
   $('.concepts_selectize').selectize({
     valueField: 'value',
     labelField: 'name',
-    searchField: ['name','parents'],
+    searchField: ['name','parents', 'labels'],
     placeholder: 'Search vocabularies for concepts...',
     create: false,
     load: function(query, callback) {

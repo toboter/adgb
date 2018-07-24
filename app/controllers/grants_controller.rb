@@ -70,7 +70,8 @@ class GrantsController < ApplicationController
 
     sk_results = model_class.search(query, 
       where: { id: records.ids },
-      per_page: 10000 ,
+      fields: [:default_fields],
+      per_page: 10000,
       misspellings: {below: 1}
       ) do |body|
         body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
@@ -105,6 +106,7 @@ class GrantsController < ApplicationController
 
     sk_results = model_class.search(query, 
       where: { id: records.ids },
+      fields: [:default_fields],
       per_page: 10000 ,
       misspellings: {below: 1}
       ) do |body|
