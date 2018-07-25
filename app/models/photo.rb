@@ -35,7 +35,8 @@ class Photo < Source
       artefacts: artefacts.map{|a| [a, a.full_entry].join(' ') },
       ancestors: ancestors.map{|p| p},
       references: references.map{|r| r},
-      full_id: self_and_ancestors.auto_include(false).reverse.map{ |t| t.name })
+      full_id: self_and_ancestors.auto_include(false).reverse.map{ |t| t.name },
+      tags: tags.map(&:name),)
   end
 
   def icon

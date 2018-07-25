@@ -43,10 +43,14 @@ Rails.application.routes.draw do
   resources :artefact_references, only: :index, path: 'references', as: 'references'
 
   resources :sources, model_name: 'Source' do
-    post :publish, on: :collection
-    post :unlock, on: :collection
-    post :grant_multiple, to: 'grants#grant_multiple', on: :collection
-    delete :revoke_multiple, to: 'grants#revoke_multiple', on: :collection
+    collection do
+      post :edit_multiple
+      put :update_multiple
+      post :publish
+      post :unlock
+      post :grant_multiple, to: 'grants#grant_multiple'
+      delete :revoke_multiple, to: 'grants#revoke_multiple'
+    end
   end
   resources :archives, controller: 'sources', type: 'Archive', model_name: 'Archive', concerns: [:commentable, :versionable]
   resources :collections, controller: 'sources', type: 'Collection', model_name: 'Collection', concerns: [:commentable, :versionable]

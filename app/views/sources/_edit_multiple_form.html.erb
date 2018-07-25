@@ -1,0 +1,31 @@
+<% if edit_sources %>
+  <%= form_tag update_multiple_sources_path, method: :put do %>
+    <%= simple_fields_for :source do |f| %>
+      <%= f.input :add_to_tag_list, 
+        as: :string,
+        input_html: {
+          class: 'concepts_selectize' 
+        }, 
+        label: "Add tags".html_safe,
+        hint: 'Add tags to categorize the sources and make them more discoverable. Existing tags will stay untouched.' %>
+      <%= f.input :remove_from_tag_list, 
+        as: :string,
+        input_html: {
+          class: 'concepts_selectize' 
+        }, 
+        label: "Remove tags".html_safe,
+        hint: 'Remove tags.' %>
+    <% end %>
+    <div class="actions">
+      <%= submit_tag "Update", class: 'btn btn-default text-strong' %>
+    </div>
+    
+    <hr>
+    <% edit_sources.each do |source| %>
+      <%= hidden_field_tag "source_ids[]", source.id %>
+      <%= render source %>
+    <% end %>
+  <% end %>
+<% else %>
+  Nothing selected
+<% end %>

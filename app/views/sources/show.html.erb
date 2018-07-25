@@ -48,6 +48,9 @@
         <%= fa_icon(@source.icon) %>
         <%= @source.name %>
       <% end %>
+      <%= content_tag :div, class: "tags", style: "padding:10px 0;" do %>
+        <%= @source.tags.map{|t| content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge')}.join(' ').html_safe %>
+      <% end if @source.tags.any? %>
       <%= content_tag :p, @source.remarks, class: 'text-muted' if @source.remarks %>
       <%= render 'shared/display_files' if @files.present? %>
       <table class="table table-striped">

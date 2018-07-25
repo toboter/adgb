@@ -4,9 +4,9 @@ class SourcesController < ApplicationController
   require 'json'
 
   load_and_authorize_resource
-  skip_load_resource only: [:index, :create, :publish, :unlock]
-  skip_authorize_resource only: [:index, :publish, :unlock]
-  layout 'source', except: [:index, :edit, :new]
+  skip_load_resource only: [:index, :create, :publish, :unlock, :edit_multiple, :update_multiple]
+  skip_authorize_resource only: [:index, :publish, :unlock, :edit_multiple, :update_multiple]
+  layout 'source', except: [:index, :edit, :new, :edit_multiple]
 
   # GET /sources
   # GET /sources.json
@@ -82,6 +82,14 @@ class SourcesController < ApplicationController
   def edit
   end
 
+  def edit_multiple
+    @edit_sources = Source.visible_for(current_user).find(params[:source_ids]) if params[:source_ids]
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
   # POST /sources
   # POST /sources.json
   def create
@@ -109,6 +117,37 @@ class SourcesController < ApplicationController
         format.html { render :edit }
         format.json { render json: @source.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def update_multiple
+    # index must be updated!
+    @sources = Source.visible_for(current_user).find(params[:source_ids])
+    count = @sources.count
+    add_tags = []
+    sources_params[:add_to_tag_list].split(',').each do |term|
+      ident = term.split(';')
+      add_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+    end
+    remove_tags = []
+    sources_params[:remove_from_tag_list].split(',').each do |term|
+      ident = term.split(';')
+      remove_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+    end
+    @sources.reject! do |source|
+      if can? :update, source
+        source.tags << add_tags.map{|t| t unless t.in?(source.tags)}.compact
+        source.tags.destroy(remove_tags.map{|t| t if t.in?(source.tags)}.compact)
+        source.reindex
+        true
+      else
+        false
+      end
+    end
+    if @sources.empty?
+      redirect_to sources_path, notice: "#{view_context.pluralize(count, 'Source')} successfully updated."
+    else
+      redirect_to sources_path, alert: "Something went wrong. Objects: #{@sources.inspect}"
     end
   end
 
@@ -248,8 +287,15 @@ class SourcesController < ApplicationController
         :identifier_stable, 
         :identifier_temp, 
         :type, 
-        :remarks, 
+        :remarks,
         :parent_id, 
+        :tag_list,
         type_class.jsonb_attributes)
+    end
+
+    def sources_params
+      params.require(:source).permit(
+        :add_to_tag_list, :remove_from_tag_list
+      )
     end
 end

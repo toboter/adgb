@@ -10,6 +10,7 @@ class Source < ApplicationRecord
   extend FriendlyId
   include Nabu
   include Visibility
+  acts_as_taggable
 
   has_closure_tree
 
@@ -20,6 +21,8 @@ class Source < ApplicationRecord
   validates :type, presence: true
   validates :identifier_stable, presence: { message: "can't be blank. At least use a temporary identifier, next field." }, unless: -> {identifier_temp.present?}
   validates :identifier_stable, uniqueness: { scope: :type }
+
+  attr_accessor :add_to_tag_list, :remove_from_tag_list
 
   def changed_characters
     total = 0
@@ -52,6 +55,18 @@ class Source < ApplicationRecord
     types.map{ |t| t.constantize.jsonb_attributes }.flatten.uniq
   end
   
+  def tag_list
+    tags.map{|t|  [t.name, t.uuid, t.url].join(';')  }
+  end
+
+  def tag_list=(values)
+    ctags = []
+    values.split(',').each do |term|
+      ident = term.split(';')
+      ctags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+    end
+    self.tags = ctags
+  end
 
 
   # Naming
@@ -74,7 +89,8 @@ class Source < ApplicationRecord
   def search_data
     attributes.merge(
       ancestors: ancestors.map{|p| p},
-      full_id: self_and_ancestors.auto_include(false).reverse.map{ |t| t.name })
+      full_id: self_and_ancestors.auto_include(false).reverse.map{ |t| t.name },
+      tags: tags.map(&:name),)
   end
 
   def reindex_descendants

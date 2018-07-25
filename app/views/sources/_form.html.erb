@@ -17,6 +17,14 @@
     </div>
     <div class="row">
       <div class="col-md-8">
+        <%= f.input :tag_list, 
+          as: :string,
+          input_html: {
+            value: @source.tag_list.join(','),
+            class: 'concepts_selectize' }, 
+          label: "Tags".html_safe,
+          hint: "Add tags to categorize the #{@source.type.downcase} and make it more discoverable." %>
+
         <% @source.class.jsonb_attributes.each do |p| %>
           <%= f.input p %>
         <% end %>
