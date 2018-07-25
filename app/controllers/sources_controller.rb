@@ -22,7 +22,7 @@ class SourcesController < ApplicationController
     @sources =
         Source.auto_include(false).search(query,
           where: {id: sources.ids},
-          fields: [:_all],
+          fields: [:default_fields],
           page: params[:page], 
           per_page: session[:per_page],
           order: sort_order, 

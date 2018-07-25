@@ -168,7 +168,7 @@ class Artefact < ApplicationRecord
       people: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
       photos: photos.map(&:name),
       tags: tags.map(&:name),
-      type: 'Artefakt',
+      type: 'Artefact',
       published: published?
     )
   end

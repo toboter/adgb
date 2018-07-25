@@ -5,17 +5,23 @@ class SearchController < ApplicationController
     query = params[:search]
     source_ids = Source.visible_for(current_user).all.ids
     artefact_ids = Artefact.visible_for(current_user).all.ids
-
-    sources = Source.search(query, 
-      execute: false, where: {id: source_ids}, fields: [:_all])
-    artefacts = Artefact.search(query, 
-      execute: false, where: {id: artefact_ids}, fields: [:_all])
       
-    @results = Searchkick.search(query, 
-      index_name: [Source, Artefact],
-      fields: [:_all],
-      where: { _or: [{ _type: Source.types.map!{|c| c.downcase.strip}, id: source_ids }, { _type: 'artefact', id: artefact_ids }]},
-      misspellings: {below: 1}
+    @results = Searchkick.search(query,
+        index_name: [Source, Artefact],
+        where: { _or: 
+          [
+            {
+              type: Source.types, 
+              id: source_ids 
+            },
+            {
+              _type: 'artefact', 
+              id: artefact_ids
+            }
+          ]
+        },
+        fields: [:default_fields],
+        misspellings: {below: 1}
       ) do |body|
         body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
       end
@@ -26,6 +32,7 @@ class SearchController < ApplicationController
 
       @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
       @illustrations_url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@photo_results.map{|i| "'#{i.name}'"}.join(' OR ')}"
+
       if @photo_results.any?
         begin
           response = RestClient.get(@illustrations_url, {:Authorization => "Token #{@commons.user_access_token}"})
