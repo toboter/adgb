@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
 
   def index
-    @tags = nil
+    @tags = ActsAsTaggableOn::Tag.most_used
   end
 end

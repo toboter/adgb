@@ -14,6 +14,11 @@
         <span class="input-group-addon"><%= link_to fa_icon('search'), '' %></span>
         <%= search_field_tag 'search', '', placeholder: "Search", class: "form-control" %>
       </div>
+      <%= content_tag :div, class: 'text-center tag-cloud --spacious' do %>
+        <% tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| %>
+          <%= link_to tag.name, search_path(search: "tags:#{tag.name}"), id: tag.name, class: css_class %>
+        <% end %>
+      <% end if @tags %>
     <% end %>
   </div>
 </div>
@@ -46,10 +51,4 @@
     <%= line_chart Artefact.group(:gr_jahr).having(gr_jahr: 1899..1917).count, colors: ["orange", "#999"] %>
     <p class="text-muted text-center">Count of excavated artefacts over the years.</p>
   <% end %>
-
-  <%= content_tag :div, class: 'col-md-12 tag-cloud' do %>
-    <% tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| %>
-      <%= link_to tag.name, '', id: tag.name, class: css_class %>
-    <% end %>
-  <% end if @tags %>
 </div>
