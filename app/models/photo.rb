@@ -32,7 +32,7 @@ class Photo < Source
 
   def search_data
     attributes.merge(
-      artefacts: artefacts.map{|a| a},
+      artefacts: artefacts.map{|a| [a, a.full_entry].join(' ') },
       ancestors: ancestors.map{|p| p},
       references: references.map{|r| r},
       full_id: self_and_ancestors.auto_include(false).reverse.map{ |t| t.name })
