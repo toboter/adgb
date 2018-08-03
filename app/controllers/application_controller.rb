@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user_repos
-    @current_user_repos = JSON.parse(((current_user && access_token) ? access_token.get("/api/user/repositories").body : []), object_class: OpenStruct)
+    @current_user_repos = JSON.parse(((current_user && access_token) ? access_token.get("/v1/user/repositories").body : []), object_class: OpenStruct)
   end
 
   # The current_user is logged out automatically and redirected to root if the access_token is expired.

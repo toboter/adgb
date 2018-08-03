@@ -34,8 +34,8 @@ class SessionsController < ApplicationController
   def update_user
     puts 'updating user'
     user = User.find(session[:user_id])
-    babili_user = JSON.parse(access_token.get('/api/user').body, object_class: OpenStruct)
-    babili_accessibilities = JSON.parse(access_token.get("/api/authorizations/clients/#{Rails.application.secrets.client_id}").body, object_class: OpenStruct)
+    babili_user = JSON.parse(access_token.get('/v1/user').body, object_class: OpenStruct)
+    babili_accessibilities = JSON.parse(access_token.get("/v1/authorizations/clients/#{Rails.application.secrets.client_id}").body, object_class: OpenStruct)
 
     babili_accessibilities.organization_accessors.each do |org|
       group = Group.where(gid: org.id, provider: 'babili').first_or_create! do |g|
@@ -60,13 +60,13 @@ class SessionsController < ApplicationController
   def set_local_token_on_babili
     puts 'sending token'
     # adding the initial token to each repo in babili when signing up the first time start
-    repos = JSON.parse(access_token.get("/api/repositories/resources/#{Rails.application.secrets.host_id}").body, object_class: OpenStruct)
+    repos = JSON.parse(access_token.get("/v1/repositories/resources/#{Rails.application.secrets.host_id}").body, object_class: OpenStruct)
 
     if repos.any? && current_user.regenerate_token
       begin
         repos.each do |r|
           data = {token: current_user.token, token_type: 'Token'}
-          resp = access_token.post("/api/repositories/#{r.id}/tokens", body: data)
+          resp = access_token.post("/v1/repositories/#{r.id}/tokens", body: data)
           flash[:notice] = (resp.status == 201 ? "Token received." : 'An error occured.')
         end
       rescue RestClient::ExceptionWithResponse => e

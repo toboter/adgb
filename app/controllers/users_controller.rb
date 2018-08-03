@@ -59,13 +59,13 @@ class UsersController < ApplicationController
   end
 
   def add_token_to_babili
-    repos = JSON.parse(access_token.get("/api/collections/resources/#{Rails.application.secrets.host_id}").body, object_class: OpenStruct)
+    repos = JSON.parse(access_token.get("/v1/collections/resources/#{Rails.application.secrets.host_id}").body, object_class: OpenStruct)
 
     if repos.any? && current_user.regenerate_token
       begin
         repos.each do |r|
           data = {token: current_user.token, token_type: 'Token'}
-          resp = access_token.post("/api/collections/#{r.id}/tokens", body: data)
+          resp = access_token.post("/v1/collections/#{r.id}/tokens", body: data)
           flash[:notice] = (resp.status == 201 ? "Token received." : 'An error occured.')
         end
         redirect_to settings_users_url, notice: 'Updated'
@@ -78,7 +78,7 @@ class UsersController < ApplicationController
   end
 
   def update_accessibilities
-    babili_accessibilities = JSON.parse(((current_user && access_token) ? access_token.get("/api/authorizations/clients/#{Rails.application.secrets.client_id}").body : []), object_class: OpenStruct)
+    babili_accessibilities = JSON.parse(((current_user && access_token) ? access_token.get("/v1/authorizations/clients/#{Rails.application.secrets.client_id}").body : []), object_class: OpenStruct)
     user = current_user
 
     babili_accessibilities.organization_accessors.each do |org|

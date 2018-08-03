@@ -8,15 +8,15 @@ class Api::WebhooksController < ActionController::API
 
   end
 
-  # application_url/api/hooks/update_accessibilities?access_token=babili-token
+  # application_url/v1/hooks/update_accessibilities?access_token=babili-token
   def update_user_accessibilities
-    user_url = "#{Rails.application.secrets.provider_site}/api/user"
+    user_url = "#{Rails.application.secrets.provider_site}/v1/user"
     user_response = RestClient.get user_url, {:Authorization => "Bearer #{@token}"}
     user_parsed = JSON.parse(user_response.body)
     user = User.where(provider: 'babili', uid: user_parsed['id']).first
 
-    # babili_accessibilities = JSON.parse(((current_user && access_token) ? access_token.get("/api/authorizations/clients/#{Rails.application.secrets.client_id}").body : []), object_class: OpenStruct)
-    babili_access_url = "#{Rails.application.secrets.provider_site}/api/authorizations/clients/#{Rails.application.secrets.client_id}"
+    # babili_accessibilities = JSON.parse(((current_user && access_token) ? access_token.get("/v1/authorizations/clients/#{Rails.application.secrets.client_id}").body : []), object_class: OpenStruct)
+    babili_access_url = "#{Rails.application.secrets.provider_site}/v1/authorizations/clients/#{Rails.application.secrets.client_id}"
     babili_access_resp = RestClient.get babili_access_url, {:Authorization => "Bearer #{@token}"}
     babili_accessibilities = JSON.parse(babili_access_resp.body, object_class: OpenStruct)
 
