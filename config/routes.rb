@@ -1,10 +1,5 @@
 Rails.application.routes.draw do
-  # added by nabu
-  concern :commentable do
-    resources :comments, only: [:index, :new, :create, :destroy]
-  end
-  # 'concerns: :commentable' needs to be added to any resource where nabu is included.
-  
+ 
   post "versions/:id/revert" => "versions#revert", :as => "revert_version"
   concern :versionable do
     resources :versions
@@ -28,7 +23,7 @@ Rails.application.routes.draw do
   
   resources :photo_imports
   
-  resources :artefacts, concerns: [:commentable, :versionable], model_name: 'Artefact' do
+  resources :artefacts, concerns: [:versionable], model_name: 'Artefact' do
     collection do
       get :mapview
       post :edit_multiple
@@ -42,7 +37,7 @@ Rails.application.routes.draw do
   resources :artefact_people, only: :index, path: 'people', as: 'people'
   resources :artefact_references, only: :index, path: 'references', as: 'references'
 
-  resources :sources, concerns: [:commentable, :versionable], model_name: 'Source' do
+  resources :sources, concerns: [:versionable], model_name: 'Source' do
     collection do
       post :edit_multiple
       put :update_multiple
@@ -52,7 +47,7 @@ Rails.application.routes.draw do
       delete :revoke_multiple, to: 'grants#revoke_multiple'
     end
   end
-  resources :archives
+  resources :archives, only: [:index]
 
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1 do

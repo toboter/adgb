@@ -51,7 +51,6 @@ gem 'bootstrap-sass', '~> 3.3.6'
 gem 'jquery-turbolinks'
 gem 'simple_form'
 gem 'friendly_id'
-gem "selectize-rails"
 gem "font-awesome-rails"
 gem 'cocoon'
 gem 'will_paginate-bootstrap'
@@ -61,7 +60,6 @@ gem 'geoutm'
 gem 'rest-client'
 gem 'cancancan'
 gem 'browser'
-gem 'toastr-rails'
 gem "jsonb_accessor", "~> 1.0.0"
 gem 'searchkick' 
 gem 'closure_tree'
@@ -69,7 +67,6 @@ gem "chartkick"
 gem 'omniauth-oauth2'
 gem 'paper_trail'
 gem 'diffy'
-gem 'magnific-popup-rails', '~> 1.1.0'
 gem 'shareable_models'
 gem 'acts-as-taggable-on', '~> 5.0'
 gem 'goldiloader'
@@ -77,14 +74,6 @@ gem 'goldiloader'
 # Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
 gem 'gmaps4rails'
-
-# Record Sharing
-# gem 'enki', path: '/home/tschmidt/dev/gem_dev/enki'
-# gem 'enki', git: 'https://github.com/toboter/enki.git'
-
-# Comments
-# gem 'nabu', path: '/home/tschmidt/dev/babylon/gem_dev/nabu'
-gem 'nabu', git: 'https://github.com/toboter/nabu.git'
 gem 'rails-bootstrap-markdown'
 
 ruby '2.3.1'

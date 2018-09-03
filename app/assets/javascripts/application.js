@@ -14,15 +14,15 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require cocoon
-//= require toastr
+//= require toastr/toastr
 //= require bootstrap-markdown-bundle
 //= require uppy/dist/uppy.min
-//= require underscore/underscore-min.js
+//= require underscore/underscore-min
 //= require gmaps/google
 //= require Chart.bundle
 //= require chartkick
-//= require magnific-popup
-//= require selectize
+//= require magnific-popup/dist/jquery.magnific-popup.min
+//= require selectize/dist/js/standalone/selectize.min
 //= require turbolinks
 //= require_tree .
 

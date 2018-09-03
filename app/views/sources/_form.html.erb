@@ -4,10 +4,10 @@
   <div class="form-inputs">
     <div class="row">
       <div class="col-md-8">
-        <%= f.input :archive_id, 
+        <%= f.input :archive_name, 
           collection: Archive.all, 
           label_method: :name, 
-          value_method: :id %>
+          value_method: :name %>
         <%= f.input :collection %>
         <%= f.input :call_number %>
         <%= f.input :temp_call_number %>

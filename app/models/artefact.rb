@@ -12,7 +12,6 @@ class Artefact < ApplicationRecord
   include Filterable
   extend FriendlyId
   require 'roo'
-  include Nabu
   include Visibility
   acts_as_taggable
 

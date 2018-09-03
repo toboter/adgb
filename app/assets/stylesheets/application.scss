@@ -10,17 +10,17 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *= require bootstrap-markdown
- *= require magnific-popup
  *= require jquery.flex-images
  */
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "font-awesome";
-@import "toastr";
+@import "toastr/toastr";
 @import "version";
-@import 'selectize';
-@import 'selectize.bootstrap3';
+@import "magnific-popup/dist/magnific-popup.css";
+@import 'selectize/dist/css/selectize.css';
+@import 'selectize/dist/css/selectize.bootstrap3.css';
 @import "uppy/dist/uppy.min";
 
 html {

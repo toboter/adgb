@@ -10,7 +10,7 @@
       <table class="table table-striped">
         <tbody>
           <%= content_tag :tr do %>
-            <th>Archive</th>
+            <th style="width:30%;">Archive</th>
             <td><%= source.archive.try(:name)%></td>
           <% end %>
           <% source.attributes.each do |k,v| %>

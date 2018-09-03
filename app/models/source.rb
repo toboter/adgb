@@ -32,11 +32,10 @@
 # t.string    :links
 
 # TODO
-# Js  Create Archive from Source.new/edit
 # assoc/js connect artefacts to sources + add fields_for &inverse == artfacts_photos (rename to artefact_source?; remove photo_import?)
-# render parent attachments with child
 # render attachment with artefact
 # import photos_import to sources
+# get file_types from babylon-online
 
 class Source < ApplicationRecord
   self.inheritance_column = :_type_disabled
@@ -49,7 +48,6 @@ class Source < ApplicationRecord
     }
   include Filterable
   extend FriendlyId
-  include Nabu
   include Visibility
   acts_as_taggable
 
@@ -100,6 +98,14 @@ class Source < ApplicationRecord
 
   # virtual attributes
 
+  def archive_name=(value)
+    self.archive = Archive.where(name: value).first_or_create
+  end
+
+  def archive_name
+    archive.try(:name)
+  end
+
   def tag_list
     tags.map{|t|  [t.name, t.uuid, t.url].join(';')  }
   end
@@ -136,6 +142,7 @@ class Source < ApplicationRecord
 
   def search_data
     attributes.merge(
+      archive: archive.name,
       artefacts: artefacts.map{|a| [a, a.full_entry].join(' ') },
       tags: tag_list
     )

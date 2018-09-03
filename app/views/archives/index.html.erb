@@ -1,0 +1,13 @@
+<% title "Archives", false %>
+
+<div class="row">
+  <div class="col-md-6" style="margin:10px 0;">
+    <div class="list-group">
+      <% @archives.each do |archive| %>
+        <%= link_to sources_path(search: "archive:#{'"'+archive.name+'"'}"), class: 'list-group-item' do %>
+          <%= content_tag :span, archive.name, class: 'text-strong' %>
+          <%= content_tag :span, archive.sources_count, class: 'badge' %>
+        <% end %>
+      <% end %>
+  </div>
+</div>

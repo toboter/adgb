@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "magnific-popup": "^1.1.0",
+    "selectize": "^0.12.6",
+    "toastr": "^2.1.4",
     "underscore": "^1.9.1",
     "uppy": "^0.27.2"
   }

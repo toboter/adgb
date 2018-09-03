@@ -56,6 +56,8 @@ class SourcesController < ApplicationController
    #  #   # Artefact.visible_for(current_user).map{ |a| a.illustrations }  where.not?
     #   @occurences = @source.occurences.where(artefact: Artefact.visible_for(current_user).all).order(position: :asc)
     # end
+    @attachments = @source.attachments
+    @attachments << @source.ancestors.map(&:attachments) if @source.ancestors.any?
 
     @contributions = Hash.new(0)
     @growth = Hash.new(0)
@@ -309,7 +311,7 @@ class SourcesController < ApplicationController
         :digitize_remarks,
         :keywords,
         :links,
-        :archive_id,
+        :archive_name,
         :tag_list
       )
     end

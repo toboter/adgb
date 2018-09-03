@@ -30,7 +30,7 @@ $(document).on('turbolinks:load', function(){
     }
   });
 
-  $('#source_archive_id').selectize({
+  $('#source_archive_name').selectize({
     create: true
   });
 });

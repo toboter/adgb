@@ -4,7 +4,8 @@
 
 <hr>
 
-<%= content_tag :li, link_to(fa_icon('database', text: "Sources"), sources_path), class: ('active' if current_page?(sources_url)) %>
+<%= content_tag :li, link_to(fa_icon('database', text: "Sources"), sources_path), class: ('active' if current_page?(sources_path)) %>
+<%= content_tag :li, link_to(fa_icon('archive', text: "Archives"), archives_path), class: ('active' if current_page?(archives_path)) %>
 
 <hr>
 <% if can?(:import, Artefact) %> 

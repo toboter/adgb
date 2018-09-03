@@ -34,5 +34,6 @@ class Ability
       can :show, Source, published?: true
     end
     can :index, [ArtefactPerson, ArtefactReference]
+    can :read, Archive
   end
 end
