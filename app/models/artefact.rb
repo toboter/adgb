@@ -117,7 +117,7 @@ class Artefact < ApplicationRecord
   end 
   
   scope :with_photo_like, lambda { |x|
-    joins(:photos).where("LOWER(CAST(photos.identifier_stable AS TEXT)) LIKE ?", "#{x.to_s.downcase}%")
+    joins(:photos).where("LOWER(CAST(photos.call_number AS TEXT)) LIKE ?", "#{x.to_s.downcase}%")
    }
    
   scope :with_person_like, lambda { |x|

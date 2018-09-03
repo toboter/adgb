@@ -1,4 +1,5 @@
-<li class="list-group-item">
-  <%= link_to source.name, source %><br>
-  <%= content_tag :small, 'description' %>  
-</li>
+<%= content_tag :li, class: "list-group-item" do %>
+  <%= link_to source.name, source, class: 'text-strong' %><br>
+  <%= content_tag :span, source.title, class: 'text-italic' %>
+  <%= content_tag :span, source.period, class: 'text-small' %>
+<% end %>

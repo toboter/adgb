@@ -1,10 +1,9 @@
 class SourcesController < ApplicationController
-  before_action :set_type
   require 'rest-client'
   require 'json'
 
   load_and_authorize_resource
-  skip_load_resource only: [:index, :create, :publish, :unlock, :edit_multiple, :update_multiple]
+  skip_load_resource only: [:index, :publish, :unlock, :edit_multiple, :update_multiple]
   skip_authorize_resource only: [:index, :publish, :unlock, :edit_multiple, :update_multiple]
   layout 'source', except: [:index, :edit, :new, :edit_multiple]
 
@@ -33,7 +32,7 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @sources.to_json }
+      format.json { render json: @sources, each_serializer: SourceSerializer }
       format.js
     end
   end
@@ -41,22 +40,22 @@ class SourcesController < ApplicationController
   # GET /sources/1
   # GET /sources/1.json
   def show
-    if @source.type == 'Photo'
-      @ref = @source.references
-      @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
-      @url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@source.name}&f=match}"
-      begin
-        response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
-        @files= JSON.parse(response.body)
-      rescue Errno::ECONNREFUSED
-        "Server at #{@commons.url} is refusing connection."
-        flash.now[:notice] = "Can't connect to #{@commons.url}."
-        @files = []
-      end
+    # if @source.type == 'Photo'
+    #   @ref = @source.references
+    #   @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
+    #   @url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@source.name}&f=match}"
+    #   begin
+    #     response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
+    #     @files= JSON.parse(response.body)
+    #   rescue Errno::ECONNREFUSED
+    #     "Server at #{@commons.url} is refusing connection."
+    #     flash.now[:notice] = "Can't connect to #{@commons.url}."
+    #     @files = []
+    #   end
 
-      # Artefact.visible_for(current_user).map{ |a| a.illustrations }  where.not?
-      @occurences = @source.occurences.where(artefact: Artefact.visible_for(current_user).all).order(position: :asc)
-    end
+   #  #   # Artefact.visible_for(current_user).map{ |a| a.illustrations }  where.not?
+    #   @occurences = @source.occurences.where(artefact: Artefact.visible_for(current_user).all).order(position: :asc)
+    # end
 
     @contributions = Hash.new(0)
     @growth = Hash.new(0)
@@ -64,8 +63,7 @@ class SourcesController < ApplicationController
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
-    @source_similar = @source.similar(fields: [:_all], where: {id: Source.visible_for(current_user).all.ids}, debug: true)
-
+    
     respond_to do |format|
       format.html
       format.json { render json: @source, serializer: SourceSerializer }
@@ -75,29 +73,18 @@ class SourcesController < ApplicationController
 
   # GET /sources/new
   def new
-    @source = type_class.new(parent_id: params[:parent_id])
   end
 
   # GET /sources/1/edit
   def edit
   end
 
-  def edit_multiple
-    @edit_sources = Source.visible_for(current_user).find(params[:source_ids]) if params[:source_ids]
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
-
   # POST /sources
   # POST /sources.json
   def create
-    @source = type_class.new(source_params)
-
     respond_to do |format|
       if @source.save
-        format.html { redirect_to @source, notice: "#{@type} was successfully created." }
+        format.html { redirect_to @source, notice: "Source was successfully created." }
         format.json { render :show, status: :created, location: @source }
       else
         format.html { render :new }
@@ -109,14 +96,41 @@ class SourcesController < ApplicationController
   # PATCH/PUT /sources/1
   # PATCH/PUT /sources/1.json
   def update
+    if params[:attachments]
+      files = JSON.parse(params[:attachments])['successful'].extend(Hashie::Extensions::DeepFind).deep_select('body')
+      @source.attachments << files.map{|file| Attachment.new(file_id: file['id'], file_url: file['file_url'], html_url: file['html_url']) unless file['id'].in?(@source.attachments.map(&:file_id)) }.compact
+      @source.attachments.inspect
+    end
     respond_to do |format|
       if @source.update(source_params)
-        format.html { redirect_to @source, notice: "#{@type} was successfully updated." }
+        format.html { redirect_to @source, notice: "Source was successfully updated." }
         format.json { render :show, status: :ok, location: @source }
       else
         format.html { render :edit }
         format.json { render json: @source.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # DELETE /sources/1
+  # DELETE /sources/1.json
+  def destroy
+    @source.destroy
+    respond_to do |format|
+      format.html { redirect_to sources_url, notice: "Source was successfully removed." }
+      format.json { head :no_content }
+    end
+  end
+
+
+
+  # -----------
+
+  def edit_multiple
+    @edit_sources = Source.visible_for(current_user).find(params[:source_ids]) if params[:source_ids]
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 
@@ -253,44 +267,51 @@ class SourcesController < ApplicationController
     end
   end
 
-  # DELETE /sources/1
-  # DELETE /sources/1.json
-  def destroy
-    @source.destroy
-    respond_to do |format|
-      format.html { redirect_to sources_url, notice: "#{@type} was successfully destroyed." }
-      format.json { head :no_content }
-    end
-  end
+  # ---------
+
 
   private
-    def set_type 
-      @type = type 
-    end
-
-    def type 
-      Source.types.include?(params[:type]) ? params[:type] : "Source"
-    end
-
-    def type_class 
-      type.constantize 
-    end
-
     def undo_link
       view_context.link_to("undo", revert_version_path(@source.versions.last), method: :post)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def source_params
-      params.require(type.underscore.to_sym).permit(
-        :slug, 
-        :identifier_stable, 
-        :identifier_temp, 
-        :type, 
+      params.require(:source).permit(
+        :collection,
+        :call_number,
+        :temp_call_number,
+        :parent_id,
+        :sheet,
+        :type,
+        :genuineness,
+        :material,
+        :measurements,
+        :title,
+        :labeling,
+        :provenance,
+        :period,
+        :author,
+        :size,
+        :contains,
+        :part_of,
+        :description,
         :remarks,
-        :parent_id, 
-        :tag_list,
-        type_class.jsonb_attributes)
+        :condition,
+        :access_restrictions,
+        :loss_remarks,
+        :location_current,
+        :location_history,
+        :state,
+        :history,
+        :relevance,
+        :relevance_comment,
+        :digitize_remarks,
+        :keywords,
+        :links,
+        :archive_id,
+        :tag_list
+      )
     end
 
     def sources_params

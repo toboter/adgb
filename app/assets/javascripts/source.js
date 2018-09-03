@@ -4,8 +4,8 @@ $(document).on('turbolinks:load', function(){
 
   $('#source_parent_id').selectize({
     valueField: 'id',
-    labelField: 'identifier_stable',
-    searchField: 'identifier_stable',
+    labelField: 'name',
+    searchField: 'name',
     create: false,
     load: function(query, callback) {
       console.log(query);
@@ -19,14 +19,18 @@ $(document).on('turbolinks:load', function(){
           callback();
         },
         success: function(res) {
-          callback(res.slice(0,10));
+          callback(res['DocumentationObjects'].slice(0,10));
         }
       })
     },
     render: {
       option: function(item, escape) {
-        return '<div>' + escape(item.identifier_stable) + '</div>'
+        return '<div>' + escape(item.name) + '</div>'
       }
     }
+  });
+
+  $('#source_archive_id').selectize({
+    create: true
   });
 });

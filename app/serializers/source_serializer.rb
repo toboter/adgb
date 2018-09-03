@@ -2,7 +2,7 @@ class SourceSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   type 'DocumentationObject'
 
-  attributes :id, :subtype, :identifier_stable, :identifier_temp, :published?
+  attributes :id, :name, :call_number, :published?
   attribute :creator do 
     {
       id: object.record_creator.try(:id),
@@ -10,7 +10,7 @@ class SourceSerializer < ActiveModel::Serializer
       url: 'babili profile url'
     }
   end 
-  attributes :type_data, :remarks
+
   attributes :links
   attribute :full_entry
 

@@ -42,7 +42,7 @@ Rails.application.routes.draw do
   resources :artefact_people, only: :index, path: 'people', as: 'people'
   resources :artefact_references, only: :index, path: 'references', as: 'references'
 
-  resources :sources, model_name: 'Source' do
+  resources :sources, concerns: [:commentable, :versionable], model_name: 'Source' do
     collection do
       post :edit_multiple
       put :update_multiple
@@ -52,13 +52,7 @@ Rails.application.routes.draw do
       delete :revoke_multiple, to: 'grants#revoke_multiple'
     end
   end
-  resources :archives, controller: 'sources', type: 'Archive', model_name: 'Archive', concerns: [:commentable, :versionable]
-  resources :collections, controller: 'sources', type: 'Collection', model_name: 'Collection', concerns: [:commentable, :versionable]
-  resources :folders, controller: 'sources', type: 'Folder', model_name: 'Folder', concerns: [:commentable, :versionable]
-  resources :letters, controller: 'sources', type: 'Letter', model_name: 'Letter', concerns: [:commentable, :versionable]
-  resources :contracts, controller: 'sources', type: 'Contract', model_name: 'Contract', concerns: [:commentable, :versionable]
-  resources :photos, controller: 'sources', type: 'Photo', model_name: 'Photo', concerns: [:commentable, :versionable]
-  
+  resources :archives
 
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1 do

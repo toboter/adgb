@@ -16,7 +16,8 @@
 //= require cocoon
 //= require toastr
 //= require bootstrap-markdown-bundle
-//= require underscore
+//= require uppy/dist/uppy.min
+//= require underscore/underscore-min.js
 //= require gmaps/google
 //= require Chart.bundle
 //= require chartkick

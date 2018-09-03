@@ -65,17 +65,9 @@
   </div>
 
   <div class="col-md-5">
-    <%= content_tag :div, class: 'clearfix' do %>
-      <%= content_tag :div, class: 'btn-group pull-right' do %>
-        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <%= fa_icon("plus") %> New <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <% for type in Source.types do %>
-            <%= content_tag :li, link_to(type, sti_source_path(type, nil, :new)) %>
-          <% end %>    
-        </ul>
-        <hr>
+    <%= content_tag :div, class: 'clearfix --spacing-20' do %>
+      <%= content_tag :div, class: 'pull-right' do %>
+        <%= link_to fa_icon('plus', text: 'Source'), new_source_path, class: 'btn btn-default text-strong' %>
       <% end if can? :create, Source %>
     <% end if current_user %>
 

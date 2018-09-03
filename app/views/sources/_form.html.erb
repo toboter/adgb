@@ -1,35 +1,59 @@
-<%= simple_form_for(@source) do |f| %>
+<%= simple_form_for(@source, html: {class: 'with_referenceables'}) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
     <div class="row">
-      <div class="col-md-4">
-        <%= f.input :parent_id, collection: [@source.parent], input_html: {id: 'source_parent_id' }, selected: @source.parent_id, label: 'Nesting' %>
-        <%= f.input :identifier_stable %>
-      </div>
-      <div class="col-md-4">
-        <%= f.input :type, disabled: true, input_html: {style: 'margin-bottom:20px;'} %>
-        <%= f.input :identifier_temp %>
-      </div>
       <div class="col-md-8">
-        <hr>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
+        <%= f.input :archive_id, 
+          collection: Archive.all, 
+          label_method: :name, 
+          value_method: :id %>
+        <%= f.input :collection %>
+        <%= f.input :call_number %>
+        <%= f.input :temp_call_number %>
+        <%= f.input :parent_id,
+          collection: [@source.parent],
+          selected: @source.parent_id %>
+        <%= f.input :sheet %>
+        <%= f.input :type %>
+        <%= f.input :genuineness %>
+        <%= f.input :material %>
+        <%= f.input :measurements %>
+        <%= f.input :title %>
+        <%= f.input :labeling %>
+        <%= f.input :provenance %>
+        <%= f.input :period %>
+        <%= f.input :author %>
+        <%= f.input :size %>
+        <%= f.input :contains %>
+        <%= f.input :part_of %>
+        <%= f.input :description %>
+        <%= f.input :remarks %>
+        <%= f.input :condition %>
+        <%= f.input :access_restrictions %>
+        <%= f.input :loss_remarks %>
+        <%= f.input :location_current %>
+        <%= f.input :location_history %>
+        <%= f.input :state %>
+        <%= f.input :history %>
+        <%= f.input :relevance %>
+        <%= f.input :relevance_comment %>
+        <%= f.input :digitize_remarks %>
+        <%= f.input :keywords %>
+        <%= f.input :links %>
         <%= f.input :tag_list, 
           as: :string,
           input_html: {
             value: @source.tag_list.join(','),
             class: 'concepts_selectize' }, 
           label: "Tags".html_safe,
-          hint: "Add tags to categorize the #{@source.type.downcase} and make it more discoverable." %>
+          hint: "Add tags to categorize the source and make it more discoverable." %>
 
-        <% @source.class.jsonb_attributes.each do |p| %>
-          <%= f.input p %>
-        <% end %>
-        <hr>
-        <%= f.input :remarks %>
+          <div id="dashboard-container" 
+    data-file-types="<%= %w[image/*] %>" 
+    data-updater-id="<%= current_user.id %>"
+    data-token="<%= @access_token.token %>"
+    data-url="<%= Rails.application.secrets.provider_site + '/v1/raw/files.json' %>"></div>
       </div>
     </div>
   </div>

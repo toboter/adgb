@@ -1,6 +1,12 @@
 <% content_for :content do %>
   <%= content_tag :div, class: 'artefact', id: "artefact-#{@artefact.id}" do %>
-    <%= content_tag :h2, link_to(@artefact.name, @artefact) %>
+    <%= content_tag :h2 do %>
+      <%= link_to(@artefact.name, @artefact) %>
+      <%= content_tag :small do %>
+        <%= "Version updated at: #{@version.updated_at}" %>.
+        View <%= link_to('current', @version) %>
+      <% end if @version %>
+    <% end %>
 
     <ul class="nav nav-tabs" role="tablist">
       <%= content_tag :li, link_to(fa_icon('info', text: "Object data"), @artefact, aria: {controls: 'data'}, role: 'tab'), role: 'presentation', class: ('active' if current_page?(@artefact)) %>

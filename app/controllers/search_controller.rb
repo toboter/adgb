@@ -11,7 +11,7 @@ class SearchController < ApplicationController
         where: { _or: 
           [
             {
-              type: Source.types, 
+              _type: 'source', 
               id: source_ids 
             },
             {

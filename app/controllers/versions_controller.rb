@@ -13,7 +13,7 @@ class VersionsController < ApplicationController
     @version = @parent.versions.find(params[:id]).reify
     instance_variable_set("@#{@parent.class.base_class.name.underscore}", @version)
 
-    render "#{@parent.class.base_class.name.underscore.pluralize}/show"
+    render "#{@parent.class.base_class.name.underscore.pluralize}/show", layout: @parent.class.base_class.name.underscore
   end
 
   def revert

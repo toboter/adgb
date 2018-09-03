@@ -18,20 +18,18 @@
     <% end if current_user %>
     <div class="list-group">
       <% sources.each do |source| %>
-        <%= check_box_tag "source_ids[]", source.id, false, class: 'checkbox pull-left' if current_user %>
-        <%= link_to sti_source_path(source.type, source), remote: !browser.device.mobile?, class: "list-group-item", style: "#{'margin-left:25px;' if current_user}" do %>
-          <%= content_tag :div, style: "" do %>
-            <%= fa_icon(source.try(:icon)) %>
-            <strong><%= source.name %></strong>
-            <br/>
-            <%= source.type %>
-          <% end %>
+        <%= check_box_tag "source_ids[]", source.id, false, class: 'checkbox pull-left', style: 'margin-top:15px;' if current_user %>
+        <%= link_to source_path(source), remote: !browser.device.mobile?, class: "list-group-item", style: "#{'margin-left:25px;' if current_user}" do %>
+          <%= content_tag :span, source.name, class: 'text-strong' %><br>
+          <%= content_tag :span, source.title, class: 'text-italic' %>
+          <%= content_tag :span, source.period, class: 'text-small' %>
+          <%= content_tag :p, source.description, class: 'text-small', style: 'margin-top:5px; margin-bottom:5px;' if source.description %>
         <% end %>
       <% end %>
     </div>
   <% end %>
   <div id="pagination-results">
-    <%= will_paginate sources, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
+    <%= will_paginate sources, renderer: BootstrapPagination::Rails %>
   </div>
 </div>
 

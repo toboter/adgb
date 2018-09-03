@@ -1,4 +1,4 @@
-<% title "#{@source.name_tree}" %>
+<% title "#{@source.name} \\ Sources", false %>
 
 <% content_for(:buttons) do %>
   <% if @source.locked? %>
@@ -10,23 +10,13 @@
     </button>
     <%= link_to fa_icon('check-square-o', text: 'Publish'), [:publish, @source], method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:publish, @source) %>
   <% end %>
-  <%= content_tag :div, class: "btn-group" do %>
-    <button type="button" class="btn btn-success btn-sm text-strong dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <%= fa_icon("plus") %> New <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-      <% for type in @source.class.subtypes do %>
-        <%= content_tag :li, link_to(type, sti_source_path(type, nil, :new, parent_id: @source.id)) %>
-      <% end %>
-    </ul>
-  <% end if can?(:create, Source) %>
-  <%= link_to fa_icon("edit", text: 'Edit'), sti_source_path(@source.type, @source, :edit), 
+  <%= link_to fa_icon("edit", text: 'Edit'), edit_source_path(@source), 
     class: 'btn btn-warning btn-sm text-strong' if can?(:edit, @source) %>
   <%= link_to fa_icon("remove", text: 'Delete'), @source, 
     method: :delete, 
     data: { confirm: 'Are you sure?' }, 
     class: 'btn btn-danger btn-sm text-strong' if can?(:destroy, @source) %>
-<% end unless @version%>
+<% end unless @version %>
 
 
 <div class="row">
@@ -44,67 +34,59 @@
 <div class="row">
   <div class="col-md-7">
     <%= content_tag :div, id: "object-#{@source.id}", style: 'padding-top:10px;padding-bottom:10px;' do %>
-      <%= content_tag :h3, class: 'text-muted' do %>
-        <%= fa_icon(@source.icon) %>
-        <%= @source.name %>
-      <% end %>
       <%= content_tag :div, class: "tags", style: "padding:10px 0;" do %>
         <%= @source.tags.map{|t| content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge')}.join(' ').html_safe %>
       <% end if @source.tags.any? %>
-      <%= content_tag :p, @source.remarks, class: 'text-muted' if @source.remarks %>
       <%= render 'shared/display_files' if @files.present? %>
       <table class="table table-striped">
         <tbody>
-            <tr>
-              <th>Full identifier</th>
-              <td><%= @source.name_tree %></td>
-            </tr>
-            <tr>
-              <th>Link:</th>
-              <td><%= link_to fa_icon('link', text: polymorphic_url(@source)), polymorphic_url(@source) %> </td>
-            </tr>
-            <% @source.type_data.each do |k,v|%>
-              <%= content_tag :tr do %>
-                <th><%= k.humanize %>:</th>
-                <td><%= link_to v, sources_path(search: v) %></td>
-              <% end if v %>
-            <% end if @source.type_data %>
+          <%= content_tag :tr do %>
+            <th>Archive</th>
+            <td><%= @source.archive.try(:name)%></td>
+          <% end %>
+          <%= content_tag :tr do %>
+            <th>Parent</th>
+            <td><%= link_to @source.parent.try(:name), @source.parent %></td>
+          <% end if @source.parent %>
+          <% @source.attributes.each do |k,v| %>
             <%= content_tag :tr do %>
-              <th>References:</th>
-              <td><%= @ref.map{ |r| r.title }.join(', ').html_safe %></td>
-            <% end if @ref.present? %>
+              <th><%= k.humanize %></th>
+              <td><%= v %></td>
+            <% end if v.present? && !k.in?(%w[archive_id parent_id id created_at updated_at slug]) %>
+          <% end %>
         </tbody>
       </table>
     <% end %>
-    <%= render partial: "child", collection: @source.children %>
+    <%= content_tag :h4, "Elements in #{@source.name}", class: 'text-gray' if @source.children.any? && !@version %>
+    <%= render @source.children.order(sheet: :asc) if @source.children.any? && !@version %>
+
+    <%= content_tag :div, id: 'stats', class: '--spacious' do %>
+      <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>
+      <p class="text-small text-muted text-center" style="margin-top:10px;">
+        Changed characters by contributor.
+        <%= link_to 'View more stats', "#collapse-stats-on-#{@source.id}", 
+          data: { toggle: 'collapse' }, 
+          aria: {expanded: 'false', controls: "collapse-stats-on-#{@source.id}"}, 
+          class: 'toggle-link', 
+          role: 'button' %>
+      </p>
+      <%= content_tag :div, class: 'collapse more-stats', id: "collapse-stats-on-#{@source.id}" do %>
+        <%= line_chart(@growth, height: '180px') %>
+        <p class="text-small text-muted text-center" style="margin-top:10px;">Total characters changed.</p>
+      <% end %>
+    <% end %>
+
   </div>
 
-  <div class="col-md-5">
+  <div class="col-md-4 col-md-offset-1">
 
-      <%= content_tag :div, id: 'stats' do %>
-        <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>
-        <p class="text-small text-muted text-center" style="margin-top:10px;">
-          Changed characters by contributor.
-          <%= link_to 'View more stats', "#collapse-stats-on-#{@source.id}", 
-            data: { toggle: 'collapse' }, 
-            aria: {expanded: 'false', controls: "collapse-stats-on-#{@source.id}"}, 
-            class: 'toggle-link', 
-            role: 'button' %>
-        </p>
-        <%= content_tag :div, class: 'collapse more-stats', id: "collapse-stats-on-#{@source.id}" do %>
-          <%= line_chart(@growth, height: '180px') %>
-          <p class="text-small text-muted text-center" style="margin-top:10px;">Total characters changed.</p>
+      <% @source.attachments.each do |file| %>
+        <%= link_to file.html_url do %>
+          <%= image_tag file.file_url, class: 'img-responsive thumbnail' %>
         <% end %>
       <% end %>
 
-
-      <%= content_tag :div, id: "similar-objects", class: '--spacious' do %>
-        <h4>Similar objects</h4>
-        <div class="list-group">
-          <%= render @source_similar %>
-        </div>
-      <% end if @source_similar.any? %>
-
+      <%= @source.occurences.inspect %>
       <%= content_tag :div, id: 'image-positions' do %>
         <table class="table table-bordered table-responsive">
           <thead>

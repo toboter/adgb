@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180511143110) do
+ActiveRecord::Schema.define(version: 20180903144233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "archives", force: :cascade do |t|
+    t.string "name"
+    t.integer "sources_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "artefact_people", id: :serial, force: :cascade do |t|
     t.string "person"
@@ -107,6 +114,17 @@ ActiveRecord::Schema.define(version: 20180511143110) do
     t.string "text_solution"
     t.index ["bab_rel"], name: "index_artefacts_on_bab_rel", unique: true
     t.index ["slug"], name: "index_artefacts_on_slug", unique: true
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.integer "source_id"
+    t.string "file_url"
+    t.string "html_url"
+    t.string "file_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["file_id"], name: "index_attachments_on_file_id"
+    t.index ["source_id"], name: "index_attachments_on_source_id"
   end
 
   create_table "comment_hierarchies", id: false, force: :cascade do |t|
@@ -211,18 +229,46 @@ ActiveRecord::Schema.define(version: 20180511143110) do
     t.index ["descendant_id"], name: "source_desc_idx"
   end
 
-  create_table "sources", id: :serial, force: :cascade do |t|
-    t.string "slug"
-    t.string "identifier_stable"
-    t.string "identifier_temp"
-    t.string "type"
-    t.jsonb "type_data"
+  create_table "sources", force: :cascade do |t|
+    t.integer "archive_id"
+    t.string "collection"
+    t.string "call_number"
+    t.string "temp_call_number"
     t.integer "parent_id"
-    t.text "remarks"
+    t.string "sheet"
+    t.string "type"
+    t.string "genuineness"
+    t.string "material"
+    t.string "measurements"
+    t.string "title"
+    t.string "labeling"
+    t.string "provenance"
+    t.string "period"
+    t.string "author"
+    t.string "size"
+    t.string "contains"
+    t.string "part_of"
+    t.string "description"
+    t.string "remarks"
+    t.string "condition"
+    t.string "access_restrictions"
+    t.string "loss_remarks"
+    t.string "location_current"
+    t.string "location_history"
+    t.string "state"
+    t.text "history"
+    t.string "relevance"
+    t.string "relevance_comment"
+    t.string "digitize_remarks"
+    t.string "keywords"
+    t.string "links"
+    t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "locked", default: false, null: false
-    t.index ["identifier_stable"], name: "index_sources_on_identifier_stable"
+    t.index ["archive_id"], name: "index_sources_on_archive_id"
+    t.index ["call_number"], name: "index_sources_on_call_number"
+    t.index ["collection"], name: "index_sources_on_collection"
     t.index ["parent_id"], name: "index_sources_on_parent_id"
     t.index ["slug"], name: "index_sources_on_slug"
   end
