@@ -48,12 +48,24 @@
             class: 'concepts_selectize' }, 
           label: "Tags".html_safe,
           hint: "Add tags to categorize the source and make it more discoverable." %>
+        
+        <div id="attachments" class="panel panel-default">
+          <div class="panel-heading text-strong text-gray">
+            <%= fa_icon('files') %> Attached files
+          </div>
+          <ul class="list-group" id="files-list">
+            <%= f.simple_fields_for :attachments do |a| %>
+              <%= render 'attachments_fields', f: a %>
+            <% end %>
+          </ul>
+        </div>
 
-          <div id="dashboard-container" 
-    data-file-types="<%= %w[image/*] %>" 
-    data-updater-id="<%= current_user.id %>"
-    data-token="<%= @access_token.token %>"
-    data-url="<%= Rails.application.secrets.provider_site + '/v1/raw/files.json' %>"></div>
+        <div id="dashboard-container" 
+          data-file-types="<%= %w[image/*] %>" 
+          data-updater-id="<%= current_user.id %>"
+          data-token="<%= @access_token.token %>"
+          data-url="<%= Rails.application.secrets.provider_site + '/v1/raw/files.json' %>">
+        </div>
       </div>
     </div>
   </div>

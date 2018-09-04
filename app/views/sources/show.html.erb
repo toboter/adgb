@@ -46,7 +46,7 @@
             <td><%= link_to @source.archive.name, sources_path(search: "archive:#{'"'+@source.archive.name+'"'}") %></td>
           <% end %>
           <%= content_tag :tr do %>
-            <th>Parent</th>
+            <th>Belongs to</th>
             <td><%= link_to @source.parent.try(:name), @source.parent %></td>
           <% end if @source.parent %>
           <% @source.attributes.each do |k,v| %>

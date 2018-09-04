@@ -312,7 +312,8 @@ class SourcesController < ApplicationController
         :keywords,
         :links,
         :archive_name,
-        :tag_list
+        :tag_list,
+        attachments_attributes: [:id, :_destroy]
       )
     end
 

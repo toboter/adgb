@@ -1,0 +1,7 @@
+<div class="nested-fields">
+  <%= content_tag :span, link_to_remove_association(fa_icon('trash'), f, style: 'color:#F05F40;padding:5px;'), style: 'position:absolute;z-index:10;right:15px;margin:5px;', class: 'with-tooltip', title: 'Remove this file' %>
+  <%= content_tag :li, class: 'list-group-item' do %>
+    <%= image_tag f.object.file_url, class: 'img-responsive', style: 'max-width:50%;' %>
+    <%= link_to f.object.file_id, f.object.html_url, target: :blank, class: 'text-small' %>
+  <% end %>
+</div>
