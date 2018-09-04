@@ -11,6 +11,9 @@
  * It is generally better to create a new file per style scope.
  *= require bootstrap-markdown
  *= require jquery.flex-images
+ *= require magnific-popup/dist/magnific-popup.css
+ *= require selectize/dist/css/selectize.css
+ *= require selectize/dist/css/selectize.bootstrap3.css
  */
 
 @import "bootstrap-sprockets";
@@ -18,9 +21,6 @@
 @import "font-awesome";
 @import "toastr/toastr";
 @import "version";
-@import "magnific-popup/dist/magnific-popup.css";
-@import 'selectize/dist/css/selectize.css';
-@import 'selectize/dist/css/selectize.bootstrap3.css';
 @import "uppy/dist/uppy.min";
 
 html {
