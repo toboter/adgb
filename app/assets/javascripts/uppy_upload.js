@@ -21,7 +21,7 @@ $(function () {
     formData: true,
     fieldName: 'upload[file]',
     headers: {
-      'authorization': `Bearer ` + $('#dashboard-container').data('token')
+      'authorization': 'Bearer ' + $('#dashboard-container').data('token')
     }
   })
   uppy.use(Uppy.Form, {
