@@ -36,6 +36,7 @@
 # render attachment with artefact
 # import photos_import to sources
 # get file_types from babylon-online
+# relevance & digitze belongsÖto
 
 class Source < ApplicationRecord
   self.inheritance_column = :_type_disabled
@@ -57,6 +58,7 @@ class Source < ApplicationRecord
   has_many :occurences, class_name: "ArtefactPhoto", foreign_key: :source_id
   has_many :artefacts, through: :occurences
   has_many :attachments, dependent: :destroy
+  has_many :publications, class_name: 'ArtefactReference', foreign_key: :source_id
 
   def ph_rel
     "#{ph}#{ph_nr}#{ph_add}"
@@ -211,18 +213,26 @@ class Source < ApplicationRecord
         @user = User.find(user_id)
         PaperTrail.whodunnit = @user.id
         PhotoImport.auto_include(false).all.each do |import|
-          photo = Photo.auto_include(false).all.type_data_where(serie: import.ph, number: import.ph_nr.to_s, addenda: import.ph_add).first_or_initialize
-          photo.call_number = "#{import.ph} #{import.ph_nr}#{import.ph_add}" 
-          photo.serie = import.ph
-          photo.number = import.ph_nr
-          photo.addenda = import.ph_add
-          photo.photo_at = import.ph_datum
-          photo.description = import.ph_text
-          photo.remarks = 'Cross import from xlsx'
-          photo.slug = nil
-          photo.save!
-          ArtefactPhoto.auto_include(false).where(p_rel: import.ph_rel).update_all(source_id: photo.id)
+          import_name = "#{import.ph} #{import.ph_nr}#{import.ph_add}"
+          source = Source.auto_include(false).where(call_number: import_name).first_or_initialize
+          source.archive_name = 'Fotoarchiv'
+          source.collection = import.ph
+          source.call_number = import_name
+          source.type = 'Photo'
+          source.period = import.ph_datum
+          source.description = import.ph_text
+          source.slug = nil
+          source.save!
+          ArtefactPhoto.auto_include(false).where(p_rel: import.ph_rel).update_all(source_id: source.id)
         end
+      end
+
+      def self.reset_source_on_artefact_reference
+        ArtefactReference.where.not(ph_rel: nil).each do |ref|
+          ref.source = Source.where("REPLACE(call_number, ' ', '') LIKE ?", ref.ph_rel).first
+          ref.save
+        end
+
       end
 
 end

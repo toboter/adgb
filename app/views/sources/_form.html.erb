@@ -12,8 +12,12 @@
         <%= f.input :call_number %>
         <%= f.input :temp_call_number %>
         <%= f.input :parent_id,
+          label: 'Belongs to',
           collection: [@source.parent],
-          selected: @source.parent_id %>
+          selected: @source.parent_id,
+          input_html: {
+            class: 'source_id'
+          } %>
         <%= f.input :sheet %>
         <%= f.input :type %>
         <%= f.input :genuineness %>

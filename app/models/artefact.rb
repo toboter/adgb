@@ -46,7 +46,7 @@ class Artefact < ApplicationRecord
   has_many :references, class_name: "ArtefactReference", foreign_key: "b_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :references, reject_if: :all_blank, allow_destroy: true
   has_many :illustrations, class_name: "ArtefactPhoto", foreign_key: "p_bab_rel", primary_key: :bab_rel
-  has_many :photos, through: :illustrations
+  has_many :sources, through: :illustrations
   accepts_nested_attributes_for :illustrations, reject_if: :all_blank, allow_destroy: true
   has_many :people, class_name: "ArtefactPerson", foreign_key: "n_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
@@ -166,7 +166,7 @@ class Artefact < ApplicationRecord
       name: full_entry,
       references: references.map(&:title),
       people: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
-      photos: photos.map(&:name),
+      sources: sources.map(&:name),
       tags: tags.map(&:name),
       type: 'Artefact',
       published: published?

@@ -33,7 +33,7 @@
   
           <%= content_tag :tr do %>
             <th>Photos <small>(position)</small></th>
-            <td><%= artefact.illustrations.map{ |i| "#{(i.photo ? link_to(i.name, i.photo) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %></td>
+            <td><%= artefact.illustrations.map{ |i| "#{(i.source ? link_to(i.name, i.source) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %></td>
           <% end if artefact.illustrations.any? %>
           <%= content_tag :tr do %>
               <th>Bibliographie: </th>

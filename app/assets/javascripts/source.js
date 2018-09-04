@@ -1,8 +1,20 @@
 // https://medium.com/@podmedicsed/remote-select-input-with-rails-searckick-and-selectize-d6621f0ee008
 
 $(document).on('turbolinks:load', function(){
+  selectize_source('.source_id');
 
-  $('#source_parent_id').selectize({
+  $('#source_archive_name').selectize({
+    create: true
+  });
+
+});
+
+$(document).on('cocoon:after-insert', function(){
+  selectize_source('.source_id');
+});
+
+function selectize_source(object) {
+  $(String(object)).selectize({
     valueField: 'id',
     labelField: 'name',
     searchField: 'name',
@@ -29,8 +41,4 @@ $(document).on('turbolinks:load', function(){
       }
     }
   });
-
-  $('#source_archive_name').selectize({
-    create: true
-  });
-});
+}

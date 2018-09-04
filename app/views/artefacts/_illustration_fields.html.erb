@@ -5,6 +5,14 @@
     <%= f.input :ph_nr %>
     <%= f.input :ph_add %>
     <%= f.input :position %>
+    <%= f.input :source_id, 
+      collection: f.object.new_record? ? [] : [f.object.source], 
+      label_method: :name, 
+      value_method: :id, 
+      selected: f.object.source,
+      input_html: {
+        class: 'source_id'
+      } %>
   </div>
   <div class="col-md-2">
     <%= link_to_remove_association fa_icon('remove', text: 'remove'), f %>

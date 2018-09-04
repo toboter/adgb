@@ -61,33 +61,59 @@
     <%= content_tag :h4, "Elements in #{@source.name}", class: 'text-gray' if @source.children.any? && !@version %>
     <%= render @source.children.order(sheet: :asc) if @source.children.any? && !@version %>
 
-    <%= @source.occurences.inspect %>
-      <%= content_tag :div, id: 'image-positions' do %>
-        <table class="table table-bordered table-responsive">
-          <thead>
+    <%= content_tag :div, id: 'attachments-positions' do %>
+      <h4>Illustrates</h4>
+      <table class="table table-bordered table-responsive">
+        <thead>
+          <tr>
+            <td></td>
+            <td>Object</td>
+            <td>
+              Position 
+              <%= link_to fa_icon('info'), 'javascript:;',
+                class: 'label label-info', 
+                data: {toggle: 'tooltip', placement: 'left'}, 
+                title: 'First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+              </td>
+          </tr>
+        </thead>
+        <tbody>
+          <% @occurences.each_with_index do |occ, index| %>
             <tr>
-              <td></td>
-              <td>Object</td>
-              <td>
-                Position 
-                <%= link_to fa_icon('info'), 'javascript:;',
-                  class: 'label label-info', 
-                  data: {toggle: 'tooltip', placement: 'left'}, 
-                  title: 'First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
-                </td>
+              <td><%= index+1 %></td>
+              <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact %></td>
+              <td><%= occ.position %></td>
             </tr>
-          </thead>
-          <tbody>
-            <% @occurences.each_with_index do |occ, index| %>
-              <tr>
-                <td><%= index+1 %></td>
-                <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact %></td>
-                <td><%= occ.position %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% end if @source.type = 'Photo' && @occurences.present? %>
+          <% end %>
+        </tbody>
+      </table>
+    <% end if @occurences.present? %>
+
+    <%= content_tag :div, id: 'publ-refs' do %>
+      <h4>Published in</h4>
+      <table class="table table-bordered table-responsive">
+        <thead>
+          <tr>
+            <td>Verfasser</td>
+            <td>Publikation</td>
+            <td>Jahr</td>
+            <td>Seite</td>
+            <td>Artefakt</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% @source.publications.each do |publication| %>
+            <tr>
+              <td><%= publication.ver %></td>
+              <td><%= publication.publ %></td>
+              <td><%= publication.jahr %></td>
+              <td><%= publication.seite %></td>
+              <td><%= link_to publication.artefact.name, publication.artefact %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end if @source.publications.any? %>
 
     <%= content_tag :div, id: 'stats', class: '--spacious' do %>
       <%= link_to 'Show stats', "#collapse-stats-on-#{@source.id}", 

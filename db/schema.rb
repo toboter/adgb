@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180903224417) do
+ActiveRecord::Schema.define(version: 20180904112630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,8 +54,10 @@ ActiveRecord::Schema.define(version: 20180903224417) do
     t.string "ph_rel"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "source_id"
     t.index ["b_bab_rel"], name: "index_artefact_references_on_b_bab_rel"
     t.index ["ph_rel"], name: "index_artefact_references_on_ph_rel"
+    t.index ["source_id"], name: "index_artefact_references_on_source_id"
   end
 
   create_table "artefacts", id: :serial, force: :cascade do |t|

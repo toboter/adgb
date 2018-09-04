@@ -54,8 +54,7 @@ class SourcesController < ApplicationController
     #   end
 
    #  #   # Artefact.visible_for(current_user).map{ |a| a.illustrations }  where.not?
-    #   @occurences = @source.occurences.where(artefact: Artefact.visible_for(current_user).all).order(position: :asc)
-    # end
+    @occurences = @source.occurences.where(artefact: Artefact.visible_for(current_user).all).order(position: :asc)
     @attachments = @source.attachments
     @attachments << @source.ancestors.map(&:attachments) if @source.ancestors.any?
 

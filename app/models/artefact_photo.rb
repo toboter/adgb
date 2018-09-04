@@ -1,8 +1,10 @@
+# ArtefactSource
+
 class ArtefactPhoto < ApplicationRecord
   require 'roo'
 
   belongs_to :artefact, foreign_key: "p_bab_rel", primary_key: 'bab_rel'
-  belongs_to :photo, class_name: 'Source', foreign_key: :source_id
+  belongs_to :source
   
   def name
     "#{ph} #{ph_nr}#{ph_add}"
