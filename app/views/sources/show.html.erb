@@ -116,7 +116,7 @@
     <% end if @source.publications.any? %>
 
     <%= content_tag :div, id: 'stats', class: '--spacious' do %>
-      <%= link_to 'Show stats', "#collapse-stats-on-#{@source.id}", 
+      <%= link_to 'Toggle stats', "#collapse-stats-on-#{@source.id}", 
         data: { toggle: 'collapse' }, 
         aria: {expanded: 'false', controls: "collapse-stats-on-#{@source.id}"}, 
         class: 'toggle-link', 

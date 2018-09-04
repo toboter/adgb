@@ -21,12 +21,7 @@
 
 
 <div class="row">
-  <div class="col-md-12">
-    <%= render 'shared/display_files' if @files.present? %>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-7">
+  <div class="col-md-6">
     <%= content_tag :div, id: 'data', class: '' do %>
       <div class="tags" style="padding:10px 0;">
         <%= @artefact.tags.map{|t| content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge')}.join(' ').html_safe %>
@@ -90,35 +85,40 @@
         </tbody>
       </table>
     <% end %>
-  </div>
 
-  <div class="col-md-5">
     <%= content_tag :div, id: 'stats' do %>
-      <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>
-      <p class="text-small text-muted text-center" style="margin-top:10px;">
-        Changed characters by contributor.
-        <%= link_to 'View more stats', "#collapse-stats-on-#{@artefact.id}", 
-          data: { toggle: 'collapse' }, 
-          aria: {expanded: 'false', controls: "collapse-stats-on-#{@artefact.id}"}, 
-          class: 'toggle-link', 
-          role: 'button' %>
-      </p>
+      <%= link_to 'Toggle stats', "#collapse-stats-on-#{@artefact.id}", 
+        data: { toggle: 'collapse' }, 
+        aria: {expanded: 'false', controls: "collapse-stats-on-#{@artefact.id}"}, 
+        class: 'toggle-link', 
+        role: 'button' %>
       <%= content_tag :div, class: 'collapse more-stats', id: "collapse-stats-on-#{@artefact.id}" do %>
+        <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>
+        <p class="text-small text-muted text-center" style="margin-top:10px;">
+          Changed characters by contributor.
+        </p>
         <%= line_chart(@growth, height: '180px') %>
         <p class="text-small text-muted text-center" style="margin-top:10px;">Total characters changed.</p>
       <% end %>
     <% end %>
+  </div>
+
+  <div class="col-md-5 col-md-offset-1">
+    <%= content_tag :div do %>
+      <% @artefact.illustrations.each do |illu| %>
+        <% illu.source.attachments.each do |file| %>
+          <%= link_to file.file_url, class: 'lightbox-link' do %>
+            <%= image_tag file.file_url, class: 'img-responsive thumbnail', style: 'margin-bottom: 0px;' %>
+          <% end %>
+          <%= content_tag :p, link_to(file.file_id, file.html_url, class: 'text-small'), style: 'margin-bottom: 0px;' %>
+          <%= content_tag :p, "#{link_to(illu.source.call_number, illu.source)} #{'(' + illu.position + ')' if illu.position}".html_safe %>
+        <% end %>
+      <% end %>
+    <% end if @artefact.illustrations.any? %>
 
     <%= content_tag :div, style: 'width: 100%;', class: "thumbnail --spacious" do %>
       <div id="map-render" style='width: 100%; height: 400px;'></div>
     <% end if @artefact.utm? %>
-
-    <%= content_tag :div, id: "similar-objects", class: '--spacious' do %>
-      <h4>Similar objects</h4>
-      <div class="list-group">
-        <%= render @artefact_similar %>
-      </div>
-    <% end if @artefact_similar && @artefact_similar.any? %> 
   </div>
 </div>
 

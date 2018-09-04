@@ -68,30 +68,13 @@ class ArtefactsController < ApplicationController
 
   # GET /artefacts/1
   # GET /artefacts/1.json
-  def show
-    @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
-    if @artefact.illustrations.any? && @commons.collection_classes
-      @illustrations_url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@artefact.illustrations.map{|i| "'#{i.name}'"}.join(' OR ')}"
-      begin
-        response = RestClient.get(@illustrations_url, {:Authorization => "Token #{@commons.user_access_token}"})
-        @files = JSON.parse(response.body)
-      rescue Errno::ECONNREFUSED
-        "Server at #{@commons.url} is refusing connection."
-        flash.now[:notice] = "Can't connect to #{@commons.url}."
-        @files = []
-      end
-    else 
-      @files = []
-    end
-    
+  def show    
     @contributions = Hash.new(0)
     @growth = Hash.new(0)
     @artefact.versions.each do |v|
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
-    @artefact_similar = @artefact.similar(fields: [:kod, :bab], where: {id: Artefact.visible_for(current_user).all.ids})
-
   end
 
   # GET /artefacts/new
