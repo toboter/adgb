@@ -19,7 +19,18 @@
               <td><%= v %></td>
             <% end if v.present? && k.in?(%w[collection call_number sheet title provenance period author size]) %>
           <% end %>
-
+          <%= content_tag :tr do %>
+            <th>Relevance</th>
+            <td><%= source.relevance.map{|r| Source::REL_TYPES.select{|k,v| k == r.to_i }.map{|l| link_to(l.last, sources_path(search: "relevance:#{'"' + l.last + '"'}"))} }.join(', ').html_safe %></td>
+          <% end if source.relevance.present? %>
+          <%= content_tag :tr do %>
+            <th>Relevance comment</th>
+            <td><%= source.relevance_comment %></td>
+          <% end if source.relevance_comment.present? %>
+          <%= content_tag :tr do %>
+            <th>Digitalization</th>
+            <td><%= source.digitize_remarks.map{|r| Source::DIGI_TYPES.select{|k,v| k == r.to_i }.map{|l| link_to(l.last, sources_path(search: "digital:#{'"' + l.last + '"'}"))} }.join(', ').html_safe %></td>
+          <% end if source.digitize_remarks.present? %>
         </tbody>
       </table>
 

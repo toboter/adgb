@@ -40,9 +40,19 @@
         <%= f.input :location_history %>
         <%= f.input :state %>
         <%= f.input :history %>
-        <%= f.input :relevance %>
+        <%= f.input :relevance_list, 
+          collection: Source::REL_TYPES,
+          value_method: :first, 
+          label_method: :last,
+          include_blank: true,
+          input_html: { multiple: true } %>
         <%= f.input :relevance_comment %>
-        <%= f.input :digitize_remarks %>
+        <%= f.input :digitize_remarks_list, 
+          collection: Source::DIGI_TYPES,
+          value_method: :first, 
+          label_method: :last,
+          include_blank: true,
+          input_html: { multiple: true } %>
         <%= f.input :keywords %>
         <%= f.input :links %>
         <%= f.input :tag_list, 

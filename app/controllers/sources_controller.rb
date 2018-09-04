@@ -305,13 +305,13 @@ class SourcesController < ApplicationController
         :location_history,
         :state,
         :history,
-        :relevance,
         :relevance_comment,
-        :digitize_remarks,
         :keywords,
         :links,
         :archive_name,
         :tag_list,
+        relevance_list: [],
+        digitize_remarks_list: [],
         attachments_attributes: [:id, :_destroy]
       )
     end

@@ -32,11 +32,8 @@
 # t.string    :links
 
 # TODO
-# assoc/js connect artefacts to sources + add fields_for &inverse == artfacts_photos (rename to artefact_source?; remove photo_import?)
-# render attachment with artefact
-# import photos_import to sources
+# import bauen
 # get file_types from babylon-online
-# relevance & digitze belongsÖto
 
 class Source < ApplicationRecord
   self.inheritance_column = :_type_disabled
@@ -143,10 +140,12 @@ class Source < ApplicationRecord
   # Indexing and search
 
   def search_data
-    attributes.merge(
+    attributes.except('relevance', 'digitize_remarks').merge(
       archive: archive.name,
-      artefacts: artefacts.map{|a| [a, a.full_entry].join(' ') },
-      tags: tag_list
+      artefacts: artefacts.map{|a| a.name },
+      tags: tag_list,
+      relevance: relevance.map{|r| Source::REL_TYPES.select{|k,v| k == r.to_i }.map(&:last) },
+      digital: digitize_remarks.map{|r| Source::DIGI_TYPES.select{|k,v| k == r.to_i }.map(&:last) }
     )
   end
 
@@ -206,7 +205,37 @@ class Source < ApplicationRecord
     ]
   end
 
+  serialize :digitize_remarks, Array
+  def digitize_remarks_list
+    digitize_remarks
+  end
+  def digitize_remarks_list=(values)
+    self.digitize_remarks = values.reject!(&:empty?)
+  end
+  DIGI_TYPES={
+    1 => 'ja (Archivseitig vorhanden)',
+    2 => 'ja (im Babylon-Projekt vorhanden)',
+    3 => 'ja (VAM-seitig vorhanden)',
+    4 => 'ja (vorhanden sein prüfen)',
+    5 => 'nein (nicht zu digitalisieren)'
+  }
 
+  serialize :relevance, Array
+  def relevance_list
+    relevance
+  end
+  def relevance_list=(values)
+    self.relevance = values.reject!(&:empty?)
+  end
+  REL_TYPES={
+    0 => 'Babylon allgemein, durch Aufnahme Bearbeitung abgeschlossen',
+    1 => 'Babylon-Projekt Allgemein, Dinge zu bearbeiten, Post It machen!',
+    2 => 'Fallstudie CW/KS',
+    3 => 'Sammlungs-studie MZ',
+    4 => 'relevant für VAM-Kollegen, Assur, Uruk etc,.',
+    5 => 'relevant für Rücklauf Archiv, z.B. zu inventarisieren oder sonst.'
+  }
+  
 
       # set User.current first
       def self.get_photos_from_photo_import(user_id)
