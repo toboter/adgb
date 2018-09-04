@@ -114,7 +114,7 @@
           <%= content_tag :p, "#{link_to(illu.source.call_number, illu.source)} #{'(' + illu.position + ')' if illu.position}".html_safe %>
         <% end %>
       <% end %>
-    <% end if @artefact.illustrations.any? %>
+    <% end if !@version && @artefact.illustrations.any? %>
 
     <%= content_tag :div, style: 'width: 100%;', class: "thumbnail --spacious" do %>
       <div id="map-render" style='width: 100%; height: 400px;'></div>
