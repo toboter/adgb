@@ -10,12 +10,11 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require rails-ujs
 //= require jquery/dist/jquery.min
-//= require jquery_ujs
 //= require bootstrap
 //= require cocoon
 //= require toastr/toastr
-//= require bootstrap-markdown-bundle
 //= require uppy/dist/uppy.min
 //= require underscore/underscore-min
 //= require gmaps/google
@@ -56,8 +55,6 @@ $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip()
     });
 
-    $('.flex-images').flexImages({rowHeight: 200});
-    
     $('.lightbox-link').magnificPopup({
         type: 'image',
         mainClass: 'mfp-with-zoom',

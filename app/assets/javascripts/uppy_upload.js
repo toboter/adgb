@@ -1,4 +1,4 @@
-$(function () {
+$(document).on('turbolinks:load', function(){
   if ( $( "#dashboard-container" ).length ) {
   var uppy = Uppy.Core({ 
     autoProceed: false,
