@@ -7,11 +7,9 @@ module Visibility
 
     def visible_for(user)
       if user && user.is_admin?
-        where([accessible_by(user), inaccessible, published].map{|s| s.arel.constraints.reduce(:and) }.reduce(:or)) \
-          .tap {|sc| sc.bind_values = [accessible_by(user), inaccessible, published].map(&:bind_values) }
+        where([accessible_by(user), inaccessible, published].map{|s| s.arel.constraints.reduce(:and) }.reduce(:or))
       elsif user
-        where([accessible_by(user), created_by(user), published].map{|s| s.arel.constraints.reduce(:and) }.reduce(:or)) \
-          .tap {|sc| sc.bind_values = [accessible_by(user), created_by(user), published].map(&:bind_values) }
+        where([accessible_by(user), created_by(user), published].map{|s| s.arel.constraints.reduce(:and) }.reduce(:or))
       else
         published
       end

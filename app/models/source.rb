@@ -38,7 +38,7 @@
 class Source < ApplicationRecord
   self.inheritance_column = :_type_disabled
   searchkick
-  has_paper_trail ignore: [:slug, :updated_at, :locked], 
+  has_paper_trail ignore: [:slug, :updated_at], 
     meta: {
       version_name: :name, 
       changed_characters_length: :changed_characters,
