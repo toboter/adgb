@@ -54,6 +54,8 @@ GEM
     archive-zip (0.11.0)
       io-like (~> 0.3.0)
     arel (9.0.0)
+    attr_json (0.3.0)
+      activerecord (>= 5.0.0, < 5.3)
     autoprefixer-rails (9.1.4)
       execjs
     bindex (0.5.0)
@@ -292,6 +294,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   acts-as-taggable-on (~> 5.0)
+  attr_json
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.3.6)
   browser
@@ -333,7 +336,7 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 RUBY VERSION
-   ruby 2.3.1p112
+   ruby 2.4.1p111
 
 BUNDLED WITH
-   1.15.4
+   1.16.3

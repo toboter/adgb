@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.3.1'
+ruby '2.4.1'
 
 gem 'rails', '~> 5.2.0'
 gem 'pg', '>= 0.18', '< 2.0'
@@ -55,11 +55,10 @@ gem 'searchkick'
 gem 'roo'
 gem 'geoutm'
 gem 'browser'
-#gem 'attr_json'
+gem 'attr_json'
 gem 'closure_tree'
 gem 'paper_trail'
 gem 'shareable_models'
 gem 'friendly_id'
 gem 'acts-as-taggable-on', '~> 5.0'
 gem 'goldiloader'
-# gem '' has_attachment -> ActiveStorage
