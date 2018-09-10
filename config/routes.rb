@@ -10,14 +10,20 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :imports, only: :index, path: 'import' do
-    collection do
-      post 'artefacts'
-      post 'artefacts_people'
-      post 'artefacts_references'
-      post 'artefacts_photos'
-      post 'photos'
-      post 'transfer_photos'
+  namespace :import do
+    resources :events do
+      collection do
+        post 'artefacts'
+        post 'artefacts_people'
+        post 'artefacts_references'
+        post 'artefacts_photos'
+        post 'photos'
+        post 'transfer_photos'
+      end
+      resources :sheets do
+        resource :check_integrity
+        resources :headers, only: [:update]
+      end
     end
   end
   

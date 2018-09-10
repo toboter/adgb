@@ -1,0 +1,2 @@
+toastr['success']('Updated attribute mapping!');
+$('#edit_import_header_<%= @header.id %>').html("<%= escape_javascript(render partial: 'import/headers/form', object: @header, as: :header) %>");

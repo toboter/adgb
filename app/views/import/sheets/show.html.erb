@@ -1,0 +1,15 @@
+<div class="panel panel-default" id="sheet<%= @sheet.id %>">
+  <div class="panel-heading">
+    <%= content_tag :h5 do %>
+      <%= "Sheet: #{content_tag :span, @sheet.name, class: 'text-strong'}".html_safe %>
+      <span class="text-small"><%= pluralize(@sheet.headers_count, 'column') %>, <%= pluralize(@sheet.rows_count, 'row') %></span>
+    <% end %>
+  </div>
+  <div class="panel-body">
+    Model mapping: <%= @sheet.model_mapping %><br>
+    Attribute mappings: <%= @sheet.headers.where.not(attribute_mapping: '').count %> / <%= @sheet.headers_count %><br>
+
+    <%= link_to 'edit mappings', edit_import_event_sheet_path(@event, @sheet) %> |
+    <%= link_to 'check integrity', new_import_event_sheet_check_integrity_path(@event, @sheet) %>
+  </div>
+</div>

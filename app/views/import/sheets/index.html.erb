@@ -1,0 +1,13 @@
+<% @event.sheets.each do |sheet| %>
+    <div class="panel panel-default" id="<%= sheet.name.parameterize %>">
+      <div class="panel-heading">
+        <%= content_tag :h5 do %>
+          <%= "Sheet: #{content_tag :span, sheet.name, class: 'text-strong'}".html_safe %>
+          <span class="text-small"><%= pluralize(sheet.headers_count, 'column') %>, <%= pluralize(sheet.rows_count, 'row') %></span>
+        <% end %>
+      </div>
+      <div class="panel-body">
+        <%= link_to 'show status', import_event_sheet_path(@event, sheet) %>
+      </div>
+    </div>
+<% end %>

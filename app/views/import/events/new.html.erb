@@ -1,0 +1,9 @@
+<%= simple_form_for @event do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :name %>
+  <%= f.file_field :file, accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %>
+  <%= f.input :creator_id, collection: User.all %>
+
+  <%= f.submit %>
+<% end %>

@@ -9,7 +9,7 @@
 
 <hr>
 <% if can?(:import, Artefact) %> 
-  <%= content_tag :li, link_to(fa_icon('upload', text: "Import"), imports_path), class: ('active' if current_page?(imports_url)) %>
+  <%= content_tag :li, link_to(fa_icon('upload', text: "Import"), import_events_path), class: ('active' if current_page?(import_events_url)) %>
 <% end %>
 
 

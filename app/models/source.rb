@@ -97,8 +97,20 @@ class Source < ApplicationRecord
 
   # virtual attributes
 
+  def nested_in
+    parent_id
+  end
+
+  def nested_in=(value)
+    value
+  end
+
+  def self.col_attr
+    attribute_names.map {|n| n unless %w(id created_at updated_at archive_id parent_id locked slug digitize_remarks relevance).include?(n) }.compact + %w(archive_name nested_in digitize_remarks_list relevance_list)
+  end
+
   def archive_name=(value)
-    self.archive = Archive.where(name: value).first_or_create
+    self.archive = Archive.where(name: value).first_or_initialize
   end
 
   def archive_name

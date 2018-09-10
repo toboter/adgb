@@ -1,0 +1,7 @@
+<%= content_tag :li, class: "list-group-item" do %>
+  <%= simple_form_for header, url: import_event_sheet_header_path(header.sheet.event, header.sheet, header), remote: true, method: :put do |f| %>
+    <%= fa_icon('check', class: 'text-success') if f.object.valid? %>
+    <%= content_tag :span, f.object.name.html_safe, class: 'text-strong' %>
+    <%= f.input :attribute_mapping, label: false, collection: [f.object.attribute_mapping].concat(f.object.model_mapping_attributes).compact.uniq, input_html: {class: 'attribute_mapping autosubmit'} %>
+  <% end %>
+<% end %>

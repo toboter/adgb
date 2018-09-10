@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_05_115745) do
+ActiveRecord::Schema.define(version: 2018_09_06_104108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -170,14 +170,29 @@ ActiveRecord::Schema.define(version: 2018_09_05_115745) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "imports", force: :cascade do |t|
+  create_table "import_events", force: :cascade do |t|
     t.string "name"
-    t.jsonb "data"
     t.integer "creator_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["creator_id"], name: "index_imports_on_creator_id"
-    t.index ["data"], name: "index_imports_on_data", using: :gin
+    t.integer "sheets_count"
+    t.index ["creator_id"], name: "index_import_events_on_creator_id"
+  end
+
+  create_table "import_headers", force: :cascade do |t|
+    t.integer "sheet_id"
+    t.string "name"
+    t.string "attribute_mapping"
+    t.index ["sheet_id"], name: "index_import_headers_on_sheet_id"
+  end
+
+  create_table "import_sheets", force: :cascade do |t|
+    t.integer "event_id"
+    t.string "name"
+    t.integer "rows_count"
+    t.integer "headers_count"
+    t.string "model_mapping"
+    t.index ["event_id"], name: "index_import_sheets_on_event_id"
   end
 
   create_table "memberships", id: :serial, force: :cascade do |t|

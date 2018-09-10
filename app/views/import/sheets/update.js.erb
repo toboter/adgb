@@ -1,0 +1,3 @@
+toastr["success"]("Updated!");
+$('#import_sheet_model_mapping').prop('disabled', true);
+$('#headers_forms').html("<%= escape_javascript(render partial: 'import/headers/form', collection: @sheet.headers.order(id: :asc), as: :header) %>");
