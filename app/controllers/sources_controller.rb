@@ -100,7 +100,6 @@ class SourcesController < ApplicationController
     if params[:attachments]
       files = JSON.parse(params[:attachments])['successful'].extend(Hashie::Extensions::DeepFind).deep_select('body')
       @source.attachments << files.map{|file| Attachment.new(file_id: file['id'], file_url: file['file_url'], html_url: file['html_url']) unless file['id'].in?(@source.attachments.map(&:file_id)) }.compact
-      @source.attachments.inspect
     end
     respond_to do |format|
       if @source.update(source_params)
