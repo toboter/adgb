@@ -16,7 +16,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   attributes :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text, :gr_datum, :gr_jahr
   attributes :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1
   attributes :standort_alt, :standort, :diss, :mus_id
-  has_many :photos
+  has_many :sources
   has_many :references
   has_many :people
 
