@@ -32,7 +32,7 @@ toastr.options = {
     "positionClass": "toast-top-left",
 }
 
-$(document).ready(function() {
+$(document).on('turbolinks:load', function(){
 
     //select all checkboxes
     $("#select_all").change(function(){  //"select all" change 
