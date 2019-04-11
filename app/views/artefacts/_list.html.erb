@@ -20,23 +20,32 @@
     <ul class="list-group">
     <% @artefacts.each do |artefact| %>
       <li class="list-group-item artefact" id="artefact-<%= artefact.id %>">
-        <div class="row" style="margin-bottom:5px;">
+        <div class="row" style="margin-bottom:10px;">
           <div class="col-md-3">
             <%= check_box_tag "artefact_ids[]", artefact.id, false, class: 'checkbox' if current_user %>
           </div>
-          <div class="col-md-9">
-            <%= artefact.tags.map{|t| content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge')}.join(' ').html_safe %>
+          <div class="col-md-7">
+            <%= artefact.tags.map{|t| content_tag(:span, link_to(t.name, artefacts_path(search: "#{params[:search]} tags:#{'"'+t.name+'"'}".strip), style: 'color:white;'), class: 'badge')}.join(' ').html_safe %>
+          </div>
+          <div class="col-md-2">
+            <%= link_to fa_icon('share', text: 'Detailansicht'), artefact, class: 'pull-right btn btn-xs btn-info text-strong' %>
           </div>
         </div>
         <div class="row">
           <div class="col-md-3">
             <%= content_tag :div, id: "excavation-#{artefact.id}" do %>
-              <%= link_to linebreak_before_and_show_if_exists(artefact.bab_name, false), artefact, class: 'text-strong', title: 'Grabungsnummer', data: {toggle: 'tooltip', placement: 'right'} %>
+              <%= content_tag :span, class: 'text-strong', title: 'Grabungsnummer', data: {toggle: 'tooltip', placement: 'right'} do %>
+                <%= link_to(artefact.grabung, artefacts_path(search: "#{params[:search]} grabung:#{'"'+artefact.grabung+'"'}".strip), class: 'filter-link') if artefact.grabung %>
+                <%= "#{artefact.bab}#{artefact.bab_ind}" %>
+              <% end %>
               <%= linebreak_before_and_show_if_exists(artefact.b_join) %>
               <%= linebreak_before_and_show_if_exists(artefact.b_korr) %>
             <% end if artefact.bab_name.present? %>
             <%= content_tag :div, id: "museum-#{artefact.id}" do %>
-              <%= link_to linebreak_before_and_show_if_exists(artefact.mus_name, false), artefact, class: 'text-strong', title: 'Museumsnummer', data: {toggle: 'tooltip', placement: 'right'} %>
+              <%= content_tag :span, class: 'text-strong', title: 'Museumsnummer', data: {toggle: 'tooltip', placement: 'right'} do %>
+                <%= link_to(artefact.mus_sig, artefacts_path(search: "#{params[:search]} mus_sig:#{'"'+artefact.mus_sig+'"'}".strip), class: 'filter-link') if artefact.mus_sig %>
+                <%= "#{artefact.mus_nr}#{artefact.mus_ind}" %>
+              <% end %>
               <%= linebreak_before_and_show_if_exists(artefact.m_join) %>
               <%= linebreak_before_and_show_if_exists(artefact.m_korr) %>
             <% end if artefact.mus_name.present? %>
@@ -57,10 +66,10 @@
               <%= linebreak_before_and_show_if_exists(with_description(artefact.abklatsch, 'Abklatsch: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.zeichnung, 'Zeichnung: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.code, 'Code: ')) %>
-              <%= "[#{artefact.kod}]" if artefact.kod.present? %>
+              <%= "[#{link_to(artefact.kod, artefacts_path(search: "#{params[:search]} kod:#{'"'+artefact.kod+'"'}".strip), class: 'filter-link')}]".html_safe if artefact.kod.present? %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.grab, 'Grab: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.text_solution, 'Text: ')) %>
-              <%= "[#{artefact.text}]" if artefact.text.present? %>
+              <%= "[#{link_to(artefact.text, artefacts_path(search: "#{params[:search]} text:#{'"'+artefact.text+'"'}".strip), class: 'filter-link')}]".html_safe if artefact.text.present? %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.sig, 'Bild: ')) %>
               <%= content_tag :span do %>
               <br>
@@ -73,8 +82,8 @@
           </div>
           <div class="col-md-3">
             <%= content_tag :div, id: "text-description-#{artefact.id}", style: 'padding-top: 5px;' do %>
-              <%= linebreak_before_and_show_if_exists(with_description(artefact.period, 'Periode: '), false) %>
-              <%= linebreak_before_and_show_if_exists(with_description(artefact.arkiv, 'Archiv: ')) %>
+              <%= linebreak_before_and_show_if_exists(with_description(link_to(artefact.period, artefacts_path(search: "#{params[:search]} period:#{'"'+artefact.period+'"'}".strip), class: 'filter-link'), 'Periode: '), false) if artefact.period %>
+              <%= linebreak_before_and_show_if_exists(with_description(link_to(artefact.arkiv, artefacts_path(search: "#{params[:search]} arkiv:#{'"'+artefact.arkiv+'"'}".strip), class: 'filter-link'), 'Archiv: ')) if artefact.arkiv %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.text_in_archiv, ': '), false) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.inhalt, 'Inhalt: ')) %>
               <%= content_tag :span do %>
@@ -93,7 +102,7 @@
           <div class="col-md-3">
             <%= content_tag :div, id: "fundort-#{artefact.id}" do %>
               <strong>Fundort</strong>
-              <%= linebreak_before_and_show_if_exists(artefact.fo_tell, false) %>
+              <%= linebreak_before_and_show_if_exists(link_to(artefact.fo_tell, artefacts_path(search: "#{params[:search]} fo_tell:#{'"'+artefact.fo_tell+'"'}".strip), class: 'filter-link'), false) if artefact.fo_tell %>
               <%= content_tag :span do %>
                 <%= linebreak_before_and_show_if_exists(artefact.fo1, false) %>
                 <%= linebreak_before_and_show_if_exists(artefact.fo2, false) %>
