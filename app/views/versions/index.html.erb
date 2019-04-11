@@ -18,7 +18,7 @@
             <%= content_tag :tr, id: "version_id_#{version.id}" do %>
               <td class="versions-group-item">
                 <div class="version-avatar-cell">
-                  <%= image_tag user.image_thumb_url if user.image_thumb_url %>
+                  <%= image_tag user.image_thumb_url if user.image_thumb_url && Rails.env == 'production' %>
                 </div>
                 <div class="version-main-cell">
                   <%= content_tag :span, user.name, class: 'text-strong' %> 

@@ -5,7 +5,7 @@ class ArtefactsController < ApplicationController
   load_and_authorize_resource
   skip_load_resource only: [:index, :mapview, :publish, :unlock, :edit_multiple, :update_multiple]
   skip_authorize_resource only: [:index, :mapview, :publish, :unlock, :edit_multiple, :update_multiple]
-  layout 'artefact', except: [:index, :mapview, :edit, :new, :edit_multiple]
+  layout 'artefact', except: [:index, :mapview, :edit, :new, :edit_multiple, :update, :create]
 
 
   # GET /artefacts
@@ -131,12 +131,12 @@ class ArtefactsController < ApplicationController
     add_tags = []
     artefact_params[:add_to_tag_list].split(',').each do |term|
       ident = term.split(';')
-      add_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+      add_tags << ActsAsTaggableOn::Tag.where(uuid: ident.second).first_or_create(name: ident.first, url: ident.last)
     end
     remove_tags = []
     artefact_params[:remove_from_tag_list].split(',').each do |term|
       ident = term.split(';')
-      remove_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+      remove_tags << ActsAsTaggableOn::Tag.where(uuid: ident.second).first_or_create(name: ident.first, url: ident.last)
     end
     @artefacts.reject! do |artefact|
       if can? :update, artefact

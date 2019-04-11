@@ -13,7 +13,7 @@ class Artefact < ApplicationRecord
   extend FriendlyId
   require 'roo'
   include Visibility
-  acts_as_taggable
+  acts_as_taggable_on :tags
 
   friendly_id :bab_rel, use: :slugged
   before_save :set_code, :set_text_solution, :set_latitude, :set_longitude
@@ -67,7 +67,7 @@ class Artefact < ApplicationRecord
     ctags = []
     values.split(',').each do |term|
       ident = term.split(';')
-      ctags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+      ctags << ActsAsTaggableOn::Tag.where(uuid: ident.second).first_or_create(name: ident.first, url: ident.last)
     end
     self.tags = ctags
   end
