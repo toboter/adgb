@@ -9,5 +9,7 @@
           <%= content_tag :span, archive.sources_count, class: 'badge' %>
         <% end %>
       <% end %>
+    </div>
+    <%= link_to "New Archive", new_archive_path, class: '--spacious text-small' if can?(:create, Archive) %>
   </div>
 </div>

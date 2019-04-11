@@ -25,7 +25,7 @@ class Ability
         s.editable_by?(user) && !s.locked?
       end
 
-      can [:new, :create], [PhotoImport, Artefact, Source] if user.is_admin? || user.is_creator?
+      can [:new, :create], [PhotoImport, Artefact, Source, Archive] if user.is_admin? || user.is_creator?
 
       can :import, [Artefact, PhotoImport, ArtefactPhoto, ArtefactPerson, ArtefactReference] if user.is_admin? || user.is_creator?
     else

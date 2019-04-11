@@ -1,0 +1,9 @@
+<h1>New Archive</h1>
+
+<%= simple_form_for @archive do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :name %>
+  <%= f.submit class: 'btn btn-primary' %>
+
+<% end %>

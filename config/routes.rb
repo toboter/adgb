@@ -47,7 +47,7 @@ Rails.application.routes.draw do
       delete :revoke_multiple, to: 'grants#revoke_multiple'
     end
   end
-  resources :archives, only: [:index]
+  resources :archives, only: [:index, :new, :create]
 
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1 do
