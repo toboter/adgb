@@ -41,7 +41,7 @@ group :test do
   gem "webdrivers"
 end
 
-gem 'bootstrap-sass', '~> 3.3.6'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'simple_form'
 gem 'diffy'
 gem "chartkick"

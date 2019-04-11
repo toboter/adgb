@@ -57,9 +57,9 @@ GEM
     bindex (0.7.0)
     bootsnap (1.4.3)
       msgpack (~> 1.0)
-    bootstrap-sass (3.3.7)
+    bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
-      sass (>= 3.3.4)
+      sassc (>= 2.0.0)
     browser (2.5.3)
     builder (3.2.3)
     byebug (11.0.1)
@@ -218,11 +218,6 @@ GEM
       nokogiri (~> 1)
       rubyzip (>= 1.2.1, < 2.0.0)
     rubyzip (1.2.2)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
@@ -298,7 +293,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   acts-as-taggable-on (~> 5.0)
   bootsnap (>= 1.1.0)
-  bootstrap-sass (~> 3.3.6)
+  bootstrap-sass (~> 3.4.1)
   browser
   byebug
   cancancan
