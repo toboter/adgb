@@ -6,6 +6,7 @@ $(document).on('turbolinks:load', function(){
     searchField: ['name', 'parents', 'labels'],
     placeholder: 'Search vocabularies for concepts...',
     create: false,
+    loadThrottle: 700,
     load: function(query, callback) {
       if (!query.length) return callback();
       $.ajax({
@@ -17,7 +18,6 @@ $(document).on('turbolinks:load', function(){
           callback();
         },
         success: function(res) {
-          console.log(res);
           callback(res.slice(0,10));
         }
       })

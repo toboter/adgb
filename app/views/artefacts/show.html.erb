@@ -124,7 +124,6 @@
 
 <% if @artefact.utm? %>
   <script type="text/javascript">
-    $(function (e) {
       handler = Gmaps.build('Google');
       handler.buildMap({
           provider: {
@@ -146,7 +145,7 @@
           handler.fitMapToBounds();
         }
       );
-    });
+
   </script>
 <% end %>
 
