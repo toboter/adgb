@@ -22,6 +22,7 @@
 //= require chartkick
 //= require magnific-popup/dist/jquery.magnific-popup.min
 //= require selectize/dist/js/standalone/selectize.min
+//= require bootstrap-tokenfield/dist/bootstrap-tokenfield.min
 //= require turbolinks
 //= require_tree .
 
@@ -33,6 +34,19 @@ toastr.options = {
 }
 
 $(document).on('turbolinks:load', function(){
+    $('#search')
+      .on('tokenfield:removedtoken', function (e) {
+        console.log(this.form.submit());
+      })
+      .tokenfield({
+        delimiter: '+'
+    });
+    $('.filter-link').click(function (e) {
+        token = $(this).data('token')
+        $('#search').tokenfield('createToken', token);
+        e.preventDefault(); // Prevent link from following its href
+        $('#search')[0].form.submit();
+    });
 
     //select all checkboxes
     $("#select_all").change(function(){  //"select all" change 

@@ -253,6 +253,13 @@ blob@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.4.tgz#bcf13052ca54463f30f9fc7e95b9a47630a94921"
 
+bootstrap-tokenfield@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-tokenfield/-/bootstrap-tokenfield-0.12.0.tgz#5d763c3d196de71078ac4d49dc2ea169cb870cdf"
+  integrity sha1-XXY8PRlt5xB4rE1J3C6hacuHDN8=
+  dependencies:
+    jquery "^2.1.0"
+
 buffer-from@^0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-0.1.2.tgz#15f4b9bcef012044df31142c14333caf6e0260d0"
@@ -373,6 +380,11 @@ isarray@2.0.1:
 jquery@>=1.12.0, jquery@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+
+jquery@^2.1.0:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
+  integrity sha1-LInWiJterFIqfuoywUUhVZxsvwI=
 
 lodash.throttle@^4.1.1:
   version "4.1.1"

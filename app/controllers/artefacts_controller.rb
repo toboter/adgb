@@ -13,13 +13,14 @@ class ArtefactsController < ApplicationController
   def index
     sort_order = Artefact.sorted_by(params[:sorted_by] ||= 'score_desc') if Artefact.any?
     query = params[:search].presence || '*'
+    string_q = query.gsub('+', ' ').squish 
     
     artefacts = Artefact
     .visible_for(current_user)
     .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
     @artefacts =
-      Artefact.search(query,
+      Artefact.search(string_q,
         where: {id: artefacts.ids},
         fields: [:default_fields],
         page: params[:page], 
@@ -27,7 +28,7 @@ class ArtefactsController < ApplicationController
         order: sort_order, 
         misspellings: {below: 1}
       ) do |body|
-        body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+        body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "AND" } }
       end
 
     respond_to do |format|

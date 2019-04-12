@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for?(:title) ? "#{yield(:title)} ::adgb.babylon-online.org" : 'adgb.babylon-online.org' %></title>
+    <title><%= content_for?(:title) ? "#{yield(:title)} | adgb.babylon-online.org" : 'adgb.babylon-online.org' %></title>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <%= yield(:head) if content_for?(:head) %>
