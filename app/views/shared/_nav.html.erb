@@ -1,7 +1,6 @@
 <%= content_tag :li, link_to(fa_icon('database', text: "Artefacts"), artefacts_path), class: ('active' if current_page?(artefacts_url)) %>
 <%= content_tag :li, link_to(fa_icon('users', text: "Historic people"), people_path), class: ('active' if current_page?(people_url)) %>
-<%= content_tag :li, link_to(fa_icon('book', text: "References"), references_path), class: ('active' if current_page?(references_url)) %> 
-
+<%= content_tag :li, link_to(fa_icon('book', text: "Literature"), literature_items_path), class: ('active' if current_page?(literature_items_url)) %> 
 <hr>
 
 <%= content_tag :li, link_to(fa_icon('database', text: "Sources"), sources_path), class: ('active' if current_page?(sources_path)) %>

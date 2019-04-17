@@ -62,7 +62,7 @@
           <% end if @artefact.illustrations.any? %>
           <%= content_tag :tr do %>
             <th>Bibliographie: </th>
-            <td><%= @artefact.references.map{ |r| "#{r.ver} [#{r.jahr}] #{r.publ}#{r.seite ? ': ' + r.seite : ''}#{' (' + link_to(r.source.call_number, r.source) + ')' if r.source.present?}" }.join('; ').html_safe %></td>
+            <td><%= @artefact.references.map{ |r| "#{link_to(r.literature_item.try(:title).try(:html_safe), r.literature_item)}#{r.locator ? ': '+r.locator : ''} #{' (' + link_to(r.source.call_number, r.source) + ')' if r.source.present?}" }.join('; ').html_safe %></td>
           <% end if @artefact.references.any? %>
 
           <%= table_row(@artefact.inhalt, 'Textinhalt') %>

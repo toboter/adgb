@@ -311,7 +311,8 @@ class SourcesController < ApplicationController
         :tag_list,
         relevance_list: [],
         digitize_remarks_list: [],
-        attachments_attributes: [:id, :_destroy]
+        attachments_attributes: [:id, :_destroy],
+        literature_item_sources_attributes: [:id, :literature_item_id, :locator, :_destroy]
       )
     end
 

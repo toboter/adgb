@@ -36,4 +36,16 @@ class ImportsController < ApplicationController
     Photo.get_photos_from_photo_import(params[:transferer_id])
     redirect_to imports_url, notice: "Photos table imported."
   end
+
+  def literature_items_from
+    items =[]
+    items << ArtefactReference.all.map(&:sync_to_literature)
+    redirect_to imports_url, notice: "#{items.flatten.size} entries synced to literature."
+  end
+
+  def literature_item_sources_from
+    items =[]
+    items << ArtefactReference.where.not(source_id: nil).map(&:sync_between_literature_item_and_source)
+    redirect_to imports_url, notice: "#{items.flatten.size} entries transfered and synced between sources and literature."
+  end
 end

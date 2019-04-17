@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_05_115745) do
+ActiveRecord::Schema.define(version: 2019_04_14_192717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 2018_09_05_115745) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "source_id"
+    t.integer "literature_item_id"
     t.index ["b_bab_rel"], name: "index_artefact_references_on_b_bab_rel"
     t.index ["ph_rel"], name: "index_artefact_references_on_ph_rel"
     t.index ["source_id"], name: "index_artefact_references_on_source_id"
@@ -170,14 +171,51 @@ ActiveRecord::Schema.define(version: 2018_09_05_115745) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "imports", force: :cascade do |t|
+  create_table "import_events", force: :cascade do |t|
     t.string "name"
-    t.jsonb "data"
     t.integer "creator_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["creator_id"], name: "index_imports_on_creator_id"
-    t.index ["data"], name: "index_imports_on_data", using: :gin
+    t.integer "sheets_count"
+    t.index ["creator_id"], name: "index_import_events_on_creator_id"
+  end
+
+  create_table "import_headers", force: :cascade do |t|
+    t.integer "sheet_id"
+    t.string "name"
+    t.string "attribute_mapping"
+    t.index ["sheet_id"], name: "index_import_headers_on_sheet_id"
+  end
+
+  create_table "import_sheets", force: :cascade do |t|
+    t.integer "event_id"
+    t.string "name"
+    t.integer "rows_count"
+    t.integer "headers_count"
+    t.string "model_mapping"
+    t.index ["event_id"], name: "index_import_sheets_on_event_id"
+  end
+
+  create_table "literature_item_sources", force: :cascade do |t|
+    t.bigint "literature_item_id"
+    t.bigint "source_id"
+    t.string "locator"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["literature_item_id", "source_id"], name: "index_lit_source_on_item_and_source", unique: true
+    t.index ["literature_item_id"], name: "index_literature_item_sources_on_literature_item_id"
+    t.index ["source_id"], name: "index_literature_item_sources_on_source_id"
+  end
+
+  create_table "literature_items", force: :cascade do |t|
+    t.jsonb "biblio_data", default: {}, null: false
+    t.string "ver"
+    t.string "publ"
+    t.string "jahr"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["biblio_data"], name: "index_literature_items_on_biblio_data", using: :gin
+    t.index ["ver", "publ", "jahr"], name: "index_literature_items_on_ver_and_publ_and_jahr", unique: true
   end
 
   create_table "memberships", id: :serial, force: :cascade do |t|
@@ -342,6 +380,8 @@ ActiveRecord::Schema.define(version: 2018_09_05_115745) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "literature_item_sources", "literature_items"
+  add_foreign_key "literature_item_sources", "sources"
   add_foreign_key "memberships", "groups"
   add_foreign_key "memberships", "users"
 end

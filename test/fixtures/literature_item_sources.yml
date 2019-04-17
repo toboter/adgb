@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  literature_item: one
+  source: one
+
+two:
+  literature_item: two
+  source: two

@@ -130,7 +130,7 @@
           <div class="col-md-12">
             <%= content_tag :div, id: "biblio-#{artefact.id}", style: 'padding-top: 5px;' do %>
               <span class="text-strong text-gray">Bibliographie: </span>
-              <%= artefact.references.map{ |r| r.title }.join('; ') %>
+              <%= artefact.references.map{ |r| "#{link_to(r.literature_item.try(:title).try(:html_safe), r.literature_item)}#{r.locator ? ': '+r.locator : ''}" }.join('; ').html_safe %>
             <% end if artefact.references.any? %>
           </div>
         </div>

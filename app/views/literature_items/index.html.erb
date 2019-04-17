@@ -1,0 +1,36 @@
+<% title 'Literature', false %>
+
+<div class="row">
+  <div class="col-md-12" style="margin-bottom:10px;">
+    <div class="well" style="padding:10px 10px;">
+      <%= page_entries_info @literature_items, model: 'Reference' %>
+      <%= link_to('Reset', literature_items_path, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
+    </div>
+    <%= will_paginate @literature_items, renderer: BootstrapPagination::Rails %>
+  </div>
+</div>
+
+
+<table class="table table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Published artefacts count</th>
+      <th>Published archival resources count</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @literature_items.each do |i| %>
+      <tr>
+        <td><%= link_to i.title, i %></td>
+        <td><%= i.artefacts.size %></td>
+        <td><%= i.sources.size %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div style="margin-top: 20px; margin-bottom: 10px;">
+  <%= render 'shared/per_page' %>
+</div>

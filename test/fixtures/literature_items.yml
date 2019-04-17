@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  biblio_data: 
+  ver: MyString
+  publ: MyString
+  jahr: MyString
+
+two:
+  biblio_data: 
+  ver: MyString
+  publ: MyString
+  jahr: MyString

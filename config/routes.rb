@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       post 'artefacts_photos'
       post 'photos'
       post 'transfer_photos'
+      post 'literature_items_from'
+      post 'literature_item_sources_from'
     end
   end
   
@@ -35,7 +37,11 @@ Rails.application.routes.draw do
     end
   end
   resources :artefact_people, only: :index, path: 'people', as: 'people'
-  resources :artefact_references, only: :index, path: 'references', as: 'references'
+  resources :literature_items do
+    collection do
+      delete :remove_empty
+    end
+  end
 
   resources :sources, concerns: [:versionable], model_name: 'Source' do
     collection do
@@ -78,6 +84,7 @@ Rails.application.routes.draw do
   get '/api', to: 'home#api'
   get '/search', to: 'search#index'
   get '/concepts/search', to: 'concepts#search'
+  get '/bibliography/search', to: 'biblio_wrapper#search'
 
   root 'home#index' 
 end

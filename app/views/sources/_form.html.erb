@@ -63,6 +63,7 @@
           label: "Tags".html_safe,
           hint: "Add tags to categorize the source and make it more discoverable." %>
         
+        <hr>
         <div id="attachments" class="panel panel-default">
           <div class="panel-heading text-strong text-gray">
             <%= fa_icon('files') %> Attached files
@@ -79,6 +80,18 @@
           data-updater-id="<%= current_user.id %>"
           data-token="<%= @access_token.token %>"
           data-url="<%= Rails.application.secrets.provider_site + '/v1/raw/files.json' %>">
+        </div>
+
+        <hr>
+        <div id="references">
+          <strong>Publications: </strong>
+          <%= f.simple_fields_for :literature_item_sources do |id| %>
+            <%= render 'literature_item_source_fields', f: id %>
+            <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.literature_item_sources.count > 1 %>
+          <% end %>
+          <div class="links clearfix">
+            <%= link_to_add_association fa_icon('plus-square', text: 'Literature item'), f, :literature_item_sources, class: 'btn btn-sm btn-success pull-right' %>
+          </div>
         </div>
       </div>
     </div>

@@ -44,6 +44,7 @@ class Artefact < ApplicationRecord
   validates :bab_rel, presence: true
 
   has_many :references, class_name: "ArtefactReference", foreign_key: "b_bab_rel", primary_key: :bab_rel
+  has_many :literature_items, through: :references
   accepts_nested_attributes_for :references, reject_if: :all_blank, allow_destroy: true
   has_many :illustrations, class_name: "ArtefactPhoto", foreign_key: "p_bab_rel", primary_key: :bab_rel
   has_many :sources, through: :illustrations

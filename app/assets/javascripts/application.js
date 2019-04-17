@@ -34,6 +34,7 @@ toastr.options = {
 }
 
 $(document).on('turbolinks:load', function(){
+    // http://sliptree.github.io/bootstrap-tokenfield/
     $('#search')
       .on('tokenfield:removedtoken', function (e) {
         console.log(this.form.submit());

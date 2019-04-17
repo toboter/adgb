@@ -106,26 +106,20 @@
       <table class="table table-bordered table-responsive">
         <thead>
           <tr>
-            <td>Verfasser</td>
             <td>Publikation</td>
-            <td>Jahr</td>
             <td>Seite</td>
-            <td>Artefakt</td>
           </tr>
         </thead>
         <tbody>
-          <% @source.publications.each do |publication| %>
+          <% @source.literature_item_sources.each do |r| %>
             <tr>
-              <td><%= publication.ver %></td>
-              <td><%= publication.publ %></td>
-              <td><%= publication.jahr %></td>
-              <td><%= publication.seite %></td>
-              <td><%= link_to publication.artefact.name, publication.artefact %></td>
+              <td><%= link_to r.literature_item.title, r.literature_item %></td>
+              <td><%= r.locator %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    <% end if @source.publications.any? %>
+    <% end if @source.publications.any? || @source.literature_items.any?  %>
 
     <%= content_tag :div, id: 'stats', class: '--spacious' do %>
       <%= link_to 'Toggle stats', "#collapse-stats-on-#{@source.id}", 

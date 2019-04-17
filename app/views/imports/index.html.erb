@@ -24,13 +24,19 @@
 
 <div class="well">
   <strong>3. Datei auswählen, welche die Daten der Literaturtabelle enthält.</strong><br>
-  <small>Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.</small>
+  <small>
+    Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.<br>
+    <strong>Allowed attributes: </strong><%= ArtefactReference.col_attr.map{|c| c.camelize }.join(', ') %>
+  </small>
   <%= form_tag artefacts_references_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_references_file %>
     <%= submit_tag "Import" %>
   <% end %>
   <br>
-  <strong>Attributes: </strong><%= ArtefactReference.col_attr.map{|c| c.camelize }.join(', ') %>
+  <%= link_to 'X-Import to literature items', literature_items_from_imports_path, method: :post %><br>
+  <%= link_to 'Transfer literature source relation', literature_item_sources_from_imports_path, method: :post %><br>
+  <%= link_to 'remove empty literature items', remove_empty_literature_items_path, method: :delete %><br>
+  
 </div>
 
 <div class="well">
@@ -38,6 +44,12 @@
   <small>Bestehende Datensätze (key: PhRel) werden aktualisiert, nicht vorhandene neu erstellt.</small>
   <%= form_tag photos_imports_path, multipart: true do %>
     <%= file_field_tag :photos_file %>
+    <%= submit_tag "Import" %>
+  <% end %>
+  <br>
+  <strong>Photos in die Archivalien übertragen und neu verknüpfen.</strong><br>
+  <%= form_tag transfer_photos_imports_path, multipart: true do %>
+    <%= select_tag :transferer_id, options_from_collection_for_select(User.all, "id", "name") %>
     <%= submit_tag "Import" %>
   <% end %>
   <br>
@@ -53,12 +65,4 @@
   <% end %>
   <br>
   <strong>Attributes: </strong><%= ArtefactPhoto.col_attr.map{|c| c.camelize }.join(', ') %>
-</div>
-
-<div class="well">
-  <strong>6. Photos in die Quellendatei übertragen und neu verknüpfen.</strong><br>
-  <%= form_tag transfer_photos_imports_path, multipart: true do %>
-    <%= select_tag :transferer_id, options_from_collection_for_select(User.all, "id", "name") %>
-    <%= submit_tag "Import" %>
-  <% end %>
 </div>

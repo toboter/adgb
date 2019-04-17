@@ -1,0 +1,18 @@
+<%= simple_form_for literature_item do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :ver %>
+  <%= f.input :publ %>
+  <%= f.input :jahr %>
+
+  <%= f.input :biblio_data,
+        collection: [literature_item.try(:biblio_data).presence || nil].compact, 
+        label_method: lambda { |b| b.try(:[], 'citation') },
+        value_method: lambda { |b| b.try(:to_json) },
+        selected: literature_item.try(:biblio_data),
+        label: "Literature entry",
+        hint: 'Find the matching literature entry on babylon-online.org.' %>
+  
+  <%= f.submit class: 'btn btn-primary' %>
+
+<% end %>

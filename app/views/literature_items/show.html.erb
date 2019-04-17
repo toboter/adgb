@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-12">
+    <%= content_tag :h1, @literature_item.title %>
+    <div class="row">
+      <%= content_tag :div, link_to(@literature_item.biblio_data['cite'].html_safe, @literature_item.biblio_data['html_url'], target: :_blank), class: 'col-md-8' if @literature_item.biblio_data.present? %>
+    </div>
+    <div style="margin-top:10px;">
+      <%= link_to 'Edit', [:edit, @literature_item] if can?(:edit, @literature_item) %> | 
+      <%= link_to 'Delete', @literature_item, method: :delete if can?(:destroy, @literature_item) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h3>Artefacts</h3>
+    <ul class="list-unstyled">
+    <% @literature_item.artefact_references.order(locator: :asc).each do |r| %>
+      <%= content_tag :li do %>
+        <%= r.locator + ': ' if r.locator %>
+        <%= link_to("#{r.artefact.full_entry}", r.artefact) %>
+      <% end if r.artefact %>
+    <% end %>
+  </div>
+  <div class="col-md-6">
+    <h3>Sources</h3>
+    <ul class="list-unstyled">
+    <% @literature_item.literature_item_sources.order(locator: :asc).each do |r| %>
+      <%= content_tag :li do %>
+        <%= r.locator + ': ' if r.locator %>
+        <%= link_to("#{r.source.name}", r.source) %>
+      <% end if r.source %>
+    <% end %>
+  </div>
+</div>
