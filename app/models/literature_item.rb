@@ -1,5 +1,4 @@
 class LiteratureItem < ApplicationRecord
-
   has_many :artefact_references
   has_many :artefacts, through: :artefact_references
   has_many :literature_item_sources
@@ -9,12 +8,7 @@ class LiteratureItem < ApplicationRecord
   validates :jahr, uniqueness: { scope: [:ver, :publ] }
   validates :publ, uniqueness: { scope: [:jahr, :ver] }
 
-  validates :biblio_data, uniqueness: true
-
-  after_commit do
-    artefacts.reindex
-    sources.reindex
-  end
+  after_commit :reindex_relations, on: [:update, :destroy]
 
   def biblio_data=(value)
     self[:biblio_data] = value.is_a?(String) ? JSON.parse(value) : value
@@ -26,6 +20,11 @@ class LiteratureItem < ApplicationRecord
 
   def full_citation
     biblio_data.present? ? biblio_data['cite'] : title
+  end
+
+  def reindex_relations
+    artefacts.reindex
+    sources.reindex
   end
 
 end

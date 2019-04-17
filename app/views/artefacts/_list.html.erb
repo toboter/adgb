@@ -109,14 +109,10 @@
                 <%= linebreak_before_and_show_if_exists(artefact.gr_datum, false) %>
                 <%= linebreak_before_and_show_if_exists(artefact.gr_jahr, false) %>
               <% end if artefact.gr_datum || artefact.gr_jahr %>
-              <%= content_tag :p do %>
-                <strong>UTM E </strong>
-                <%= artefact.utmx %> (<%= artefact.utmxx %>) 
-                <strong>N </strong>
-                <%= artefact.utmy %> (<%= artefact.utmyy %>)<br>
-                <small>
-                  <%= link_to fa_icon('external-link', text: 'Google Maps'), "http://maps.google.com/maps?t=k&q=loc:#{artefact.latitude}+#{artefact.longitude}", target: :_blank %>
-                </small>
+              <%= content_tag :div do %>
+                <strong>UTM Koordinaten (WGS84)</strong><br>
+                Z: 38S E: <%= artefact.utmx %> N: <%= artefact.utmy %><br>
+                <span class="text-small">Abweichung max: E: <%= artefact.utmxx %> N: <%= artefact.utmyy %><br>
               <% end if artefact.utm? %>
             <% end %>
           </div>

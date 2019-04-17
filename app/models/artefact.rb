@@ -3,7 +3,7 @@ class Artefact < ApplicationRecord
   # https://github.com/ankane/searchkick/issues/642
   # showing more than 10000 results on index
   searchkick
-  has_paper_trail ignore: [:slug, :latitude, :longitude], 
+  has_paper_trail ignore: [:slug, :latitude, :longitude, :updated_at], 
     meta: {
       version_name: :name, 
       changed_characters_length: :changed_characters,
@@ -277,13 +277,13 @@ class Artefact < ApplicationRecord
     utmx && utmy
   end
   
-  def to_lat_lon(zone)
+  def to_lat_lon(zone, corrx=0, corry=0)
     # Olof bemängelt eine Verschiebung der von ihm verwendeten UTM WGS84 Koordinaten in maps um E 27 und N 7
     # GeoUTM bietet verschiedene ellipsoide, das standard WGS84 führt zu dem besagten Verschiebungsfehler
     # neuer Versuch mit 'International' hier sind die angezeigten Koordinaten viel südlicher.
     # Laut Olof ergibt sich daraus ein noch viel größerer Fehler. Daher wieder wgs84. 
     # Nun aber mit 27m Abzug auf x und 7m auf der y Achse.
-    GeoUtm::UTM.new(zone, utmx-27, utmy-7, "WGS-84").to_lat_lon if utm? && zone
+    GeoUtm::UTM.new(zone, utmx+corrx, utmy+corry, "WGS-84").to_lat_lon if utm? && zone
   end
 
 

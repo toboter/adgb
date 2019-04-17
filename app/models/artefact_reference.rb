@@ -3,9 +3,11 @@ class ArtefactReference < ApplicationRecord
 
   alias_attribute :locator, :seite
   
-  belongs_to :artefact, foreign_key: "b_bab_rel", primary_key: 'bab_rel', optional: true, touch: true
+  belongs_to :artefact, foreign_key: "b_bab_rel", primary_key: 'bab_rel', optional: true
   belongs_to :literature_item, optional: true
   belongs_to :source, optional: true
+
+  after_commit :reindex_artefact
 
   scope :without_artefact, -> { where(b_bab_rel: nil) }
 
@@ -53,5 +55,9 @@ class ArtefactReference < ApplicationRecord
     else
       return false
     end
+  end
+
+  def reindex_artefact
+    artefact.try(:reindex)
   end
 end

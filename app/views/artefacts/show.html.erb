@@ -56,7 +56,16 @@
           <%= table_row("#{@artefact.fo1} #{@artefact.fo2} #{@artefact.fo3} #{@artefact.fo4}", 'Areal') %>
           <%= table_row(@artefact.fo_text, 'Fundumstände') %>
           <%= table_row("#{@artefact.gr_datum}#{@artefact.gr_jahr}", 'Grabungsdatum') %>
-          <%= table_row("<strong>E</strong> #{@artefact.utmx} (#{@artefact.utmxx}) <strong>N</strong> #{@artefact.utmy} (#{@artefact.utmyy})".html_safe, 'UTM') if @artefact.utm? %>
+          <%= content_tag :tr do %>
+            <th>Koordinaten: </th>
+            <td>
+              <strong>UTM Koordinaten (WGS84)</strong><br>
+              Z: 38S E: <%= @artefact.utmx %> N: <%= @artefact.utmy %><br>
+              <strong>Dezimalgrad (WGS84)</strong><br>
+              Lat: <%= @artefact.latitude %> Lon: <%= @artefact.longitude %>
+              <p class="text-small">Abweichung max: E: <%= @artefact.utmxx %> N: <%= @artefact.utmyy %></p>
+            </td>
+          <% end if @artefact.utm? %>
           <%= content_tag :tr do %>
             <th>
               Archivalien
@@ -135,8 +144,11 @@
       <% end %>
     <% end if !@version && @artefact.illustrations.any? %>
 
-    <%= content_tag :div, style: 'width: 100%;', class: "thumbnail --spacious" do %>
-      <div id="map-render" style='width: 100%; height: 400px;'></div>
+    <%= content_tag :div, style: 'width: 100%;', class: "--spacious" do %>
+      <div class="thumbnail" style="margin-bottom:5px;">
+        <div id="map-render" style='width: 100%; height: 400px;'></div>
+      </div>
+      <p class="text-small text-muted">Auf der Karte wird ein Verschiebungsvektor von E -27m und N -7m angewendet.</p>
     <% end if @artefact.utm? %>
   </div>
 </div>
@@ -155,8 +167,8 @@
         function(){
           markers = handler.addMarkers([
             {
-              "lat": <%= @artefact.to_lat_lon('38S').lat %>,
-              "lng": <%= @artefact.to_lat_lon('38S').lon %>,
+              "lat": <%= @artefact.to_lat_lon('38S', -27, -7).lat %>,
+              "lng": <%= @artefact.to_lat_lon('38S', -27, -7).lon %>,
               "infowindow": "<%= "#{@artefact.full_entry}#{' ('+@artefact.kod+')' if @artefact.kod}#{', '+@artefact.f_obj if @artefact.f_obj}" %>"
             }
           ]);
