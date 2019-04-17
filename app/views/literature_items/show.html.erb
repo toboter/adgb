@@ -6,11 +6,11 @@
     </div>
     <div style="margin-top:10px;">
       <%= link_to 'Edit', [:edit, @literature_item] if can?(:edit, @literature_item) %> | 
-      <%= link_to 'Delete', @literature_item, method: :delete if can?(:destroy, @literature_item) %>
+      <%= link_to 'Delete', @literature_item, method: :delete, data: {confirm: "Are you sure?"} if can?(:destroy, @literature_item) %>
     </div>
   </div>
   <div class="col-md-6">
-    <h3>Artefacts</h3>
+    <h3>Artefacts <span class="badge"><%= @literature_item.artefacts.size %></span></h3>
     <ul class="list-unstyled">
     <% @literature_item.artefact_references.order(locator: :asc).each do |r| %>
       <%= content_tag :li do %>
@@ -20,7 +20,7 @@
     <% end %>
   </div>
   <div class="col-md-6">
-    <h3>Sources</h3>
+    <h3>Archival resources <span class="badge"><%= @literature_item.sources.size %></span></h3>
     <ul class="list-unstyled">
     <% @literature_item.literature_item_sources.order(locator: :asc).each do |r| %>
       <%= content_tag :li do %>

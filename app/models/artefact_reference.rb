@@ -3,7 +3,7 @@ class ArtefactReference < ApplicationRecord
 
   alias_attribute :locator, :seite
   
-  belongs_to :artefact, foreign_key: "b_bab_rel", primary_key: 'bab_rel', optional: true
+  belongs_to :artefact, foreign_key: "b_bab_rel", primary_key: 'bab_rel', optional: true, touch: true
   belongs_to :literature_item, optional: true
   belongs_to :source, optional: true
 
@@ -11,6 +11,10 @@ class ArtefactReference < ApplicationRecord
 
   def title
     literature_item ? literature_item.title : "#{ver} [#{jahr}] #{publ}" + "#{seite ? ': '+seite : ''}"
+  end
+
+  def full_citation
+    literature_item ? literature_item.full_citation.gsub(/\.$/, '') : title + "#{seite ? ': '+seite : ''}"
   end
 
   def self.col_attr

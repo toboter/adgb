@@ -1,6 +1,14 @@
 $(document).on('turbolinks:load', function(){
+  selectize_biblio_search('#literature_item_biblio_data');
+  selectize_literature_item('.literature_items');
+});
 
-  $('#literature_item_biblio_data').selectize({
+$(document).on('cocoon:after-insert', function(){
+  selectize_literature_item('.literature_items');
+});
+
+function selectize_biblio_search(object) {
+  $(String(object)).selectize({
     valueField: 'value',
     labelField: 'citation',
     searchField: ['citation', 'cite', 'type'],
@@ -30,4 +38,8 @@ $(document).on('turbolinks:load', function(){
       }
     }
   });
-});
+};
+
+function selectize_literature_item(object) {
+  $(String(object)).selectize();
+};

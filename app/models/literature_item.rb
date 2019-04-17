@@ -11,16 +11,21 @@ class LiteratureItem < ApplicationRecord
 
   validates :biblio_data, uniqueness: true
 
+  after_commit do
+    artefacts.reindex
+    sources.reindex
+  end
+
   def biblio_data=(value)
     self[:biblio_data] = value.is_a?(String) ? JSON.parse(value) : value
   end
 
   def title
-    if biblio_data.present?
-      biblio_data['citation']
-    else
-      "#{ver}#{',' if !jahr}#{' ['+jahr+']' if jahr}#{' '+publ if publ}"
-    end
+    biblio_data.present? ? biblio_data['citation'] : "#{ver}#{',' if !jahr}#{' ['+jahr+']' if jahr}#{' '+publ if publ}"
+  end
+
+  def full_citation
+    biblio_data.present? ? biblio_data['cite'] : title
   end
 
 end

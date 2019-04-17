@@ -1,6 +1,12 @@
 <div class="nested-fields row">
   <div class="col-md-10">
-    <%= f.input :literature_item_id, collection: LiteratureItem.all, value_method: :id, label_method: :title %>
+    <%= f.input :literature_item_id, 
+      collection: LiteratureItem.all, 
+      value_method: :id, 
+      label_method: :title,
+      input_html: {
+        class: 'literature_items'
+      } %>
     <%= f.input :seite %>
   </div>
   <div class="col-md-2">

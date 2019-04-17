@@ -165,10 +165,10 @@ class Artefact < ApplicationRecord
   def search_data
     attributes.merge(
       name: full_entry,
-      references: references.map(&:title),
-      people: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
-      sources: sources.map(&:name),
-      tags: tags.map(&:name),
+      publication: references.map{ |r| [r.full_citation, r.title] },
+      person: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
+      source: sources.map(&:name),
+      tag: tags.map(&:name),
       type: 'Artefact',
       published: published?
     )

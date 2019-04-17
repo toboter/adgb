@@ -23,9 +23,6 @@
 <div class="row">
   <div class="col-md-6">
     <%= content_tag :div, id: 'data', class: '' do %>
-      <div class="tags" style="padding:10px 0;">
-        <%= @artefact.tags.map{|t| content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge')}.join(' ').html_safe %>
-      </div>
       <table class="table table-striped">
         <tbody>
           <%= table_row(@artefact.bab_name, 'Excavation No') %>
@@ -34,6 +31,16 @@
           <%= table_row(@artefact.mus_name, 'Museum No') %>
           <%= table_row(@artefact.m_join, 'Museum Joins') %>
           <%= table_row(@artefact.m_korr, 'Museum Korrektur') %>
+          <%= content_tag :tr do %>
+            <th>Tags: </th>
+            <td>
+              <ul class="list-unstyled">
+                <% @artefact.tags.each do |t| %>
+                  <%= content_tag :li, content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge') %>
+                <% end %>
+              </ul>
+            </td>
+          <% end if @artefact.tags.any? %>
           <%= table_row(@artefact.kod, 'Code') %>
           <%= table_row(@artefact.code, 'Code (text)') %>
           <%= table_row(@artefact.grab, 'Grab') %>
@@ -52,17 +59,29 @@
           <%= table_row("<strong>E</strong> #{@artefact.utmx} (#{@artefact.utmxx}) <strong>N</strong> #{@artefact.utmy} (#{@artefact.utmyy})".html_safe, 'UTM') if @artefact.utm? %>
           <%= content_tag :tr do %>
             <th>
-              Photos
+              Archivalien
               <%= link_to fa_icon('info'), 'javascript:;',
                 class: 'label label-info', 
                 data: {toggle: 'tooltip', placement: 'top'}, 
                 title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
             </th>
-            <td><%= @artefact.illustrations.map{ |i| "#{(i.source ? link_to(i.source.name, i.source) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %></td>
+            <td>
+              <ul style="padding-left:15px;">
+                <% @artefact.illustrations.each do |i| %>
+                  <%= content_tag :li, "#{(i.source ? link_to(i.source.name, i.source) : i.name)}#{' ('+i.position+')' if i.position}".html_safe %>
+                <% end %>
+              </ul>
+            </td>
           <% end if @artefact.illustrations.any? %>
           <%= content_tag :tr do %>
             <th>Bibliographie: </th>
-            <td><%= @artefact.references.map{ |r| "#{link_to(r.literature_item.try(:title).try(:html_safe), r.literature_item)}#{r.locator ? ': '+r.locator : ''} #{' (' + link_to(r.source.call_number, r.source) + ')' if r.source.present?}" }.join('; ').html_safe %></td>
+            <td>
+              <ul style="padding-left:15px;">
+                <% @artefact.references.each do |r| %>
+                  <%= content_tag :li, "#{link_to(r.try(:full_citation).try(:html_safe), r.literature_item)}#{r.locator ? ': '+r.locator : ''}".html_safe %>
+                <% end %>
+              </ul>
+            </td>
           <% end if @artefact.references.any? %>
 
           <%= table_row(@artefact.inhalt, 'Textinhalt') %>

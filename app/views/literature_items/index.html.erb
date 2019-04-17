@@ -14,9 +14,9 @@
 <table class="table table-bordered table-responsive">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Published artefacts count</th>
-      <th>Published archival resources count</th>
+      <th width="66%">Title</th>
+      <th class="text-small">Published artefacts</th>
+      <th class="text-small">Published archival resources</th>
     </tr>
   </thead>
 
@@ -24,8 +24,8 @@
     <% @literature_items.each do |i| %>
       <tr>
         <td><%= link_to i.title, i %></td>
-        <td><%= i.artefacts.size %></td>
-        <td><%= i.sources.size %></td>
+        <td class="text-small"><%= i.artefacts.size %></td>
+        <td class="text-small"><%= i.sources.size %></td>
       </tr>
     <% end %>
   </tbody>

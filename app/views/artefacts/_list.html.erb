@@ -24,10 +24,7 @@
           <div class="col-md-3">
             <%= check_box_tag "artefact_ids[]", artefact.id, false, class: 'checkbox' if current_user %>
           </div>
-          <div class="col-md-7">
-            <%= artefact.tags.map{|t| content_tag(:span, link_to(t.name, artefacts_path(search: "#{params[:search]} tags:#{'"'+t.name+'"'}".strip), style: 'color:white;', class: 'filter-link', data: {token: "tags:#{'"'+t.name+'"'}"}), class: 'badge')}.join(' ').html_safe %>
-          </div>
-          <div class="col-md-2">
+          <div class="col-md-9">
             <%= link_to fa_icon('share', text: 'Detailansicht'), artefact, class: 'pull-right btn btn-xs btn-info text-strong' %>
           </div>
         </div>
@@ -49,16 +46,13 @@
               <%= linebreak_before_and_show_if_exists(artefact.m_join) %>
               <%= linebreak_before_and_show_if_exists(artefact.m_korr) %>
             <% end if artefact.mus_name.present? %>
-
-            <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
-              <span class="text-strong text-gray">Photos</span>
-              <%= link_to fa_icon('info'), 'javascript:;',
-                    class: 'label label-info', 
-                    data: {toggle: 'tooltip', placement: 'top'}, 
-                    title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
-              <br>
-              <%= artefact.illustrations.map{ |i| "#{(i.source ? link_to(i.name, i.source) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
-            <% end if artefact.illustrations.any? %>
+            <%= content_tag :div, id: "tags-#{artefact.id}", style: 'margin-top:10px;' do %>
+              <ul class="list-unstyled">
+                <% artefact.tags.each do |t| %>
+                  <%= content_tag :li, content_tag(:span, link_to(t.name, artefacts_path(search: "#{params[:search]} tag:#{'"'+t.name+'"'}".strip), style: 'color:white;', class: 'filter-link', data: {token: "tag:#{'"'+t.name+'"'}"}), class: 'badge').html_safe %>
+                <% end %>
+              </ul>
+            <% end if artefact.tags.any? %>
           </div>
           <div class="col-md-3">
             <%= content_tag :div, id: "description-#{artefact.id}", style: 'padding-top: 5px;' do %>
@@ -128,9 +122,18 @@
           </div>
           
           <div class="col-md-12">
+            <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
+              <span class="text-strong text-gray">Archivalien: </span>
+              <%= artefact.illustrations.map{ |i| "#{(i.source ? link_to(i.name, artefacts_path(search: "#{params[:search]} source:#{'"'+i.name+'"'}".strip), class: 'filter-link', data: {token: "source:#{'"'+i.name+'"'}"}) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
+              <%= link_to fa_icon('info'), 'javascript:;',
+                    class: 'label label-info', 
+                    data: {toggle: 'tooltip', placement: 'top'}, 
+                    title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
+            <% end if artefact.illustrations.any? %>
+
             <%= content_tag :div, id: "biblio-#{artefact.id}", style: 'padding-top: 5px;' do %>
               <span class="text-strong text-gray">Bibliographie: </span>
-              <%= artefact.references.map{ |r| "#{link_to(r.literature_item.try(:title).try(:html_safe), r.literature_item)}#{r.locator ? ': '+r.locator : ''}" }.join('; ').html_safe %>
+              <%= artefact.references.map{ |r| "#{link_to(r.title, artefacts_path(search: "#{params[:search]} publication:#{'"'+r.title+'"'}".strip), class: 'filter-link', data: {token: "publication:#{'"'+r.title+'"'}"})}#{r.locator ? ': '+r.locator : ''}" }.join('; ').html_safe %>
             <% end if artefact.references.any? %>
           </div>
         </div>
