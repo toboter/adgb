@@ -44,8 +44,9 @@ class ArtefactReference < ApplicationRecord
   end
 
   def sync_to_literature
-    self.literature_item = LiteratureItem.where(ver: ver, publ: publ, jahr: jahr).first_or_create
-    return self.save!
+    literature_item = LiteratureItem.where(ver: ver, publ: publ, jahr: jahr).first_or_create
+    self.update_columns(literature_item_id: literature_item.id)
+    return true
   end
 
   def sync_between_literature_item_and_source
