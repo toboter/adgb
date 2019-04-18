@@ -266,12 +266,19 @@ class Artefact < ApplicationRecord
 
   # GEO
 
+  def self.update_findspots
+    where.not(utmx: nil, utmy: nil).in_batches.each_record do |a|
+      coords = a.to_lat_lon('38S')
+      a.update_columns(latitude: coords.lat, longitude: coords.lon)
+    end
+  end
+
   def set_latitude
-    self.latitude = to_lat_lon('38S').lat if utm?
+    self.latitude = to_lat_lon('38S').lat if utm? && utmx_changed?
   end
 
   def set_longitude
-    self.longitude = to_lat_lon('38S').lon if utm?
+    self.longitude = to_lat_lon('38S').lon if utm? && utmy_changed?
   end
   
   def utm?
@@ -283,6 +290,8 @@ class Artefact < ApplicationRecord
     # GeoUTM bietet verschiedene ellipsoide, das standard WGS84 führt zu dem besagten Verschiebungsfehler
     # neuer Versuch mit 'International' hier sind die angezeigten Koordinaten viel südlicher.
     # Laut Olof ergibt sich daraus ein noch viel größerer Fehler. Daher wieder wgs84. 
+    # Edit April 2019: Olof hat die Koordinaten von einem Satellitenbild abgenommen. Bei dem Vergleich von seinem und Google
+    # entsteht die Verschiebung aufgrund von Verzerrung der beiden Bilder. Das System ist beides WGS84. 
     # Nun aber mit 27m Abzug auf x und 7m auf der y Achse.
     GeoUtm::UTM.new(zone, utmx+corrx, utmy+corry, "WGS-84").to_lat_lon if utm? && zone
   end
