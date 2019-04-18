@@ -48,6 +48,11 @@ $(document).on('turbolinks:load', function(){
         e.preventDefault(); // Prevent link from following its href
         $('#search-artefacts')[0].form.submit();
     });
+    $('.filter-link').tooltip({
+        title: 'Click to filter for this attribute.',
+        delay: 300,
+        placement : 'left'
+    });
 
     //select all checkboxes
     $("#select_all").change(function(){  //"select all" change 
