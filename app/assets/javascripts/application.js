@@ -44,9 +44,9 @@ $(document).on('turbolinks:load', function(){
     });
     $('.filter-link').click(function (e) {
         token = $(this).data('token')
-        $('#search').tokenfield('createToken', token);
+        $('#search-artefacts').tokenfield('createToken', token);
         e.preventDefault(); // Prevent link from following its href
-        $('#search')[0].form.submit();
+        $('#search-artefacts')[0].form.submit();
     });
 
     //select all checkboxes

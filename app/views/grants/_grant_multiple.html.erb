@@ -1,7 +1,7 @@
 <div class="clearfix">
       <strong>Share records:</strong>
       <%= form_tag [:grant_multiple, model], method: :post do %>
-        <%= hidden_field_tag "search", params[:search] %>
+        <%= hidden_field_tag "search", params[:search], id: 'hidden-search' %>
         <%= hidden_field_tag "with_user_shared_to_like", params[:with_user_shared_to_like] %>
         <%= hidden_field_tag "with_unshared_records", params[:with_unshared_records] %>
         <%= hidden_field_tag "with_published_records", params[:with_published_records] %>

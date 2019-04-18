@@ -39,17 +39,19 @@ class ArtefactsController < ApplicationController
 
   def mapview
     query = params[:search].presence || '*'
+    string_q = query.gsub('+', ' ').squish 
+
     artefacts = Artefact
       .visible_for(current_user)
       .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
     
     @artefacts =
-      Artefact.search(query,
+      Artefact.search(string_q,
         where: {id: artefacts.ids},
         fields: [:default_fields],
         misspellings: {below: 1}
       ) do |body|
-        body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+        body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
       end
 
     @gmhash = Gmaps4rails.build_markers(@artefacts) do |artefact, marker|
@@ -171,16 +173,17 @@ class ArtefactsController < ApplicationController
       else
         authorize! :publish_multiple, Artefact
         query = params[:search].presence || '*'
+        string_q = query.gsub('+', ' ').squish 
         artefacts = Artefact
           .visible_for(current_user)
           .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
         
-        sk_results = Artefact.search(query, 
+        sk_results = Artefact.search(string_q, 
           where: { id: artefacts.ids },
           per_page: 10000,
           misspellings: {below: 1}
           ) do |body|
-            body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+            body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
           end
         
         results = Artefact.where(id: sk_results.map(&:id))
@@ -222,16 +225,17 @@ class ArtefactsController < ApplicationController
       else
         authorize! :unlock_multiple, Artefact
         query = params[:search].presence || '*'
+        string_q = query.gsub('+', ' ').squish
         artefacts = Artefact
           .visible_for(current_user)
           .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
         
-        sk_results = Artefact.search(query, 
+        sk_results = Artefact.search(string_q, 
           where: { id: artefacts.ids },
           per_page: 10000,
           misspellings: {below: 1}
           ) do |body|
-            body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
+            body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
           end
         
         results = Artefact.where(id: sk_results.map(&:id))
