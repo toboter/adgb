@@ -2,7 +2,7 @@ class Artefact < ApplicationRecord
 
   # https://github.com/ankane/searchkick/issues/642
   # showing more than 10000 results on index
-  searchkick
+  searchkick locations: [:findspot]
   has_paper_trail ignore: [:slug, :latitude, :longitude, :updated_at], 
     meta: {
       version_name: :name, 
@@ -169,6 +169,7 @@ class Artefact < ApplicationRecord
       person: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
       source: sources.map(&:name),
       tag: tags.map(&:name),
+      findspot: {lat: latitude, lon: longitude},
       type: 'Artefact',
       published: published?
     )

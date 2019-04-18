@@ -9,6 +9,7 @@ class LiteratureItemsController < ApplicationController
   end
 
   def new
+    redirect_to literature_items_url, notice: "Not implemented."
   end
 
   def edit

@@ -146,8 +146,8 @@ class Source < ApplicationRecord
     attributes.except('relevance', 'digitize_remarks').merge(
       archive: archive.name,
       artefact: artefacts.map{|a| a.name },
-      tag: tag_list,
-      publication: literature_item_sources.map{|r| [r.literature_item, r.locator].join(': ')},
+      tag: tags.map(&:name),
+      publication: literature_item_sources.map{|r| [r.literature_item.try(:full_citation), r.locator].join(': ')},
       relevance: relevance.map{|r| Source::REL_TYPES.select{|k,v| k == r.to_i }.map(&:last) },
       digital: digitize_remarks.map{|r| Source::DIGI_TYPES.select{|k,v| k == r.to_i }.map(&:last) }
     )

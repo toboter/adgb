@@ -111,8 +111,10 @@
               <% end if artefact.gr_datum || artefact.gr_jahr %>
               <%= content_tag :div do %>
                 <strong>UTM Koordinaten (WGS84)</strong><br>
-                Z: 38S E: <%= artefact.utmx %> N: <%= artefact.utmy %><br>
-                <span class="text-small">Abweichung max: E: <%= artefact.utmxx %> N: <%= artefact.utmyy %><br>
+                <%= link_to artefacts_path(search: "#{params[:search]} latitude:#{artefact.latitude} longitude:#{artefact.longitude}".strip), class: 'filter-link', data: {token: "latitude:#{artefact.latitude} longitude:#{artefact.longitude}"} do %>
+                  Z: 38S E: <%= artefact.utmx %> N: <%= artefact.utmy %>
+                <% end %><br>
+                <span class="text-small">Genauigkeit: E: ~<%= artefact.utmxx %>m, N: ~<%= artefact.utmyy %>m<br>
               <% end if artefact.utm? %>
             <% end %>
           </div>

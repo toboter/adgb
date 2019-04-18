@@ -57,13 +57,13 @@
           <%= table_row(@artefact.fo_text, 'Fundumstände') %>
           <%= table_row("#{@artefact.gr_datum}#{@artefact.gr_jahr}", 'Grabungsdatum') %>
           <%= content_tag :tr do %>
-            <th>Koordinaten: </th>
+            <th>Koordinaten (WGS84): </th>
             <td>
-              <strong>UTM Koordinaten (WGS84)</strong><br>
+              <strong>UTM</strong><br>
               Z: 38S E: <%= @artefact.utmx %> N: <%= @artefact.utmy %><br>
-              <strong>Dezimalgrad (WGS84)</strong><br>
-              Lat: <%= @artefact.latitude %> Lon: <%= @artefact.longitude %>
-              <p class="text-small">Abweichung max: E: <%= @artefact.utmxx %> N: <%= @artefact.utmyy %></p>
+              <strong>Dezimalgrad</strong><br>
+              <%= [@artefact.latitude, @artefact.longitude].join(', ') %> (Lat, Lon)
+              <p class="text-small">Genauigkeit: E: ~<%= @artefact.utmxx %>m, N: ~<%= @artefact.utmyy %>m</p>
             </td>
           <% end if @artefact.utm? %>
           <%= content_tag :tr do %>
@@ -148,7 +148,7 @@
       <div class="thumbnail" style="margin-bottom:5px;">
         <div id="map-render" style='width: 100%; height: 400px;'></div>
       </div>
-      <p class="text-small text-muted">Auf der Karte wird ein Verschiebungsvektor von E -27m und N -7m angewendet.</p>
+      <p class="text-small text-muted">Auf der Karte wird ein Verschiebungsvektor von E -27m und N -7m gegenüber den genannten UTM-Koordinaten angewendet, um eine annähernd korrekte Darstellung des ursprünglichen Fundplatzes zu erreichen.</p>
     <% end if @artefact.utm? %>
   </div>
 </div>
