@@ -2,7 +2,10 @@
 
 <div class="well">
   <strong>1. Datei auswählen, welche die Daten der Haupttabelle enthält.</strong><br>
-  <small>Bestehende Datensätze (key: BabRel) werden aktualisiert, nicht vorhandene neu erstellt.</small>
+  <small>
+    Bestehende Datensätze (key: BabRel) werden aktualisiert, nicht vorhandene neu erstellt.<br>
+    <strong>Attributes: </strong><%= Artefact.col_attr.map{|c| c.camelize }.join(', ') %>
+  </small>
   <%= form_tag artefacts_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_file %>
     <%= select_tag :creator_id, options_from_collection_for_select(User.all, "id", "name") %>
@@ -10,18 +13,19 @@
     <%= submit_tag "Import" %>
   <% end %>
   <br>
-  <strong>Attributes: </strong><%= Artefact.col_attr.map{|c| c.camelize }.join(', ') %>
+  <%= link_to 'Update concepts on tags', update_tag_concepts_from_imports_path, method: :post %>
 </div>
 
 <div class="well">
   <strong>2. Datei auswählen, welche die Daten der Personentabelle enthält.</strong><br>
-  <small>Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.</small>
+  <small>
+    Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.<br>
+    <strong>Attributes: </strong><%= ArtefactPerson.col_attr.map{|c| c.camelize }.join(', ') %>
+  </small>
   <%= form_tag artefacts_people_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_people_file %>
     <%= submit_tag "Import" %>
   <% end %>
-  <br>
-  <strong>Attributes: </strong><%= ArtefactPerson.col_attr.map{|c| c.camelize }.join(', ') %>
 </div>
 
 <div class="well">

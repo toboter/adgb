@@ -49,7 +49,7 @@
             <%= content_tag :div, id: "tags-#{artefact.id}", style: 'margin-top:10px;' do %>
               <ul class="list-unstyled">
                 <% artefact.tags.each do |t| %>
-                  <%= content_tag :li, content_tag(:span, link_to(t.name, artefacts_path(search: "#{params[:search]} tag:#{'"'+t.name+'"'}".strip), style: 'color:white;', class: 'filter-link', data: {token: "tag:#{'"'+t.name+'"'}"}), class: 'badge').html_safe %>
+                  <%= content_tag :li, content_tag(:span, link_to(t.name, artefacts_path(search: "#{params[:search]} tag:#{'"'+t.name+'"'}".strip), class: 'filter-link', data: {token: "tag:#{'"'+t.name+'"'}"}), class: 'badge', style: 'background-color:#ececec;').html_safe %>
                 <% end %>
               </ul>
             <% end if artefact.tags.any? %>

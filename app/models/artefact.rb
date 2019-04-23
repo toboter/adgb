@@ -61,16 +61,16 @@ class Artefact < ApplicationRecord
   end
 
   def tag_list
-    tags.map{|t|  [t.name, t.uuid, t.url].join(';')  }
+    tags.map{|t|  t.concept_data  }
   end
 
   def tag_list=(values)
-    ctags = []
-    values.split(',').each do |term|
-      ident = term.split(';')
-      ctags << ActsAsTaggableOn::Tag.where(uuid: ident.second).first_or_create(name: ident.first, url: ident.last)
+    tags = []
+    values.reject(&:empty?).each do |concept|
+      concept = concept.is_a?(String) ? JSON.parse(concept) : concept
+      tags << ActsAsTaggableOn::Tag.where(uuid: concept['id']).first_or_create(name: concept['default_label'], url: concept['html_url'], concept_data: concept)
     end
-    self.tags = ctags
+    self.tags = tags
   end
 
   # Naming
@@ -168,9 +168,10 @@ class Artefact < ApplicationRecord
       publication: references.map{ |r| [r.full_citation, r.title] },
       person: people.map{|p| [p.try(:person), p.try(:titel)].join(' ') },
       source: sources.map(&:name),
-      tag: tags.map(&:name),
+      tag: tags.map{ |t| [t.try(:name), t.try(:concept_data).try(:to_json)] },
       findspot: {lat: latitude, lon: longitude},
       type: 'Artefact',
+      contributor: User.find(versions.map{|v| v.whodunnit}.reject(&:nil?).uniq).map(&:name),
       published: published?
     )
   end

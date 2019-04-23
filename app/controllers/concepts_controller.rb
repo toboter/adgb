@@ -1,17 +1,11 @@
 class ConceptsController < ApplicationController
 
   def search
-    query = params[:q]
-    resp = JSON.parse(access_token.get("/v1/search/concepts.json?q=#{query}&in_scheme=#{Rails.application.secrets.in_scheme}").body)['concepts']
-    data = resp.map{|t| { 
-      value: [t['default_label'], t['id'].to_s, t['html_url']].join(';'), 
-      name: t['default_label'], 
-      parents: t['broader'].map{|b| b['default_label'] }.join(', '), 
-      note: t['notes'].first['body'], 
-      labels: t['labels'].map{|l| l['body'] }.join(', ') }
-    }
-    # die unterschiedlichen Sprachen werden ausgefiltert.
-    render json: data.to_json
+    render json: Wrapper::Vocab.search(params[:q], access_token).to_json
+  end
+
+  def show
+    render json: Wrapper::Vocab.find(params[:id], access_token).to_json
   end
 
 end

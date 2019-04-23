@@ -109,16 +109,16 @@ class Source < ApplicationRecord
   end
 
   def tag_list
-    tags.map{|t|  [t.name, t.uuid, t.url].join(';')  }
+    tags.map{|t|  t.concept_data  }
   end
 
   def tag_list=(values)
-    ctags = []
-    values.split(',').each do |term|
-      ident = term.split(';')
-      ctags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
+    tags = []
+    values.reject(&:empty?).each do |concept|
+      concept = concept.is_a?(String) ? JSON.parse(concept) : concept
+      tags << ActsAsTaggableOn::Tag.where(uuid: concept['id']).first_or_create(name: concept['default_label'], url: concept['html_url'], concept_data: concept)
     end
-    self.tags = ctags
+    self.tags = tags
   end
 
   def should_generate_new_friendly_id?
@@ -146,7 +146,7 @@ class Source < ApplicationRecord
     attributes.except('relevance', 'digitize_remarks').merge(
       archive: archive.name,
       artefact: artefacts.map{|a| a.name },
-      tag: tags.map(&:name),
+      tag: tags.map{ |t| [t.try(:name), t.try(:concept_data).try(:to_json)] },
       publication: literature_item_sources.map{|r| [r.literature_item.try(:full_citation), r.locator].join(': ')},
       relevance: relevance.map{|r| Source::REL_TYPES.select{|k,v| k == r.to_i }.map(&:last) },
       digital: digitize_remarks.map{|r| Source::DIGI_TYPES.select{|k,v| k == r.to_i }.map(&:last) }

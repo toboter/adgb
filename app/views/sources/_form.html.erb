@@ -56,13 +56,17 @@
         <%= f.input :keywords %>
         <%= f.input :links %>
         <%= f.input :tag_list, 
-          as: :string,
+          collection: @source.tag_list,
+          label_method: lambda { |c| c.try(:[], 'default_label') },
+          value_method: lambda { |c| c.try(:to_json) },
+          selected: @source.tag_list.map{ |c| c.try(:to_json) },
           input_html: {
-            value: @source.tag_list.join(','),
-            class: 'concepts_selectize' }, 
+            class: 'concepts_selectize',
+            multiple: true
+          }, 
           label: "Tags".html_safe,
-          hint: "Add tags to categorize the source and make it more discoverable." %>
-        
+          hint: 'Add tags to categorize the source and make it more discoverable.' %>
+          
         <hr>
         <div id="attachments" class="panel panel-default">
           <div class="panel-heading text-strong text-gray">

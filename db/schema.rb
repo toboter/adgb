@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_14_192717) do
+ActiveRecord::Schema.define(version: 2019_04_18_143014) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -346,6 +346,8 @@ ActiveRecord::Schema.define(version: 2019_04_14_192717) do
     t.integer "taggings_count", default: 0
     t.string "uuid"
     t.string "url"
+    t.jsonb "concept_data", default: {}, null: false
+    t.index ["concept_data"], name: "index_tags_on_concept_data", using: :gin
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 

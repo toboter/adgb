@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       post 'transfer_photos'
       post 'literature_items_from'
       post 'literature_item_sources_from'
+      post 'update_tag_concepts_from'
     end
   end
   
@@ -34,6 +35,9 @@ Rails.application.routes.draw do
       post :unlock
       post :grant_multiple, to: 'grants#grant_multiple'
       delete :revoke_multiple, to: 'grants#revoke_multiple'
+    end
+    member do
+      put :update_tags
     end
   end
   resources :artefact_people, only: :index, path: 'people', as: 'people'
@@ -83,7 +87,11 @@ Rails.application.routes.draw do
   
   get '/api', to: 'home#api'
   get '/search', to: 'search#index'
-  get '/concepts/search', to: 'concepts#search'
+  resources :concepts, only: :show do
+    get :search, on: :collection
+  end
+  #get '/concepts/search', to: 'concepts#search'
+  #get '/concepts/:id', to: 'concepts#search'
   get '/bibliography/search', to: 'biblio_wrapper#search'
 
   root 'home#index' 

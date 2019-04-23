@@ -32,11 +32,26 @@
           <%= table_row(@artefact.m_join, 'Museum Joins') %>
           <%= table_row(@artefact.m_korr, 'Museum Korrektur') %>
           <%= content_tag :tr do %>
-            <th>Tags: </th>
+            <th>
+              Tags:
+              <%= content_tag :p, link_to('(update)', update_tags_artefact_path(@artefact), method: :put), class: 'text-small', style: 'font-weight:normal' if can?(:update_tags, @artefact) %>
+            </th>
             <td>
               <ul class="list-unstyled">
                 <% @artefact.tags.each do |t| %>
-                  <%= content_tag :li, content_tag(:span, link_to(t.name, t.try(:url), style: 'color:white;', target: :_blank), class: 'badge') %>
+                  <%= content_tag :li, 
+                    content_tag(:span, link_to(t.name, t.try(:concept_data).try(:[], 'html_url'), 
+                      style: 'color:white;', 
+                      target: :_blank,
+                      title: t.try(:concept_data).try(:[], 'default_label'),
+                      data: {
+                        toggle: "popover",
+                        content: t.try(:concept_data),
+                        trigger: 'hover',
+                        container: 'body',
+                        placement: 'right'
+                      }),
+                      class: 'badge') %>
                 <% end %>
               </ul>
             </td>
