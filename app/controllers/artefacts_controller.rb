@@ -137,19 +137,18 @@ class ArtefactsController < ApplicationController
   end
 
   def update_multiple
-    # index must be updated!
     @artefacts = Artefact.visible_for(current_user).find(params[:artefact_ids])
     count = @artefacts.count
     add_tags = []
-    artefact_params[:add_to_tag_list].split(',').each do |term|
-      ident = term.split(';')
-      add_tags << ActsAsTaggableOn::Tag.where(uuid: ident.second).first_or_create(name: ident.first, url: ident.last)
-    end
+    artefact_params[:add_to_tag_list].reject(&:empty?).each do |concept|
+      concept = concept.is_a?(String) ? JSON.parse(concept) : concept
+      add_tags << ActsAsTaggableOn::Tag.where(uuid: concept['id']).first_or_create(name: concept['default_label'], url: concept['html_url'], concept_data: concept)
+    end if artefact_params[:add_to_tag_list].is_a?(Array)
     remove_tags = []
-    artefact_params[:remove_from_tag_list].split(',').each do |term|
-      ident = term.split(';')
-      remove_tags << ActsAsTaggableOn::Tag.where(uuid: ident.second).first_or_create(name: ident.first, url: ident.last)
-    end
+    artefact_params[:remove_from_tag_list].reject(&:empty?).each do |concept|
+      concept = concept.is_a?(String) ? JSON.parse(concept) : concept
+      remove_tags << ActsAsTaggableOn::Tag.where(uuid: concept['id']).first_or_create(name: concept['default_label'], url: concept['html_url'], concept_data: concept)
+    end if artefact_params[:remove_from_tag_list].is_a?(Array)
     @artefacts.reject! do |artefact|
       if can? :update, artefact
         artefact.tags << add_tags.map{|t| t unless t.in?(artefact.tags)}.compact
@@ -301,7 +300,8 @@ class ArtefactsController < ApplicationController
         :utmx, :utmxx, :utmy, :utmyy, 
         :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, 
         :gr_datum, :gr_jahr, :creator_id, 
-        :add_to_tag_list, :remove_from_tag_list, 
+        add_to_tag_list: [],
+        remove_from_tag_list: [], 
         tag_list: [],
         accessor_ids: [], 
         references_attributes: [:id, :literature_item_id, :seite, :_destroy], 

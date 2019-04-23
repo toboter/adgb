@@ -135,19 +135,18 @@ class SourcesController < ApplicationController
   end
 
   def update_multiple
-    # index must be updated!
     @sources = Source.visible_for(current_user).find(params[:source_ids])
-    count = @sources.count
+    count = @sources.size
     add_tags = []
-    sources_params[:add_to_tag_list].split(',').each do |term|
-      ident = term.split(';')
-      add_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
-    end
+    sources_params[:add_to_tag_list].reject(&:empty?).each do |concept|
+      concept = concept.is_a?(String) ? JSON.parse(concept) : concept
+      add_tags << ActsAsTaggableOn::Tag.where(uuid: concept['id']).first_or_create(name: concept['default_label'], url: concept['html_url'], concept_data: concept)
+    end if sources_params[:add_to_tag_list].is_a?(Array)
     remove_tags = []
-    sources_params[:remove_from_tag_list].split(',').each do |term|
-      ident = term.split(';')
-      remove_tags << ActsAsTaggableOn::Tag.where(name: ident.first, uuid: ident.second, url: ident.last).first_or_create
-    end
+    sources_params[:remove_from_tag_list].reject(&:empty?).each do |concept|
+      concept = concept.is_a?(String) ? JSON.parse(concept) : concept
+      remove_tags << ActsAsTaggableOn::Tag.where(uuid: concept['id']).first_or_create(name: concept['default_label'], url: concept['html_url'], concept_data: concept)
+    end if sources_params[:remove_from_tag_list].is_a?(Array)
     @sources.reject! do |source|
       if can? :update, source
         source.tags << add_tags.map{|t| t unless t.in?(source.tags)}.compact
@@ -318,7 +317,8 @@ class SourcesController < ApplicationController
 
     def sources_params
       params.require(:source).permit(
-        :add_to_tag_list, :remove_from_tag_list
+        add_to_tag_list: [], 
+        remove_from_tag_list: []
       )
     end
 end

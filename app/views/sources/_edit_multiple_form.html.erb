@@ -2,16 +2,24 @@
   <%= form_tag update_multiple_sources_path, method: :put do %>
     <%= simple_fields_for :source do |f| %>
       <%= f.input :add_to_tag_list, 
-        as: :string,
+        collection: [],
+        label_method: lambda { |c| c.try(:[], 'default_label') },
+        value_method: lambda { |c| c.try(:to_json) },
+        selected: [],
         input_html: {
-          class: 'concepts_selectize' 
+          class: 'concepts_selectize',
+          multiple: true
         }, 
         label: "Add tags".html_safe,
         hint: 'Add tags to categorize the sources and make them more discoverable. Existing tags will stay untouched.' %>
       <%= f.input :remove_from_tag_list, 
-        as: :string,
+        collection: [],
+        label_method: lambda { |c| c.try(:[], 'default_label') },
+        value_method: lambda { |c| c.try(:to_json) },
+        selected: [],
         input_html: {
-          class: 'concepts_selectize' 
+          class: 'concepts_selectize',
+          multiple: true
         }, 
         label: "Remove tags".html_safe,
         hint: 'Remove tags.' %>
