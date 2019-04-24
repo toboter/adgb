@@ -1,5 +1,6 @@
 class Api::V1::ArtefactsController < Api::V1::BaseController
 
+  # /api/artefacts
   def index
     sort_order = Artefact.sorted_by(params[:sort].presence || 'updated_at_desc')
     artefacts = Artefact.visible_for(@user).order(sort_order)
@@ -14,6 +15,7 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
     render json: artefact, serializer: ArtefactSerializer
   end
 
+  # /api/artefacts/search
   def search
     query = params[:q]
     sort_order = Artefact.sorted_by(params[:sort].presence || 'score_desc')
@@ -21,7 +23,7 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
     results =
       Artefact.search(query,
         where: {id: artefact_ids},
-        fields: [:_all],
+        fields: [:default_fields],
         page: params[:page], 
         per_page: params[:per_page] || 30, 
         order: sort_order, 

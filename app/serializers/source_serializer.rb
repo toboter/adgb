@@ -1,6 +1,6 @@
 class SourceSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
-  type 'DocumentationObject'
+  type 'ArchivalResource'
 
   attributes :id, :name, :call_number, :published?
   attribute :creator do 
