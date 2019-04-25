@@ -76,7 +76,7 @@
 
       <hr>
       <div id="references">
-        <strong>References: </strong>
+        <strong>Publications: </strong>
         <%= f.simple_fields_for :references do |id| %>
           <%= render 'reference_fields', f: id %>
           <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.references.count > 1 %>
@@ -89,7 +89,7 @@
       <hr>
 
       <div id="photos">
-        <strong>Photos: </strong>
+        <strong>Archival resources: </strong>
         <%= f.simple_fields_for :illustrations do |id| %>
           <%= render 'illustration_fields', f: id %>
           <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.illustrations.count > 1 %>
@@ -102,7 +102,7 @@
       <hr>
 
       <div id="people">
-        <strong>Personennamen: </strong>
+        <strong>Personal names: </strong>
         <%= f.simple_fields_for :people do |id| %>
           <%= render 'person_fields', f: id %>
           <%= content_tag :div, '', style: 'border-top: 1px solid #eeeeee; width: 50%; margin: 10px auto 20px auto;' if f.object.people.count > 1 %>

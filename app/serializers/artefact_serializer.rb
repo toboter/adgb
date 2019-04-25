@@ -2,7 +2,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   type 'ExcavatedObject'
 
-  attribute :bab_rel, key: :id
+  attribute :slug, key: :id
   attribute :identification do
     {
       excavationNumber: {
@@ -45,7 +45,9 @@ class ArtefactSerializer < ActiveModel::Serializer
       comment: {
         de: object.fo_text
       }, 
-      excavated: "#{object.gr_datum}#{object.gr_jahr}",
+      excavated: {
+        dateParts: [object.gr_jahr, object.gr_datum]
+      },
       geometry: {
         type: "Point",
         coordinates: [
@@ -87,8 +89,8 @@ class ArtefactSerializer < ActiveModel::Serializer
 
   attribute :locations do
     [
-      location_hash(object.standort, 'current'),
-      location_hash(object.standort_alt, 'historic-date')
+      location_hash(object.standort, {dateParts: [2012]}),
+      location_hash(object.standort_alt, {dateParts: [1917]})
   ].compact
   end
 
@@ -109,7 +111,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   attribute :archivalResources do
     object.illustrations.map{ |i|
       {
-        archivalResourceData: i.source,
+        archivalResourceData: SourceInfoSerializer.new(i.source),
         locator: i.position,
         property: 'isPhotographedIn'
       }
@@ -134,12 +136,24 @@ class ArtefactSerializer < ActiveModel::Serializer
 
   attributes :updated_at, :published?
 
+  attribute :contributors do
+    User.find(object.versions.map(&:whodunnit).uniq).map { |u|
+      {
+        name: u.name
+      }
+    } if object.versions.any?
+  end
+
   attribute :links do
     {
       self: api_artefact_url(object.id),
       html_url: artefact_url(object)
     }
   end
+
+  attribute(:full_entry) {object.name}
+
+  # ---
 
   def number_index(ind)
     ind.present? ? {value: ind} : nil
@@ -166,7 +180,4 @@ class ArtefactSerializer < ActiveModel::Serializer
       deposited: deposited
     } if raw.present?
   end
-
-  # attribute(:accessor_uids) { object.record_accessors.map(&:uid)}
-
 end
