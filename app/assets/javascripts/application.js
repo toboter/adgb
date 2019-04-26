@@ -54,6 +54,8 @@ $(document).on('turbolinks:load', function(){
         placement : 'left'
     });
 
+    $('.user_group_list_item').selectize();
+
     //select all checkboxes
     $("#select_all").change(function(){  //"select all" change 
         $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status

@@ -67,11 +67,11 @@ class User < ApplicationRecord
   end
 
   def group_list
-    groups.map(&:name).join("; ")
+    groups.map(&:name)
   end
   
   def group_list=(names)
-    self.groups = names.reject { |c| c.empty? }.split(";").flatten.map do |n|
+    self.groups = names.reject { |c| c.empty? }.flatten.map do |n|
       Group.where(name: n).first
     end
   end

@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
 
   before_action :check_token!
   before_action :init_session_per_page

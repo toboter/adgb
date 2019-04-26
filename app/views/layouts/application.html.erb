@@ -42,6 +42,7 @@
 
                 <ul class="dropdown-menu">
                   <%= content_tag :li, link_to(fa_icon('cog', text: "Settings"), settings_users_path) if current_user %>
+                  <%= content_tag :li, link_to(fa_icon('upload', text: "Import"), imports_path), class: ('active' if current_page?(imports_url)) if can?(:import, Artefact) %>
                   <%= content_tag :li, link_to(fa_icon('users', text: "Users"), users_path) if can_administrate? %>
                   <li role="separator" class="divider"></li>        
                   <li><%= link_to fa_icon('sign-out', text: "Sign Out"), signout_path %></li>

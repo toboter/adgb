@@ -1,7 +1,6 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th></th>
       <th>Username</th>
       <th>Admin</th>
       <th>Commenter</th>
@@ -12,46 +11,29 @@
   </thead>
 
   <tbody>
-    <% @users.each do |user| %>
+    <% @users.order(name: :asc).each do |user| %>
       <tr>
-        <td>
-          <%= image_tag(user.image_thumb_url, class: 'img-circle') if user.image_thumb_url %>
-        </td>
         <td id="user_<%= user.id %>_app_admin">
           <%= link_to user.name, '' %>
         </td>
-        <%= simple_form_for [user], remote: true do |f| %>
-        <td>
-          <%= f.check_box :app_admin, { :onchange => "$(this.form).submit();" } unless user == current_user %>    
-        </td>
-        <td>
-          <%= f.check_box :app_commentator, { :onchange => "$(this.form).submit();" } %>    
-        </td>
-        <td>
-          <%= f.check_box :app_creator, { :onchange => "$(this.form).submit();" } %>    
-        </td>
-        <td>
-          <%= f.check_box :app_publisher, { :onchange => "$(this.form).submit();" } %>    
-        </td>
-        <td>
-          <%= f.input :group_list, 
-            label: false,
-            collection: Group.all, 
-            label_method: :name, 
-            value_method: :name,  
-            selected: user.groups.map(&:name), 
-            input_html: {multiple: true, class: 'groups', style: 'width:100%;', onchange: "$(this.form).submit();" } %>
-        </td>
+        <%= form_for user, remote: true do |f| %>
+          <td>
+            <%= f.check_box :app_admin, { :onchange => 'Rails.fire(this.form, "submit")' } unless user == current_user %>    
+          </td>
+          <td>
+            <%= f.check_box :app_commentator, { :onchange => 'Rails.fire(this.form, "submit")' } %>    
+          </td>
+          <td>
+            <%= f.check_box :app_creator, { :onchange => 'Rails.fire(this.form, "submit")' } %>    
+          </td>
+          <td>
+            <%= f.check_box :app_publisher, { :onchange => 'Rails.fire(this.form, "submit")' } %>    
+          </td>
+          <td>
+            <%= f.collection_select :group_list, Group.all, :name, :name, {prompt: false}, {multiple: true, selected: user.group_list, onchange: 'Rails.fire(this.form, "submit")', class: 'user_group_list_item' } %>
+          </td>
         <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<script type="text/javascript">
-    $(".groups").select2({
-        tags: true,
-        tokenSeparators: [';'],
-        theme: "bootstrap"
-    });
-</script>
