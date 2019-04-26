@@ -9,6 +9,8 @@
     <div style="margin-top:10px;">
       <%= link_to 'Edit', [:edit, @literature_item] if can?(:edit, @literature_item) %> | 
       <%= link_to 'Delete', @literature_item, method: :delete, data: {confirm: "Are you sure?"} if can?(:destroy, @literature_item) %>
+      <%= %' | ' if @literature_item.biblio_data != {} %>
+      <%= link_to 'Update biblio data', [:update_biblio_data, @literature_item], method: :put if @literature_item.biblio_data != {} %>
     </div>
   </div>
   <div class="col-md-6">

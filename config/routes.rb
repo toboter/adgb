@@ -18,9 +18,6 @@ Rails.application.routes.draw do
       post 'artefacts_photos'
       post 'photos'
       post 'transfer_photos'
-      post 'literature_items_from'
-      post 'literature_item_sources_from'
-      post 'update_tag_concepts_from'
     end
   end
   
@@ -41,10 +38,16 @@ Rails.application.routes.draw do
     end
   end
   resources :artefact_people, only: :index, path: 'people', as: 'people'
+  resources :artefact_references, only: [] do
+    post :normalize_to_literature_item, on: :collection
+    post :extract_to_literature_item_source, on: :collection
+  end
   resources :literature_items do
-    collection do
-      delete :remove_empty
-    end
+    put :update_biblio_data, on: :member, to: 'literature_items#single_update_biblio_data'
+    post :update_biblio_data, on: :collection
+  end
+  resources :tags, only: [] do
+    post :update_concept_data, on: :collection
   end
 
   resources :sources, concerns: [:versionable], model_name: 'Source' do

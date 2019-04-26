@@ -2,6 +2,7 @@
 
 <div class="row">
   <div class="col-md-12">
+    <h1>User settings</h1>
     <div class="panel panel-info">
       <div class="panel-heading">
         <%= content_tag :strong, "You are logged in as #{current_user.name}" %>
@@ -55,5 +56,39 @@
         <%= link_to fa_icon('caret-square-o-down', text: 'Renew your accessibilities through babili'), get_accessibilities_users_path, class: 'btn btn-xs btn-info' %>
       </div>
     </div>
+    <%= content_tag :div, class: '--spacious' do %>
+      <h1>Record treatment</h1>
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <td>Description</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>This will update any tag-concept with the content from babylon-online.org. </td>
+            <td>
+              <%= link_to 'Update all concepts', update_concept_data_tags_path, method: :post, data: {confirm: "Are you sure? This may take some time because of reindexing artefacts and sources after update."} %>
+            </td>
+          </tr>
+          <tr>
+            <td>This will update any literature item with the content from babylon-online.org. </td>
+            <td>
+              <%= link_to 'Update all literature items', update_biblio_data_literature_items_path, method: :post, data: {confirm: "Are you sure? This may take some time because of reindexing artefacts and sources after update."} %>
+            </td>
+          </tr>
+          <tr>
+            <td>This will transfer all entries attributes "Ver", "Jahr" and "Publ" from the import table ArtefactReferences as a normalized form in the LiteratureItem table. It will create new Literature entries or assign existing ones to the artefact-references relation.</td>
+            <td><%= link_to 'Normalize artefact-references to artefacts-literatureItems', normalize_to_literature_item_artefact_references_path, method: :post, data: {confirm: "Are you sure?"} %></td>
+          </tr>
+          <tr>
+            <td>This will transfer all entries with a phRel given in artefact-references into a relation table called literature_item_source.</td>
+            <td><%= link_to 'Normalize artefact-references to sources-literatureItems', extract_to_literature_item_source_artefact_references_path, method: :post, data: {confirm: "Are you sure?"} %></td>
+          </tr>
+        </tbody>
+      </table>
+
+    <% end if can_administrate?%>
   </div>
 </div>

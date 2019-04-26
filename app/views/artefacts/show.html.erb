@@ -102,7 +102,7 @@
             <td>
               <ul style="padding-left:15px;">
                 <% @artefact.references.each do |r| %>
-                  <%= content_tag :li, "#{link_to(r.try(:full_citation).try(:html_safe), r.literature_item)}#{r.locator ? ': '+r.locator : ''}".html_safe %>
+                  <%= content_tag :li, "#{link_to(r.try(:literature_item).try(:full_citation).try(:html_safe), r.literature_item)}#{r.locator ? ': '+r.locator : ''}".html_safe %>
                 <% end %>
               </ul>
             </td>

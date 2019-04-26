@@ -131,7 +131,7 @@
 
             <%= content_tag :div, id: "biblio-#{artefact.id}", style: 'padding-top: 5px;' do %>
               <span class="text-strong text-gray">Bibliographie: </span>
-              <%= artefact.references.map{ |r| "#{link_to(r.title, artefacts_path(search: "#{params[:search]} publication:#{'"'+r.title+'"'}".strip), class: 'filter-link', data: {token: "publication:#{'"'+r.title+'"'}"})}#{r.locator ? ': '+r.locator : ''}" }.join('; ').html_safe %>
+              <%= artefact.references.map{ |r| "#{link_to(r.try(:literature_item).try(:title), artefacts_path(search: "#{params[:search]} publication:#{'"'+r.try(:literature_item).try(:title)+'"'}".strip), class: 'filter-link', data: {token: "publication:#{'"'+r.try(:literature_item).try(:title)+'"'}"})}#{r.locator ? ': '+r.locator : ''}" }.join('; ').html_safe %>
             <% end if artefact.references.any? %>
           </div>
         </div>

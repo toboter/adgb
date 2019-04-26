@@ -28,6 +28,28 @@ class LiteratureItemsController < ApplicationController
     end
   end
 
+  def single_update_biblio_data
+    item = Wrapper::Biblio.find(@literature_item.biblio_data['url'], access_token)
+    respond_to do |format|
+      if @literature_item.update(biblio_data: item)
+        format.html { redirect_to @literature_item, notice: "Literature was successfully updated." }
+      else
+        format.html { render :edit }
+      end
+    end
+  end
+
+  def update_biblio_data
+    items=[]
+    LiteratureItem.where.not(biblio_data: {}).each do |i|
+      if i.biblio_data['url'].present?
+        item = Wrapper::Biblio.find(i.biblio_data['url'], access_token)
+        items << i.update(biblio_data: item)
+      end
+    end if current_user.is_admin?
+    redirect_to settings_users_path, notice: "#{view_context.pluralize(items.size, 'item')} successfuly updated from babylon-online.org/bibliography"
+  end
+
   def destroy
     if @literature_item.artefacts.empty? && @literature_item.sources.empty?
       @literature_item.destroy
@@ -35,13 +57,6 @@ class LiteratureItemsController < ApplicationController
     else
       redirect_to @literature_item, notice: "There are associated objects."
     end
-  end
-
-  def remove_empty
-    @literature_items = LiteratureItem.left_outer_joins(:artefacts).where(artefacts: {id: nil})
-    redirect_to literature_items_url, notice: "currently disabled."
-    #size = @literature_items.destroy_all.size
-    #redirect_to literature_items_url, notice: "#{size} removed."
   end
 
   private

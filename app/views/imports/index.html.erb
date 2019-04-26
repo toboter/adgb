@@ -12,8 +12,6 @@
     
     <%= submit_tag "Import" %>
   <% end %>
-  <br>
-  <%= link_to 'Update concepts on tags', update_tag_concepts_from_imports_path, method: :post %>
 </div>
 
 <div class="well">
@@ -29,7 +27,7 @@
 </div>
 
 <div class="well">
-  <strong>3. Datei auswählen, welche die Daten der Literaturtabelle enthält.</strong><br>
+  <strong>3. Datei auswählen, welche die Daten der Literaturtabelle (ArtefactReferences) enthält.</strong><br>
   <small>
     Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.<br>
     <strong>Allowed attributes: </strong><%= ArtefactReference.col_attr.map{|c| c.camelize }.join(', ') %>
@@ -37,12 +35,7 @@
   <%= form_tag artefacts_references_imports_path, multipart: true do %>
     <%= file_field_tag :artefacts_references_file %>
     <%= submit_tag "Import" %>
-  <% end %>
-  <br>
-  <%= link_to 'X-Import to literature items', literature_items_from_imports_path, method: :post %><br>
-  <%= link_to 'Transfer literature source relation', literature_item_sources_from_imports_path, method: :post %><br>
-  <%= link_to 'remove empty literature items', remove_empty_literature_items_path, method: :delete %><br>
-  
+  <% end %>  
 </div>
 
 <div class="well">

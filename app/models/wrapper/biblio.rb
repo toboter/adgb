@@ -7,5 +7,10 @@ module Wrapper
       return data
     end
 
+    def self.find(url, access_token)
+      resp = JSON.parse(access_token.get(url).body)['entry']
+      data = resp
+      return data
+    end
   end
 end

@@ -12,11 +12,11 @@ class ArtefactReference < ApplicationRecord
   scope :without_artefact, -> { where(b_bab_rel: nil) }
 
   def title
-    literature_item ? literature_item.title : "#{ver} [#{jahr}] #{publ}" + "#{seite ? ': '+seite : ''}"
+    (literature_item ? literature_item.title : "#{ver} [#{jahr}] #{publ}") + "#{seite ? ': '+seite : ''}"
   end
 
   def full_citation
-    literature_item ? literature_item.full_citation.gsub(/\.$/, '') : title + "#{seite ? ': '+seite : ''}"
+    (literature_item ? literature_item.full_citation.gsub(/\.$/, '') : title) + "#{seite ? ': '+seite : ''}"
   end
 
   def self.col_attr
