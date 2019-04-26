@@ -147,7 +147,7 @@ class Source < ApplicationRecord
       archive: archive.name,
       artefact: artefacts.map{|a| a.name },
       tag: tags.map{ |t| [t.try(:name), t.try(:concept_data).try(:to_json)] },
-      publication: literature_item_sources.map{|r| [r.literature_item.try(:full_citation), r.locator].join(': ')},
+      publication: literature_item_sources.map{|r| [r.try(:literature_item).try(:full_citation), r.try(:literature_item).try(:title), r.locator]},
       relevance: relevance.map{|r| Source::REL_TYPES.select{|k,v| k == r.to_i }.map(&:last) },
       digital: digitize_remarks.map{|r| Source::DIGI_TYPES.select{|k,v| k == r.to_i }.map(&:last) }
     )
