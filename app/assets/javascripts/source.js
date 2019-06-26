@@ -16,8 +16,8 @@ $(document).on('cocoon:after-insert', function(){
 function selectize_source(object) {
   $(String(object)).selectize({
     valueField: 'id',
-    labelField: 'name',
-    searchField: 'name',
+    labelField: 'call_number',
+    searchField: ['call_number', 'sheet'],
     create: false,
     load: function(query, callback) {
       console.log(query);
@@ -31,13 +31,16 @@ function selectize_source(object) {
           callback();
         },
         success: function(res) {
-          callback(res['DocumentationObjects'].slice(0,10));
+          callback(res.slice(0,10));
         }
       })
     },
     render: {
       option: function(item, escape) {
-        return '<div>' + escape(item.name) + '</div>'
+        return '<div>' + '<strong>' + escape(item.call_number) + '</strong>' +
+                  '<strong>' + ' :: ' + escape(item.sheet) + '</strong>' +
+                  '<p class="text-small">' + '<em>' + escape(item.type) + '</em>' + '</p>' +
+               '</div>'
       }
     }
   });

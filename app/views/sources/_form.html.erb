@@ -12,7 +12,7 @@
         <%= f.input :call_number %>
         <%= f.input :temp_call_number %>
         <%= f.input :parent_id,
-          label: 'Belongs to',
+          label: 'Belongs to / Contained in',
           collection: [@source.parent],
           selected: @source.parent_id,
           input_html: {

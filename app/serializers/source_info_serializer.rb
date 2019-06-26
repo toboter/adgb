@@ -17,4 +17,5 @@ class SourceInfoSerializer < ActiveModel::Serializer
       abbr: object.collection
     }
   end
+  attribute :name
 end

@@ -32,7 +32,7 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @sources, each_serializer: SourceSerializer } # Needed for artefacts/_form
+      format.json { render json: @sources.to_json } #, each_serializer: SourceInfoSerializer } # Needed for artefacts/_form & sources/_form
       format.js
     end
   end
