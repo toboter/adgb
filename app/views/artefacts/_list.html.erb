@@ -45,7 +45,7 @@
               <% end %>
               <%= linebreak_before_and_show_if_exists(artefact.m_join) %>
               <%= linebreak_before_and_show_if_exists(artefact.m_korr) %>
-            <% end if artefact.mus_name.present? %>
+            <% end if artefact.mus_name.present? && can?(:read, 'museum_internals') %>
             <%= content_tag :div, id: "tags-#{artefact.id}", style: 'margin-top:10px;' do %>
               <ul class="list-unstyled">
                 <% artefact.tags.each do |t| %>

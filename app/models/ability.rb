@@ -30,7 +30,11 @@ class Ability
       end
 
       can :manage, [Artefact, Source, Archive, PhotoImport, ArtefactPhoto, ArtefactPerson, ArtefactReference, LiteratureItem] if user.is_admin?
-      can :update_concept_data, :tags if user.is_admin?
+      can :update_concept_data, :tags if user.is_admin?#
+      
+
+      cannot :read, 'museum_internals'
+      can :read, 'museum_internals' if user.is_admin? || user.is_publisher? || user.is_creator?
     end
   end
 end

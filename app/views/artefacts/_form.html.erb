@@ -24,21 +24,21 @@
       <%= f.input :b_korr %>
       <hr>
       
-      <%= f.input :mus_sig %>
-      <%= f.input :mus_nr %>
-      <%= f.input :mus_ind %>
-      <%= f.input :m_join %>
-      <%= f.input :m_korr %>
+      <%= f.input :mus_sig if can?(:read, 'museum_internals') %>
+      <%= f.input :mus_nr if can?(:read, 'museum_internals') %>
+      <%= f.input :mus_ind if can?(:read, 'museum_internals') %>
+      <%= f.input :m_join if can?(:read, 'museum_internals') %>
+      <%= f.input :m_korr if can?(:read, 'museum_internals') %>
       <hr>
       
       <%= f.input :kod %>
       <%= f.input :grab %>
       <%= f.input :text %>
       <%= f.input :sig %>
-      <%= f.input :diss %>
-      <%= f.input :mus_id %>
-      <%= f.input :standort_alt %>
-      <%= f.input :standort %>
+      <%= f.input :diss if can?(:read, 'museum_internals') %>
+      <%= f.input :mus_id if can?(:read, 'museum_internals') %>
+      <%= f.input :standort_alt if can?(:read, 'museum_internals') %>
+      <%= f.input :standort if can?(:read, 'museum_internals') %>
       
       <%= f.input :mas1 %>
       <%= f.input :mas2 %>

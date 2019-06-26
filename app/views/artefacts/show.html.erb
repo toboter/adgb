@@ -28,9 +28,9 @@
           <%= table_row(@artefact.bab_name, 'Excavation No') %>
           <%= table_row(@artefact.b_join, 'Grabung Joins') %>
           <%= table_row(@artefact.b_korr, 'Grabung Korrektur') %>
-          <%= table_row(@artefact.mus_name, 'Museum No') %>
-          <%= table_row(@artefact.m_join, 'Museum Joins') %>
-          <%= table_row(@artefact.m_korr, 'Museum Korrektur') %>
+          <%= table_row(@artefact.mus_name, 'Museum No') if can?(:read, 'museum_internals') %>
+          <%= table_row(@artefact.m_join, 'Museum Joins') if can?(:read, 'museum_internals') %>
+          <%= table_row(@artefact.m_korr, 'Museum Korrektur') if can?(:read, 'museum_internals') %>
           <%= content_tag :tr do %>
             <th>
               Tags:
@@ -120,10 +120,10 @@
             <td><%= @artefact.people.map{|p| "#{p.person}#{' '+p.titel if p.titel.present?}"}.join('; ') %></td>
           <% end if @artefact.people.any? %>
           <%= content_tag :div do %>
-            <%= table_row(@artefact.diss, 'Dissov Id') %>
-            <%= table_row(@artefact.mus_id, 'Museums Id') %>
-            <%= table_row(@artefact.standort, 'Standort') %>
-            <%= table_row(@artefact.standort_alt, 'Standort (alt)') %>
+            <%= table_row(@artefact.diss, 'Dissov Id') if can?(:read, 'museum_internals') %>
+            <%= table_row(@artefact.mus_id, 'Museums Id') if can?(:read, 'museum_internals') %>
+            <%= table_row(@artefact.standort, 'Standort') if can?(:read, 'museum_internals') %>
+            <%= table_row(@artefact.standort_alt, 'Standort (alt)') if can?(:read, 'museum_internals') %>
           <% end if can? :edit, @artefact %>         
         </tbody>
       </table>
