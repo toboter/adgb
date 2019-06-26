@@ -1,3 +1,6 @@
+<div id="init-pagination">
+  <%= will_paginate artefacts, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
+</div>
 <div id="_results" class="row artefacts-list">
   <div class="col-md-12">
     <%= content_tag :div, id: "tools", class: "--spacing-20" do %>
@@ -140,10 +143,6 @@
     </ul>
   <% end %>
   </div>
-</div>
-
-<div id="init-pagination">
-  <%= will_paginate artefacts, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
 </div>
 
 <% content_for :modals do %>
