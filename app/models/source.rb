@@ -52,10 +52,10 @@ class Source < ApplicationRecord
   has_closure_tree
   
   belongs_to :archive, counter_cache: true
-  has_many :occurences, class_name: "ArtefactPhoto", foreign_key: :source_id
+  has_many :occurences, class_name: "ArtefactPhoto", foreign_key: :source_id, dependent: :destroy
   has_many :artefacts, through: :occurences
   has_many :attachments, dependent: :destroy
-  has_many :literature_item_sources
+  has_many :literature_item_sources, dependent: :destroy
   has_many :literature_items, through: :literature_item_sources
   has_many :publications, class_name: 'ArtefactReference', foreign_key: :source_id
   accepts_nested_attributes_for :literature_item_sources, reject_if: :all_blank, allow_destroy: true
