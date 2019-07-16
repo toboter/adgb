@@ -26,14 +26,14 @@
         <div class="thumbnail">
           <%= link_to file.file_url, class: 'lightbox-link' do %>
             <%= image_tag file.file_url, class: 'img-responsive', style: 'max-height:200px;' %>
-          <% end %>
+          <% end if file.file_url %>
           <div class="caption">
             <%= content_tag :p, link_to(file.file_id, file.html_url, class: 'text-small'), style: 'margin-bottom: 0px;' %>
             <%= content_tag :p, "#{link_to(illu.source.call_number, illu.source)} #{'(' + illu.position + ')' if illu.position}".html_safe %>
           </div>
         </div>
       </div>
-    <% end %>
+    <% end if illu.source.attachments.any? %>
   <% end %>
 <% end if !@version && @artefact.illustrations.any? %>
 
