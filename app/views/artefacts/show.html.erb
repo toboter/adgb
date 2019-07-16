@@ -63,10 +63,11 @@
                       title: t.try(:concept_data).try(:[], 'default_label'),
                       data: {
                         toggle: "popover",
-                        content: t.try(:concept_data),
+                        content: prettify_concept_hash(t.try(:concept_data)),
                         trigger: 'hover',
                         container: 'body',
-                        placement: 'right'
+                        placement: 'right',
+                        html: true
                       }),
                       class: 'badge') %>
                 <% end %>
