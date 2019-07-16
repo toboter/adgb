@@ -6,7 +6,7 @@
     <%= f.input :ph_add %>
     <%= f.input :position %>
     <%= f.input :source_id, 
-      collection: f.object.new_record? ? [] : [f.object.source], 
+      collection: f.object.new_record? || f.object.source_id == nil ? [] : [f.object.source], 
       label_method: :name, 
       value_method: :id, 
       selected: f.object.source,
