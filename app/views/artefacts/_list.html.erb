@@ -125,7 +125,7 @@
           <div class="col-md-12">
             <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
               <span class="text-strong text-gray">Archivalien: </span>
-              <%= artefact.illustrations.map{ |i| "#{(i.source ? link_to(i.name, artefacts_path(search: "#{params[:search]} source:#{'"'+i.name+'"'}".strip), class: 'filter-link', data: {token: "source:#{'"'+i.name+'"'}"}) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
+              <%= artefact.illustrations.map{ |i| "#{(i.source ? link_to(i.source.name, artefacts_path(search: "#{params[:search]} source:#{'"'+i.source.name+'"'}".strip), class: 'filter-link', data: {token: "source:#{'"'+i.source.name+'"'}"}) : i.source.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
               <%= link_to fa_icon('info'), 'javascript:;',
                     class: 'label label-info', 
                     data: {toggle: 'tooltip', placement: 'top'}, 
