@@ -78,6 +78,9 @@ class ArtefactsController < ApplicationController
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
+
+    # This loads the url of the epidoc xml file and passes it to CETEIcean through the view
+    @text_url = nil
   end
 
   # GET /artefacts/new

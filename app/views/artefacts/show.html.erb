@@ -173,6 +173,13 @@
     <% end if @artefact.utm? %>
   </div>
 </div>
+<%= content_tag :div, class: "row" do %>
+  <div class="col-md-12 --spacing">
+    <%= content_tag :div, id: "TEI", data: {'xml-url': @text_url} do %>
+      Loading ...
+    <% end %>
+  </div>
+<% end if @text_url %>
 
 <% if @artefact.utm? %>
   <script type="text/javascript">

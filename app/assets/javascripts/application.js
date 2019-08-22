@@ -34,6 +34,12 @@ toastr.options = {
 }
 
 $(document).on('turbolinks:load', function(){
+    xmlURL = $('#TEI').data('xml-url')
+    var CETEIcean = new CETEI()
+    CETEIcean.getHTML5(xmlURL, function(data) {
+      document.getElementById("TEI").innerHTML = "";
+      document.getElementById("TEI").appendChild(data)
+    });
     // http://sliptree.github.io/bootstrap-tokenfield/
     $('#search-artefacts')
       //.on('tokenfield:removedtoken', function (e) {
