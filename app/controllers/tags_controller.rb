@@ -5,7 +5,9 @@ class TagsController < ApplicationController
     ActsAsTaggableOn::Tag.all.each do |t|
       if t.uuid.present?
         concept = Wrapper::Vocab.find(t.uuid, access_token)
-        tags << t.update(concept_data: concept, name: concept['default_label'], url: concept['html_url'])
+        default_name = concept['prefLabel'].try('[]', 'de') || concept['prefLabel'].try('[]', 'en') || 'unknown language'
+        default_url = concept['links']['html']
+        tags << t.update(concept_data: concept, name: default_name, url: default_url)
         t.taggings.each do |o|
           o.taggable.reindex
         end

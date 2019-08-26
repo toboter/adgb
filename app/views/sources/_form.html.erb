@@ -57,7 +57,7 @@
         <%= f.input :links %>
         <%= f.input :tag_list, 
           collection: @source.tag_list,
-          label_method: lambda { |c| c.try(:[], 'default_label') },
+          label_method: lambda { |c| c['prefLabel'].try('[]', 'de') || c['prefLabel'].try('[]', 'en') || 'unknown language' },
           value_method: lambda { |c| c.try(:to_json) },
           selected: @source.tag_list.map{ |c| c.try(:to_json) },
           input_html: {

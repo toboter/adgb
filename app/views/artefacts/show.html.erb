@@ -57,10 +57,10 @@
               <ul class="list-unstyled">
                 <% @artefact.tags.each do |t| %>
                   <%= content_tag :li, 
-                    content_tag(:span, link_to(t.name, t.try(:concept_data).try(:[], 'html_url'), 
+                    content_tag(:span, link_to(t.name, t.try(:url), 
                       style: 'color:white;', 
                       target: :_blank,
-                      title: t.try(:concept_data).try(:[], 'default_label'),
+                      title: t.name,
                       data: {
                         toggle: "popover",
                         content: prettify_concept_hash(t.try(:concept_data)),

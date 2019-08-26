@@ -68,7 +68,10 @@ class Artefact < ApplicationRecord
     tags = []
     values.reject(&:empty?).each do |concept|
       concept = concept.is_a?(String) ? JSON.parse(concept) : concept
-      tags << ActsAsTaggableOn::Tag.where(uuid: concept['id']).first_or_create(name: concept['default_label'], url: concept['html_url'], concept_data: concept)
+      id = concept['id'].split('/').last
+      default_name = concept['prefLabel'].try('[]', 'de') || concept['prefLabel'].try('[]', 'en') || 'unknown language'
+      default_url = concept['links']['html']
+      tags << ActsAsTaggableOn::Tag.where(uuid: id).first_or_create(name: default_name, url: default_url, concept_data: concept)
     end
     self.tags = tags
   end

@@ -6,7 +6,7 @@
     <div class="col-md-12">
       <%= f.input :tag_list, 
         collection: @artefact.tag_list,
-        label_method: lambda { |c| c.try(:[], 'default_label') },
+        label_method: lambda { |c| c['prefLabel'].try('[]', 'de') || c['prefLabel'].try('[]', 'en') || 'unknown language' },
         value_method: lambda { |c| c.try(:to_json) },
         selected: @artefact.tag_list.map{ |c| c.try(:to_json) },
         input_html: {
