@@ -10,8 +10,8 @@ $(document).on('cocoon:after-insert', function(){
 function selectize_biblio_search(object) {
   $(String(object)).selectize({
     valueField: 'value',
-    labelField: 'citation',
-    searchField: ['citation', 'cite', 'type'],
+    labelField: 'shortTitle',
+    searchField: ['shortTitle', 'cite', 'type'],
     placeholder: 'Search literature...',
     create: false,
     loadThrottle: 500,
@@ -32,7 +32,7 @@ function selectize_biblio_search(object) {
     },
     render: {
       option: function(item, escape) {
-        return '<div>' + '<strong>' + escape(item.citation) + '</strong>' +
+        return '<div>' + '<strong>' + escape(item.shortTitle) + '</strong>' +
                   '<p class="text-small">' + '<em>' + escape(item.cite) + '</em>' + '</p>' +
                '</div>'
       }

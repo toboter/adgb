@@ -7,7 +7,7 @@
 
   <%= f.input :biblio_data,
         collection: [literature_item.try(:biblio_data).presence || nil].compact, 
-        label_method: lambda { |b| b.try(:[], 'citation') },
+        label_method: lambda { |b| b.try(:[], 'shortTitle') },
         value_method: lambda { |b| b.try(:to_json) },
         selected: literature_item.try(:biblio_data),
         label: "Literature entry",

@@ -29,7 +29,7 @@ class LiteratureItemsController < ApplicationController
   end
 
   def single_update_biblio_data
-    item = Wrapper::Biblio.find(@literature_item.biblio_data['url'], access_token)
+    item = Wrapper::Biblio.find(@literature_item.remote_url, access_token)
     respond_to do |format|
       if @literature_item.update(biblio_data: item)
         format.html { redirect_to @literature_item, notice: "Literature was successfully updated." }
@@ -42,8 +42,8 @@ class LiteratureItemsController < ApplicationController
   def update_biblio_data
     items=[]
     LiteratureItem.where.not(biblio_data: {}).each do |i|
-      if i.biblio_data['url'].present?
-        item = Wrapper::Biblio.find(i.biblio_data['url'], access_token)
+      if i.remote_url.present?
+        item = Wrapper::Biblio.find(i.remote_url, access_token)
         items << i.update(biblio_data: item)
       end
     end if current_user.is_admin?

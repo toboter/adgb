@@ -11,15 +11,25 @@ class LiteratureItem < ApplicationRecord
   after_commit :reindex_relations, on: [:update, :destroy]
 
   def biblio_data=(value)
-    self[:biblio_data] = value.is_a?(String) ? JSON.parse(value) : value
+    self[:biblio_data] = value.is_a?(String) ? (value.empty? ? {} : JSON.parse(value)) : value
   end
 
   def title
-    biblio_data.present? ? biblio_data['citation'] : "#{ver}#{',' if !jahr}#{' ['+jahr+']' if jahr}#{' '+publ if publ}"
+    biblio_data.present? ? biblio_data['shortTitle'] : "#{ver}#{',' if !jahr}#{' ['+jahr+']' if jahr}#{' '+publ if publ}"
   end
 
   def full_citation
     biblio_data.present? ? biblio_data['cite'] : title
+  end
+
+  def remote_url
+    if biblio_data.present? && url = biblio_data.try(:[], 'url')
+      url
+    elsif biblio_data.present? && url = biblio_data['links']['self']
+      url
+    else
+      nil
+    end
   end
 
   def reindex_relations
