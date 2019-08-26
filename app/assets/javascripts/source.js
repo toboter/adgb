@@ -23,7 +23,7 @@ function selectize_source(object) {
       console.log(query);
       if (!query.length) return callback();
       $.ajax({
-        url: "/sources.json",
+        url: "/sources.json?view=simple",
         data: { search: query },
         dataType: "json",
         type: 'GET',

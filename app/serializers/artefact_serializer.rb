@@ -9,21 +9,27 @@ class ArtefactSerializer < ActiveModel::Serializer
         excavationProjectData: object.grabung,
         number: object.bab,
         numberIndex: number_index(object.bab_ind),
-        literal: object.bab_name.try(:squish)
+        literal: object.bab_name.try(:squish),
+        registered: {
+          dateParts: object.gr_date_arr,
+          literal: "#{object.gr_datum}#{object.gr_jahr}"
+        }
       },
       collectionNumber: {
         collectionData: object.mus_sig,
         number: object.mus_nr,
         numberIndex: number_index(object.mus_ind),
-        literal: object.mus_name.try(:squish)
+        literal: object.mus_name.try(:squish),
+        registered: {
+        }
       },
       others: [
         label_value_hash('MusId', object.mus_id),
         label_value_hash('DissovId', object.diss)
       ].compact,
-      comment: {
-        de: '-'
-      },
+      # comment: {
+      #   de: '-'
+      # },
       joins: {
         # Enspricht nicht dem Schema
         b_join: object.b_join,
@@ -46,7 +52,6 @@ class ArtefactSerializer < ActiveModel::Serializer
         de: object.fo_text
       }, 
       excavated: {
-        dateParts: [object.gr_jahr, object.gr_datum]
       },
       geometry: {
         type: "Point",
@@ -111,7 +116,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   attribute :archivalResources do
     object.illustrations.map{ |i|
       {
-        archivalResourceData: SourceInfoSerializer.new(i.source),
+        archivalResourceData: (i.try(:source) ? SourceInfoSerializer.new(i.source) : i.name),
         locator: i.position,
         property: 'isPhotographedIn'
       }
@@ -147,7 +152,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   attribute :links do
     {
       self: api_artefact_url(object.id),
-      html_url: artefact_url(object)
+      html: artefact_url(object)
     }
   end
 

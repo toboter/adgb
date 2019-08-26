@@ -18,12 +18,14 @@ class SourcesController < ApplicationController
       .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
       .auto_include(false)
 
+    per_page = params[:format] == 'json' && params[:all] == 'true' ? nil : session[:per_page]
+
     @sources =
         Source.auto_include(false).search(query,
           where: {id: sources.ids},
           fields: [:default_fields],
           page: params[:page], 
-          per_page: session[:per_page],
+          per_page: per_page,
           order: sort_order, 
           misspellings: {below: 1}
         ) do |body|
@@ -32,7 +34,9 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @sources.to_json } #, each_serializer: SourceInfoSerializer } # Needed for artefacts/_form & sources/_form
+      # view == simple is rendering a plain json view without any defined external schema and 
+      # is needed for looking up sources on the artefacts edit view.
+      format.json { params[:view].present? && params[:view] == 'simple' ? (render json: @sources.to_json) : (render json: @sources, each_serializer: SourceSerializer) }
       format.js
     end
   end
@@ -67,7 +71,7 @@ class SourcesController < ApplicationController
     
     respond_to do |format|
       format.html
-      #format.json { render json: @source, serializer: SourceSerializer }
+      format.json { render json: @source, serializer: SourceSerializer }
       format.js
     end
   end

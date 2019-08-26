@@ -19,12 +19,14 @@ class ArtefactsController < ApplicationController
     .visible_for(current_user)
     .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
+    per_page = params[:format] == 'json' && params[:all] == 'true' ? nil : session[:per_page]
+
     @artefacts =
       Artefact.search(string_q,
         where: {id: artefacts.ids},
         fields: [:default_fields],
         page: params[:page], 
-        per_page: session[:per_page], 
+        per_page: per_page, 
         order: sort_order, 
         misspellings: {below: 1}
       ) do |body|
@@ -34,6 +36,7 @@ class ArtefactsController < ApplicationController
     respond_to do |format|
       format.html
       format.js
+      format.json { render json: @artefacts, each_serializer: ArtefactSerializer }
     end
   end
 
@@ -81,6 +84,12 @@ class ArtefactsController < ApplicationController
 
     # This loads the url of the epidoc xml file and passes it to CETEIcean through the view
     @text_url = nil
+
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { render json: @artefact, serializer: ArtefactSerializer }
+    end
   end
 
   # GET /artefacts/new

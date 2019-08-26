@@ -4,7 +4,7 @@ class SourceSerializer < ActiveModel::Serializer
 
   attribute :slug, key: :id
   attribute :containedIn do
-    object.child? ? SourceSerializer.new(object.parent) : ArchiveSerializer.new(object.archive)
+    object.child? ? SourceInfoSerializer.new(object.parent) : ArchiveSerializer.new(object.archive)
   end
   attribute :serialNumber do
     object.sheet.presence || object.call_number.sub(object.collection, '').sub(object.archive.try(:name), '').gsub(',', '').squish!
@@ -102,7 +102,7 @@ class SourceSerializer < ActiveModel::Serializer
   attribute :excavatedObjects do
     object.occurences.map { |o| 
       {
-        excavatedObjectData: ArtefactInfoSerializer.new(o.artefact),
+        excavatedObjectData: (o.try(:artefact) ? ArtefactInfoSerializer.new(o.artefact) : o.try(:p_bab_rel)),
         locator: o.position,
         property: 'isPhotographOf'
       }
@@ -149,7 +149,7 @@ class SourceSerializer < ActiveModel::Serializer
   attribute :links do
     {
       self: api_source_url(object.id),
-      html_url: source_url(object)
+      html: source_url(object)
     }
   end
   

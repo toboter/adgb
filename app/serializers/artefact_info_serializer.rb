@@ -5,7 +5,11 @@ class ArtefactInfoSerializer < ActiveModel::Serializer
       excavationProjectData: object.grabung,
       number: object.bab,
       numberIndex: number_index(object.bab_ind),
-      literal: object.bab_name.try(:squish)
+      literal: object.bab_name.try(:squish),
+      registered: {
+        dateParts: object.gr_date_arr,
+        literal: "#{object.gr_datum}#{object.gr_jahr}"
+      }
     }
   end
   attribute :collectionNumber do 
@@ -13,7 +17,9 @@ class ArtefactInfoSerializer < ActiveModel::Serializer
       collectionData: object.mus_sig,
       number: object.mus_nr,
       numberIndex: number_index(object.mus_ind),
-      literal: object.mus_name.try(:squish)
+      literal: object.mus_name.try(:squish),
+      registered: {
+      }
     }
   end
 

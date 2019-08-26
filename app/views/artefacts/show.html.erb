@@ -1,6 +1,7 @@
 <% title "#{@artefact.name} | Artefacts", false %>
 
 <% content_for(:buttons) do %>
+  <%= link_to 'View json', [@artefact, format: :json], class: 'btn btn-default btn-sm text-strong' %>
   <% if @artefact.locked? %>
     This object is currently locked. <%= 'Because it is published.' if @artefact.versions.last.event == 'publish' if @artefact.versions.any? %>
     <%= link_to fa_icon('unlock', text: 'Unlock'), unlock_artefact_path(@artefact), method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:unlock, @artefact) %>

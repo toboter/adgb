@@ -1,7 +1,7 @@
 class SourceInfoSerializer < ActiveModel::Serializer
   attribute :slug, key: :id
   attribute :containedIn do
-    object.child? ? SourceSerializer.new(object.parent) : ArchiveSerializer.new(object.archive)
+    object.child? ? SourceInfoSerializer.new(object.parent) : ArchiveSerializer.new(object.archive)
   end
   attribute :serialNumber do
     object.sheet.presence || object.call_number.sub(object.collection, '').sub(object.archive.try(:name), '').gsub(',', '').squish!

@@ -243,6 +243,21 @@ class Artefact < ApplicationRecord
     self.code = kod_to_values
   end
 
+  def gr_date_arr
+    if gr_datum.present? && gr_datum.include?('-')
+      day_start = gr_datum.split('.-').first
+      day_end = gr_datum.split('.-').last.split('.').first
+      month = gr_datum.split('.-').last.split('.').last
+      date_start = [gr_jahr].push(month).push(day_start)
+      date_end = [gr_jahr].push(month).push(day_end)
+      [date_start, date_end]
+    else
+      date = [gr_jahr]
+      date << gr_datum.split('.').reverse if gr_datum.present?
+      date.flatten
+    end
+  end
+
   TEXT_SOLUTION = {
     "a" => "Aramäisch",
     "a k"  => "Aramäisch, Keilschrift",

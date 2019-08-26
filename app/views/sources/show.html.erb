@@ -1,6 +1,7 @@
 <% title "#{@source.name} | Sources", false %>
 
 <% content_for(:buttons) do %>
+  <%= link_to 'View json', [@source, format: :json], class: 'btn btn-default btn-sm text-strong' %>
   <% if @source.locked? %>
     This object is currently locked. <%= 'Because it is published.' if @source.published? %>
     <%= link_to fa_icon('unlock', text: 'Unlock'), [:unlock, @source], method: :put, class: 'btn btn-default btn-sm text-strong' if can?(:unlock, @source) %>
@@ -93,7 +94,7 @@
           <% @occurences.each_with_index do |occ, index| %>
             <tr>
               <td><%= index+1 %></td>
-              <td><%= link_to (occ.artefact.grabung ? occ.artefact.bab_name : occ.artefact.mus_name), occ.artefact if occ.artefact %></td>
+              <td><%= link_to (occ.artefact.name), occ.artefact if occ.artefact %></td>
               <td><%= occ.position %></td>
             </tr>
           <% end %>

@@ -67,8 +67,9 @@
   <div class="col-md-5">
     <%= content_tag :div, class: 'clearfix --spacing-20' do %>
       <%= content_tag :div, class: 'pull-right' do %>
-        <%= link_to fa_icon('plus', text: 'Source'), new_source_path, class: 'btn btn-default text-strong' %>
+        <%= link_to fa_icon('plus', text: 'Source'), new_source_path, class: 'btn btn-success text-strong' %>
       <% end if can? :create, Source %>
+      <small>Data can be downloaded as 'json'. Add .json as format to the url and '?/&all=true' as fragment to view the full set.</small>
     <% end if current_user %>
 
     <%= content_tag :div, id: "show-target", data: {spy: 'affix', 'offset-top': "60"} do %>
