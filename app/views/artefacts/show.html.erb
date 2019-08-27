@@ -176,11 +176,17 @@
 </div>
 <%= content_tag :div, class: "row" do %>
   <div class="col-md-12 --spacing">
-    <%= content_tag :div, id: "TEI", data: {'xml-url': @text_url} do %>
-      Loading ...
+    <hr>
+    <h3>
+      Textbearbeitung für <%= @artefact.mus_name %><br>
+      <%= content_tag :small, "Geladen aus #{link_to @html_url, @html_url, target: :blank}".html_safe if @html_url %>
+    </h3>
+    <%= content_tag :div, id: "TEI", data: {'xml-text': @text_data} do %>
+      <h4>Loading ...</h4>
+      <p>This page may not work in Internet Explorer and some older browsers, due to outdated Javascript support. We suggest you use Chrome or Firefox.</p>
     <% end %>
   </div>
-<% end if @text_url %>
+<% end if @artefact.mus_name %>
 
 <% if @artefact.utm? %>
   <script type="text/javascript">

@@ -1,5 +1,4 @@
 
-
 /* Choice elements */
 tei-choice tei-abbr + tei-expan:before,
 tei-choice tei-expan + tei-abbr:before,
@@ -1602,9 +1601,31 @@ tei-summary {
 tei-superEntry {
   /* Block with space above and below, maybe have no block and space for <entry> when contained by this element */
 }
-tei-supplied {
+tei-supplied[reason='lost']:before {
   /* not sure on this one, seems like we should indicate somehow. Is there a standard way to do this? */
+  content:'[';
 }
+tei-supplied[reason='lost']:after {
+  /* not sure on this one, seems like we should indicate somehow. Is there a standard way to do this? */
+  content: attr(data-content) ']';
+}
+tei-damage:before {
+  /* not sure on this one, seems like we should indicate somehow. Is there a standard way to do this? */
+  content:'\2308';
+}
+tei-damage:after {
+  /* not sure on this one, seems like we should indicate somehow. Is there a standard way to do this? */
+  content: attr(data-content) '\2309';
+}
+tei-foreign[lang='sum']  {
+  text-transform: uppercase;
+  font-style: normal;
+}
+tei-foreign[lang='akk'] {
+  text-transform: lowercase;
+  font-style:italic;
+}
+
 tei-support {
   /* Empty Set Rule */
 }
