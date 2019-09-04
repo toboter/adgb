@@ -3,9 +3,18 @@ class Artefact < ApplicationRecord
   # https://github.com/ankane/searchkick/issues/642
   # showing more than 10000 results on index
   searchkick locations: [:findspot]
-  has_paper_trail ignore: [:slug, :latitude, :longitude, :updated_at], 
+  #  curl -X PUT "localhost:9200/artefacts_development/_settings?pretty" -H 'Content-Type: application/json' -d'
+  #  {
+  #      "index" : {
+  #          "max_terms_count" : 100000
+  #      }
+  #  }
+  #  '
+  #  curl -X GET "localhost:9200/artefacts_development/_settings?pretty"
+
+  has_paper_trail ignore: [:slug, :latitude, :longitude, :updated_at],
     meta: {
-      version_name: :name, 
+      version_name: :name,
       changed_characters_length: :changed_characters,
       total_characters_length: :total_characters
     }
@@ -18,7 +27,6 @@ class Artefact < ApplicationRecord
   friendly_id :bab_rel, use: :slugged
   before_save :set_code, :set_text_solution, :set_latitude, :set_longitude
   # after_commit :reindex_descendants
-
 
   def changed_characters
     total = 0
@@ -51,7 +59,7 @@ class Artefact < ApplicationRecord
   accepts_nested_attributes_for :illustrations, reject_if: :all_blank, allow_destroy: true
   has_many :people, class_name: "ArtefactPerson", foreign_key: "n_bab_rel", primary_key: :bab_rel
   accepts_nested_attributes_for :people, reject_if: :all_blank, allow_destroy: true
-  
+
   attr_accessor :add_to_tag_list, :remove_from_tag_list
 
   # virtual attributes
@@ -81,19 +89,19 @@ class Artefact < ApplicationRecord
   def name
     bab_name || mus_name
   end
-  
+
   def bab_name
     grabung && bab ? "#{grabung} #{bab}#{bab_ind}" : nil
   end
-  
+
   def mus_name
     mus_sig ? "#{mus_sig} #{mus_nr}#{mus_ind}" : nil
   end
-  
+
   def full_entry
     "#{bab_name} #{mus_name}"
   end
-  
+
 
   # Scopes
 
@@ -117,12 +125,12 @@ class Artefact < ApplicationRecord
     scope ("with_#{a}_like").to_sym, lambda { |x|
       where("LOWER(CAST(artefacts.#{a} AS TEXT)) LIKE ?", "%#{x.to_s.downcase}%")
     }
-  end 
-  
+  end
+
   scope :with_photo_like, lambda { |x|
     joins(:photos).where("LOWER(CAST(photos.call_number AS TEXT)) LIKE ?", "#{x.to_s.downcase}%")
    }
-   
+
   scope :with_person_like, lambda { |x|
     joins(:people).where("LOWER(artefact_people.person) LIKE ?", "%#{x.to_s.downcase}%")
    }
@@ -179,7 +187,7 @@ class Artefact < ApplicationRecord
     )
   end
 
-  
+
   # KOD lookup
 
   KOD_MATERIAL = {
@@ -227,10 +235,10 @@ class Artefact < ApplicationRecord
     "H" => "Dach/Hegemon",
     "R" => "reliefiert",
     nil => nil
-  } 
-  
+  }
+
   def kod_to_values
-    if kod.present? 
+    if kod.present?
       kod.split(' ')
         .map{ |key| [Artefact::KOD_MATERIAL[key[0]], Artefact::KOD_GRUPPE[key[1]], Artefact::KOD_BEARBEITUNG[key[2]]].compact }
         .join(', ')
@@ -238,7 +246,7 @@ class Artefact < ApplicationRecord
       'unbestimmt'
     end
   end
-  
+
   def set_code
     self.code = kod_to_values
   end
@@ -273,7 +281,7 @@ class Artefact < ApplicationRecord
   }
 
   def text_to_text_solution
-    if text.present? 
+    if text.present?
       Artefact::TEXT_SOLUTION[text]
     end
   end
@@ -299,18 +307,18 @@ class Artefact < ApplicationRecord
   def set_longitude
     self.longitude = to_lat_lon('38S').lon if utm? && utmy_changed?
   end
-  
+
   def utm?
     utmx && utmy
   end
-  
+
   def to_lat_lon(zone, corrx=0, corry=0)
     # Olof bemängelt eine Verschiebung der von ihm verwendeten UTM WGS84 Koordinaten in maps um E 27 und N 7
     # GeoUTM bietet verschiedene ellipsoide, das standard WGS84 führt zu dem besagten Verschiebungsfehler
     # neuer Versuch mit 'International' hier sind die angezeigten Koordinaten viel südlicher.
-    # Laut Olof ergibt sich daraus ein noch viel größerer Fehler. Daher wieder wgs84. 
+    # Laut Olof ergibt sich daraus ein noch viel größerer Fehler. Daher wieder wgs84.
     # Edit April 2019: Olof hat die Koordinaten von einem Satellitenbild abgenommen. Bei dem Vergleich von seinem und Google
-    # entsteht die Verschiebung aufgrund von Verzerrung der beiden Bilder. Das System ist beides WGS84. 
+    # entsteht die Verschiebung aufgrund von Verzerrung der beiden Bilder. Das System ist beides WGS84.
     # Nun aber mit 27m Abzug auf x und 7m auf der y Achse.
     GeoUtm::UTM.new(zone, utmx+corrx, utmy+corry, "WGS-84").to_lat_lon if utm? && zone
   end
@@ -318,7 +326,7 @@ class Artefact < ApplicationRecord
 
 
   # Import/export
-  # Whodunnit muss auf user gesetzt werden 
+  # Whodunnit muss auf user gesetzt werden
   # optional hinzu import neue freigeben für
   def self.import(file, creator_id)
     spreadsheet = open_spreadsheet(file)
@@ -329,7 +337,7 @@ class Artefact < ApplicationRecord
       row = Hash[[header, spreadsheet.row(i)].transpose]
       artefact = find_by_bab_rel(row["bab_rel"]) || new
       artefact.attributes = row.to_hash.slice(*Artefact.col_attr)
-      
+
       # artefact.creator = @user
       # artefact.share_to(@user, @user, true) unless artefact.record_accessors.include?(@user.id)
 
@@ -340,7 +348,7 @@ class Artefact < ApplicationRecord
       artefact.save!
     end
   end
-  
+
   def self.open_spreadsheet(file)
     case File.extname(file.original_filename)
     when ".csv" then Roo::Csv.new(file.path)
@@ -358,7 +366,7 @@ end
 
   # nicht mehr aktuell seit 2017-12-06
   # KOD_MATERIAL = {
-  #   "A" => "Asphalt", 
+  #   "A" => "Asphalt",
   #   "B" => "Bestattung(sbeigabe)",
   #   "G" => "Glas",
   #   "H" => "Holz",

@@ -38,9 +38,9 @@
 class Source < ApplicationRecord
   self.inheritance_column = :_type_disabled
   searchkick
-  has_paper_trail ignore: [:slug, :updated_at], 
+  has_paper_trail ignore: [:slug, :updated_at],
     meta: {
-      version_name: :name, 
+      version_name: :name,
       changed_characters_length: :changed_characters,
       total_characters_length: :total_characters
     }
@@ -50,7 +50,7 @@ class Source < ApplicationRecord
   acts_as_taggable
 
   has_closure_tree
-  
+
   belongs_to :archive, counter_cache: true
   has_many :occurences, class_name: "ArtefactPhoto", foreign_key: :source_id, dependent: :destroy
   has_many :artefacts, through: :occurences
@@ -147,8 +147,8 @@ class Source < ApplicationRecord
 
   def search_data
     attributes.except('relevance', 'digitize_remarks').merge(
-      archive: archive.name,
-      artefact: artefacts.map{|a| a.name },
+      archive: archive.try(:name),
+      artefact: artefacts.map{|a| a.try(:name) },
       tag: tags.map{ |t| [t.try(:name), t.try(:concept_data).try(:to_json)] },
       publication: literature_item_sources.map{|r| [r.try(:literature_item).try(:full_citation), r.try(:literature_item).try(:title), r.locator]},
       relevance: relevance.map{|r| Source::REL_TYPES.select{|k,v| k == r.to_i }.map(&:last) },
@@ -198,7 +198,7 @@ class Source < ApplicationRecord
       raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
     end
   end
-   
+
   def self.options_for_sorted_by
     [
       ['Relevance asc', 'score_asc'],
@@ -242,7 +242,7 @@ class Source < ApplicationRecord
     4 => 'relevant für VAM-Kollegen, Assur, Uruk etc,.',
     5 => 'relevant für Rücklauf Archiv, z.B. zu inventarisieren oder sonst.'
   }
-  
+
 
       # set User.current first
       def self.get_photos_from_photo_import(user_id)

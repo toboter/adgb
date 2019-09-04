@@ -34,16 +34,6 @@ toastr.options = {
 }
 
 $(document).on('turbolinks:load', function(){
-
-    xmlTEXT = $('#TEI').data('xml-text')
-    if (xmlTEXT.length) {
-      var CETEIcean = new CETEI()
-      CETEIcean.makeHTML5(xmlTEXT, function(data) {
-        document.getElementById("TEI").innerHTML = "";
-        document.getElementById("TEI").appendChild(data)
-      })
-    };
-
     // http://sliptree.github.io/bootstrap-tokenfield/
     $('#search-artefacts')
       //.on('tokenfield:removedtoken', function (e) {
@@ -67,12 +57,12 @@ $(document).on('turbolinks:load', function(){
     $('.user_group_list_item').selectize();
 
     //select all checkboxes
-    $("#select_all").change(function(){  //"select all" change 
+    $("#select_all").change(function(){  //"select all" change
         $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
     });
 
-    //".checkbox" change 
-    $('.checkbox').change(function(){ 
+    //".checkbox" change
+    $('.checkbox').change(function(){
         //uncheck "select all", if one of the listed checkbox item is unchecked
         if(false == $(this).prop("checked")){ //if this item is unchecked
             $("#select_all").prop('checked', false); //change "select all" checked status to false
@@ -91,13 +81,13 @@ $(document).on('turbolinks:load', function(){
     $('.lightbox-link').magnificPopup({
         type: 'image',
         mainClass: 'mfp-with-zoom',
-        
+
         zoom: {
           enabled: true, // By default it's false, so don't forget to enable it
-    
+
           duration: 300, // duration of the effect, in milliseconds
           easing: 'ease-in-out', // CSS transition easing function
-    
+
           // The "opener" function should return the element from which popup will be zoomed in
           // and to which popup will be scaled down
           // By defailt it looks for an image tag:
@@ -108,5 +98,17 @@ $(document).on('turbolinks:load', function(){
           }
         }
     });
-    
+
+});
+
+$(document).on('ready turbolinks:load', function(){
+
+    xmlTEXT = $('#TEI').data('xml-text')
+    if (xmlTEXT.length) {
+      var CETEIcean = new CETEI()
+      CETEIcean.makeHTML5(xmlTEXT, function(data) {
+        document.getElementById("TEI").innerHTML = "";
+        document.getElementById("TEI").appendChild(data)
+      })
+    };
 });

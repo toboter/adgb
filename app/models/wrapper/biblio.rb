@@ -8,6 +8,7 @@ module Wrapper
     end
 
     def self.find(url, access_token)
+      url = url.gsub('babylon-online.org', 'dev.local:3000') if Rails.env != 'production'
       resp = JSON.parse(access_token.get(url).body)['citation_data_item']
       data = resp
       return data

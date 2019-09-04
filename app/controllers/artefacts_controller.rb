@@ -13,8 +13,8 @@ class ArtefactsController < ApplicationController
   def index
     sort_order = Artefact.sorted_by(params[:sorted_by] ||= 'score_desc') if Artefact.any?
     query = params[:search].presence || '*'
-    string_q = query.gsub('+', ' ').squish 
-    
+    string_q = query.gsub('+', ' ').squish
+
     artefacts = Artefact
     .visible_for(current_user)
     .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
@@ -25,12 +25,13 @@ class ArtefactsController < ApplicationController
       Artefact.search(string_q,
         where: {id: artefacts.ids},
         fields: [:default_fields],
-        page: params[:page], 
-        per_page: per_page, 
-        order: sort_order, 
+        page: params[:page],
+        per_page: per_page,
+        order: sort_order,
         misspellings: {below: 1}
       ) do |body|
         body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "AND" } }
+        body[:track_total_hits] = true
       end
 
     respond_to do |format|
@@ -42,12 +43,12 @@ class ArtefactsController < ApplicationController
 
   def mapview
     query = params[:search].presence || '*'
-    string_q = query.gsub('+', ' ').squish 
+    string_q = query.gsub('+', ' ').squish
 
     artefacts = Artefact
       .visible_for(current_user)
       .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-    
+
     @artefacts =
       Artefact.search(string_q,
         where: {id: artefacts.ids},
@@ -74,7 +75,7 @@ class ArtefactsController < ApplicationController
 
   # GET /artefacts/1
   # GET /artefacts/1.json
-  def show    
+  def show
     @contributions = Hash.new(0)
     @growth = Hash.new(0)
     @artefact.versions.each do |v|
@@ -85,7 +86,7 @@ class ArtefactsController < ApplicationController
     # This loads the text edition for the artefact on github which is an epidoc xml file and passes it to CETEIcean in the view
     repo = Rails.application.secrets.git_repo
     token = Rails.application.secrets.git_token
-    if @artefact.mus_name
+    if @artefact.mus_name.present?
       url = "https://api.github.com/search/code?q=repo:#{repo} filename:#{@artefact.mus_name.parameterize(separator: '_')}.xml"
       begin
         response = RestClient.get(url, {:Authorization => "Token #{token}", :Accept => "application/vnd.github.v3.raw"})
@@ -166,7 +167,9 @@ class ArtefactsController < ApplicationController
     tags=[]
     @artefact.tags.each do |t|
       concept = Wrapper::Vocab.find(t.uuid, access_token)
-      tags << t.update(concept_data: concept)
+      default_name = concept['prefLabel'].try('[]', 'de') || concept['prefLabel'].try('[]', 'en') || 'unknown language'
+      default_url = concept['links']['html']
+      tags << t.update(concept_data: concept, name: default_name, url: default_url)
     end
     redirect_to @artefact, notice: "#{view_context.pluralize(tags.size, 'tag')} successfuly updated from source"
   end
@@ -230,21 +233,21 @@ class ArtefactsController < ApplicationController
       else
         authorize! :publish_multiple, Artefact
         query = params[:search].presence || '*'
-        string_q = query.gsub('+', ' ').squish 
+        string_q = query.gsub('+', ' ').squish
         artefacts = Artefact
           .visible_for(current_user)
           .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-        
-        sk_results = Artefact.search(string_q, 
+
+        sk_results = Artefact.search(string_q,
           where: { id: artefacts.ids },
           per_page: 10000,
           misspellings: {below: 1}
           ) do |body|
             body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
           end
-        
+
         results = Artefact.where(id: sk_results.map(&:id))
-        
+
         @published_length = 0
         results.in_batches.each do |records|
           records_length = records.where(locked: false).each do |r|
@@ -286,17 +289,17 @@ class ArtefactsController < ApplicationController
         artefacts = Artefact
           .visible_for(current_user)
           .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-        
-        sk_results = Artefact.search(string_q, 
+
+        sk_results = Artefact.search(string_q,
           where: { id: artefacts.ids },
           per_page: 10000,
           misspellings: {below: 1}
           ) do |body|
             body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
           end
-        
+
         results = Artefact.where(id: sk_results.map(&:id))
-        
+
         @unlocked_length = 0
         results.in_batches.each do |records|
           records_length = records.where(locked: true).each do |r|
@@ -318,7 +321,7 @@ class ArtefactsController < ApplicationController
       end
     end
   end
-  
+
   # DELETE /artefacts/1
   # DELETE /artefacts/1.json
   def destroy
@@ -338,25 +341,25 @@ class ArtefactsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def artefact_params
       params.require(:artefact).permit(
-        :locked, 
-        :bab_rel, 
-        :grabung, :bab, :bab_ind, :b_join, :b_korr, 
-        :mus_sig, :mus_nr, :mus_ind, :m_join, :m_korr, 
-        :kod, :grab, :text, :sig, 
-        :diss, :mus_id, :standort_alt, :standort, 
-        :mas1, :mas2, :mas3, :f_obj, :abklatsch, :zeichnung, 
-        :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text, 
-        :utmx, :utmxx, :utmy, :utmyy, 
-        :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1, 
-        :gr_datum, :gr_jahr, :creator_id, 
+        :locked,
+        :bab_rel,
+        :grabung, :bab, :bab_ind, :b_join, :b_korr,
+        :mus_sig, :mus_nr, :mus_ind, :m_join, :m_korr,
+        :kod, :grab, :text, :sig,
+        :diss, :mus_id, :standort_alt, :standort,
+        :mas1, :mas2, :mas3, :f_obj, :abklatsch, :zeichnung,
+        :fo_tell, :fo1, :fo2, :fo3, :fo4, :fo_text,
+        :utmx, :utmxx, :utmy, :utmyy,
+        :inhalt, :period, :arkiv, :text_in_archiv, :jahr, :datum, :zeil2, :zeil1,
+        :gr_datum, :gr_jahr, :creator_id,
         add_to_tag_list: [],
-        remove_from_tag_list: [], 
+        remove_from_tag_list: [],
         tag_list: [],
-        accessor_ids: [], 
-        references_attributes: [:id, :literature_item_id, :seite, :_destroy], 
-        illustrations_attributes: [:id, :ph, :ph_nr, :ph_add, :position, :p_rel, :source_id, :_destroy], 
+        accessor_ids: [],
+        references_attributes: [:id, :literature_item_id, :seite, :_destroy],
+        illustrations_attributes: [:id, :ph, :ph_nr, :ph_add, :position, :p_rel, :source_id, :_destroy],
         people_attributes: [:id, :person, :titel, :_destroy]
       )
     end
-    
+
 end

@@ -57,9 +57,9 @@
             <td>
               <ul class="list-unstyled">
                 <% @artefact.tags.each do |t| %>
-                  <%= content_tag :li, 
-                    content_tag(:span, link_to(t.name, t.try(:url), 
-                      style: 'color:white;', 
+                  <%= content_tag :li,
+                    content_tag(:span, link_to(t.name, t.try(:url),
+                      style: 'color:white;',
                       target: :_blank,
                       title: t.name,
                       data: {
@@ -104,8 +104,8 @@
             <th>
               Archivalien
               <%= link_to fa_icon('info'), 'javascript:;',
-                class: 'label label-info', 
-                data: {toggle: 'tooltip', placement: 'top'}, 
+                class: 'label label-info',
+                data: {toggle: 'tooltip', placement: 'top'},
                 title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
             </th>
             <td>
@@ -143,16 +143,16 @@
             <%= table_row(@artefact.mus_id, 'Museums Id') if can?(:read, 'museum_internals') %>
             <%= table_row(@artefact.standort, 'Standort') if can?(:read, 'museum_internals') %>
             <%= table_row(@artefact.standort_alt, 'Standort (alt)') if can?(:read, 'museum_internals') %>
-          <% end if can? :edit, @artefact %>         
+          <% end if can? :edit, @artefact %>
         </tbody>
       </table>
     <% end %>
 
     <%= content_tag :div, id: 'stats' do %>
-      <%= link_to 'Toggle stats', "#collapse-stats-on-#{@artefact.id}", 
-        data: { toggle: 'collapse' }, 
-        aria: {expanded: 'false', controls: "collapse-stats-on-#{@artefact.id}"}, 
-        class: 'toggle-link', 
+      <%= link_to 'Toggle stats', "#collapse-stats-on-#{@artefact.id}",
+        data: { toggle: 'collapse' },
+        aria: {expanded: 'false', controls: "collapse-stats-on-#{@artefact.id}"},
+        class: 'toggle-link',
         role: 'button' %>
       <%= content_tag :div, class: 'collapse more-stats', id: "collapse-stats-on-#{@artefact.id}" do %>
         <%= pie_chart(@contributions, width: "100%", height: "180px", legend: "right") %>

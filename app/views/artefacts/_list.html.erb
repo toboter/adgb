@@ -1,5 +1,5 @@
 <div id="init-pagination">
-  <%= will_paginate artefacts, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
+  <%= will_paginate artefacts, renderer: BootstrapPagination::Rails %>
 </div>
 <div id="_results" class="row artefacts-list">
   <div class="col-md-12">
@@ -73,7 +73,7 @@
                 <strong>Maße: </strong>
                 <%= linebreak_before_and_show_if_exists(artefact.mas1, false) %><%= ';' if artefact.mas2 || artefact.mas3 %>
                 <%= linebreak_before_and_show_if_exists(artefact.mas2, false) %><%= ';' if artefact.mas3 %>
-                <%= linebreak_before_and_show_if_exists(artefact.mas3, false) %>         
+                <%= linebreak_before_and_show_if_exists(artefact.mas3, false) %>
               <% end if artefact.mas1.present? || artefact.mas2.present? || artefact.mas3.present? %>
             <% end %>
           </div>
@@ -90,7 +90,7 @@
               <%= content_tag :strong, '<br>Datum: '.html_safe if artefact.jahr.present? || artefact.datum.present? %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.jahr, ''), false) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.datum, "#{', ' if artefact.jahr.present?}"), false) %>
-              
+
               <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil2, 'Zeil2: ')) %>
               <%= linebreak_before_and_show_if_exists(with_description(artefact.zeil1, 'Zeil1: ')) %>
             <% end %>
@@ -121,14 +121,14 @@
               <% end if artefact.utm? %>
             <% end %>
           </div>
-          
+
           <div class="col-md-12">
             <%= content_tag :div, id: "photos-#{artefact.id}", style: 'padding-top: 5px;' do %>
               <span class="text-strong text-gray">Archivalien: </span>
               <%= artefact.illustrations.map{ |i| "#{(i.source.present? ? link_to(i.source.name, artefacts_path(search: "#{params[:search]} source:#{'"'+i.source.name+'"'}".strip), class: 'filter-link', data: {token: "source:#{'"'+i.source.name+'"'}"}) : i.name)}#{' ('+i.position+')' if i.position}" }.join('; ').html_safe %>
               <%= link_to fa_icon('info'), 'javascript:;',
-                    class: 'label label-info', 
-                    data: {toggle: 'tooltip', placement: 'top'}, 
+                    class: 'label label-info',
+                    data: {toggle: 'tooltip', placement: 'top'},
                     title: 'Position: First number counts row from top to bottom, second number counts position from left to right, e.g. PhBab 1867 (4 2) means artifact ist displayed in 4th row from top and 2nd position from left on picture PhBab 1867.' %>
             <% end if artefact.illustrations.any? %>
 
