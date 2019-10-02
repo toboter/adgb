@@ -65,7 +65,7 @@ class Artefact < ApplicationRecord
   # virtual attributes
 
   def self.col_attr
-    attribute_names.map {|n| n unless ['id', 'created_at', 'updated_at'].include?(n) }.compact
+    attribute_names.map {|n| n unless ['id', 'created_at', 'updated_at', 'slug', 'code', 'latitude', 'longitude', 'locked', 'text_solution', 'tag_list'].include?(n) }.compact
   end
 
   def tag_list

@@ -100,6 +100,11 @@ class Source < ApplicationRecord
 
   # virtual attributes
 
+
+  def self.col_attr
+    attribute_names.map {|n| n unless ['id', 'created_at', 'updated_at', 'tag_list', 'locked'].include?(n) }.compact
+  end
+
   def archive_name=(value)
     self.archive = Archive.where(name: value).first_or_create
   end
@@ -242,6 +247,11 @@ class Source < ApplicationRecord
     4 => 'relevant für VAM-Kollegen, Assur, Uruk etc,.',
     5 => 'relevant für Rücklauf Archiv, z.B. zu inventarisieren oder sonst.'
   }
+
+
+  def self.import(file, creator_id)
+
+  end
 
 
       # set User.current first

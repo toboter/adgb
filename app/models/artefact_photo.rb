@@ -5,13 +5,13 @@ class ArtefactPhoto < ApplicationRecord
 
   belongs_to :artefact, foreign_key: "p_bab_rel", primary_key: 'bab_rel'
   belongs_to :source, optional: true
-  
+
   def name
     "#{ph} #{ph_nr}#{ph_add}"
   end
-  
+
   def self.col_attr
-    %w(p_bab_rel ph ph_nr ph_add position p_rel)
+    %w(p_bab_rel ph ph_nr ph_add position p_rel source_slug)
   end
 
   def self.import(file)
@@ -24,7 +24,7 @@ class ArtefactPhoto < ApplicationRecord
       a_photo.save!
     end
   end
-  
+
   def self.open_spreadsheet(file)
     case File.extname(file.original_filename)
     when ".csv" then Roo::Csv.new(file.path)

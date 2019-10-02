@@ -1,67 +1,186 @@
-<% title "Import", false %>
+<% title "Import" %>
 
-<div class="well">
-  <strong>1. Datei auswählen, welche die Daten der Haupttabelle enthält.</strong><br>
-  <small>
-    Bestehende Datensätze (key: BabRel) werden aktualisiert, nicht vorhandene neu erstellt.<br>
-    <strong>Attributes: </strong><%= Artefact.col_attr.map{|c| c.camelize }.join(', ') %>
-  </small>
-  <%= form_tag artefacts_imports_path, multipart: true do %>
-    <%= file_field_tag :artefacts_file %>
-    <%= select_tag :creator_id, options_from_collection_for_select(User.all, "id", "name") %>
-    
-    <%= submit_tag "Import" %>
-  <% end %>
-</div>
+<p>Vorsicht beim Import! Es kann immer etwas schief gehen. Bevor ein neuer Import erzeugt wird, sollte immer ein <strong>Backup</strong> angefertigt werden.</p>
 
-<div class="well">
-  <strong>2. Datei auswählen, welche die Daten der Personentabelle enthält.</strong><br>
-  <small>
-    Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.<br>
-    <strong>Attributes: </strong><%= ArtefactPerson.col_attr.map{|c| c.camelize }.join(', ') %>
-  </small>
-  <%= form_tag artefacts_people_imports_path, multipart: true do %>
-    <%= file_field_tag :artefacts_people_file %>
-    <%= submit_tag "Import" %>
-  <% end %>
-</div>
+<div class="--spacious">
 
-<div class="well">
-  <strong>3. Datei auswählen, welche die Daten der Literaturtabelle (ArtefactReferences) enthält.</strong><br>
-  <small>
-    Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.<br>
-    <strong>Allowed attributes: </strong><%= ArtefactReference.col_attr.map{|c| c.camelize }.join(', ') %>
-  </small>
-  <%= form_tag artefacts_references_imports_path, multipart: true do %>
-    <%= file_field_tag :artefacts_references_file %>
-    <%= submit_tag "Import" %>
-  <% end %>  
-</div>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs text-strong" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Artefacts</a></li>
+    <li role="presentation"><a href="#refs" aria-controls="messages" role="tab" data-toggle="tab">Literature references</a></li>
+    <li role="presentation"><a href="#archivals" aria-controls="settings" role="tab" data-toggle="tab">Archival resources</a></li>
+    <li role="presentation"><a href="#people" aria-controls="profile" role="tab" data-toggle="tab">People</a></li>
+  </ul>
 
-<div class="well">
-  <strong>4. Datei auswählen, welche die Daten der Photo-Haupttabelle enthält.</strong><br>
-  <small>Bestehende Datensätze (key: PhRel) werden aktualisiert, nicht vorhandene neu erstellt.</small>
-  <%= form_tag photos_imports_path, multipart: true do %>
-    <%= file_field_tag :photos_file %>
-    <%= submit_tag "Import" %>
-  <% end %>
-  <br>
-  <strong>Photos in die Archivalien übertragen und neu verknüpfen.</strong><br>
-  <%= form_tag transfer_photos_imports_path, multipart: true do %>
-    <%= select_tag :transferer_id, options_from_collection_for_select(User.all, "id", "name") %>
-    <%= submit_tag "Import" %>
-  <% end %>
-  <br>
-  <strong>Attributes: </strong><%= PhotoImport.col_attr.map{|c| c.camelize }.join(', ') %>
-</div>
+  <!-- Tab panes -->
+  <div class="tab-content --spacious-20">
+    <div role="tabpanel" class="tab-pane active" id="home">
+      <div style="border-left:2px solid orange;padding-left:15px;margin-bottom:40px;">
+        <p>
+          <strong>Datei auswählen, welche die Daten der Haupttabelle enthält.</strong><br>
+          Bestehende Datensätze (key: BabRel) werden aktualisiert, nicht vorhandene neu erstellt.
+        </p>
+        <p>Dieser Import muss als erster erfolgen, da ansonsten eventuell abhängige Datensätze nicht erstellt werden können.</p>
+        <ul>
+          <head><strong>Erforderliche Attribute </strong>(Zeile 1 der Tabelle)</head>
+          <%= Artefact.col_attr.map{|c| content_tag(:li, c.camelize) }.join.html_safe %>
+        </ul>
+        <hr>
+        <%= form_tag artefacts_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="artefacts_file">Datei</label>
+            <%= file_field_tag :artefacts_file %>
+            <p class="help-block">Diese Datei heißt etwa Bab.xlsx oder BabHaupt.xlsx</p>
+          </div>
+          <div class="form-group">
+            <label for="creator_id">Gewünschter Ersteller dieses Uploads</label>
+            <%= select_tag(:creator_id, options_from_collection_for_select(User.all, "id", "name"), {class: "form-control", style: 'width:50%'}) %>
+            <p class="help-block">Diese Nutzer wird in der Versionierung hinterlegt.</p>
+          </div>
+          <%= submit_tag "Import", class: 'btn btn-warning text-strong' %>
+        <% end %>
+      </div>
+    </div>
 
-<div class="well">
-  <strong>5. Datei auswählen, welche die Daten der Artefakt-Phototabelle enthält.</strong><br>
-  <small>Bestehende Datensätze werden gelöscht. </small>
-  <%= form_tag artefacts_photos_imports_path, multipart: true do %>
-    <%= file_field_tag :artefacts_photos_file %>
-    <%= submit_tag "Import" %>
-  <% end %>
-  <br>
-  <strong>Attributes: </strong><%= ArtefactPhoto.col_attr.map{|c| c.camelize }.join(', ') %>
+
+    <div role="tabpanel" class="tab-pane" id="refs">
+      <div style="border-left:2px solid orange;padding-left:15px;margin-bottom:40px;">
+        <p class="text-strong">Der Import von Litertur kann aus zwei Paketen bestehen.</p>
+        <p>
+          <strong>Datei auswählen, welche die Daten der Literaturreferenzen enthält.</strong><br>
+          Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.
+        </p>
+        <p>Die Daten dieser Einheit sind 1:n abhängig von den Artefakten.</p>
+        <ul>
+          <head><strong>Erforderliche Attribute </strong>(Zeile 1 der Tabelle)</head>
+          <%= ArtefactReference.col_attr.map{|c| content_tag(:li, c.camelize) }.join.html_safe %>
+        </ul>
+        <hr>
+        <%= form_tag artefacts_references_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="artefacts_file">Datei</label>
+            <%= file_field_tag :artefacts_references_file %>
+            <p class="help-block">Diese Datei heißt etwa BabBib.xlsx</p>
+          </div>
+          <%= submit_tag "Import", class: 'btn btn-warning text-strong' %>
+        <% end %>
+      </div>
+    </div>
+
+
+    <div role="tabpanel" class="tab-pane" id="archivals">
+      <div style="border-left:2px solid orange;padding-left:15px;margin-bottom:40px;">
+        <p>
+          <strong>Schritt 1: Datei auswählen, welche die Daten der Photo-Haupttabelle enthält:</strong><br>
+          Bestehende Datensätze (key: PhRel) werden aktualisiert, nicht vorhandene neu erstellt.
+        </p>
+        <ul>
+          <head><strong>Erforderliche Attribute </strong>(Zeile 1 der Tabelle)</head>
+          <%= PhotoImport.col_attr.map{|c| content_tag(:li, c.camelize) }.join.html_safe %>
+        </ul>
+        <%= form_tag photos_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="artefacts_file">Datei</label>
+            <%= file_field_tag :photos_file %>
+            <p class="help-block">Diese Datei heißt etwa BabPhotos.xlsx</p>
+          </div>
+          <%= submit_tag "Import photos", class: 'btn btn-warning text-strong' %>
+        <% end %>
+
+        <p class="--spacious-20">
+          <strong>Schritt 2: Datei auswählen, welche die Daten der Artefakt-Photo Relation enthält.</strong><br>
+          Bestehende Datensätze werden gelöscht.
+        </p>
+        <p>Die Daten dieser Einheit sind m:n abhängig von Artefakten und Archivalien.</p>
+        <ul>
+          <head><strong>Erforderliche Attribute </strong>(Zeile 1 der Tabelle)</head>
+          <%= ArtefactPhoto.col_attr.map{|c| content_tag(:li, c.camelize) unless c == 'source_slug' }.join.html_safe %>
+        </ul>
+        <%= form_tag artefacts_photos_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="artefacts_file">Datei</label>
+            <%= file_field_tag :artefacts_photos_file %>
+          </div>
+          <%= submit_tag "Import", class: 'btn btn-warning text-strong' %>
+        <% end %>
+
+        <p class="--spacious-20">
+          <strong>Schritt 3: Photos in die Archivalien übertragen und Relationen neu verknüpfen:</strong>
+        </p>
+        <%= form_tag transfer_photos_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="creator_id">Gewünschter Ersteller dieses Uploads</label>
+            <%= select_tag(:transferer_id, options_from_collection_for_select(User.all, "id", "name"), {class: "form-control", style: 'width:50%'}) %>
+            <p class="help-block">Diese Nutzer wird in der Versionierung hinterlegt.</p>
+          </div>
+          <%= submit_tag "Migrate photos", class: 'btn btn-warning text-strong' %>
+        <% end %>
+
+      </div>
+
+      <div style="border-left:2px solid blue;padding-left:15px;margin-bottom:40px;">
+        <p class="text-strong">Alternativ</p>
+        <p>
+          <strong>Schritt 1: Datei auswählen, welche die Daten der Archivalien enthält:</strong><br>
+          Bestehende Datensätze (key: slug) werden aktualisiert, nicht vorhandene neu erstellt.
+        </p>
+        <ul>
+          <head><strong>Erforderliche Attribute </strong>(Zeile 1 der Tabelle)</head>
+          <%= Source.col_attr.map{|c| content_tag(:li, c.camelize) }.join.html_safe %>
+        </ul>
+        <%= form_tag photos_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="artefacts_file">Datei</label>
+            <%= file_field_tag :photos_file %>
+          </div>
+          ArchiveName
+          <%= submit_tag "Import", class: 'btn btn-warning text-strong' %>
+        <% end %>
+
+        <p class="--spacious-20">
+          <strong>Schritt 2: Datei auswählen, welche die Daten der Artefakt-ArchivalResource Relation enthält.</strong><br>
+          Bestehende Datensätze werden gelöscht.
+        </p>
+        <p>Die Daten dieser Einheit sind m:n abhängig von Artefakten und Archivalien.</p>
+        <ul>
+          <head><strong>Erforderliche Attribute </strong>(Zeile 1 der Tabelle)</head>
+          <%= content_tag(:li, 'PBabRel') %>
+          <%= content_tag(:li, 'SourceSlug') %>
+          <%= content_tag(:li, 'Position') %>
+        </ul>
+        <%= form_tag artefacts_photos_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="artefacts_file">Datei</label>
+            <%= file_field_tag :artefacts_photos_file %>
+          </div>
+          <%= submit_tag "Import", class: 'btn btn-warning text-strong' %>
+        <% end %>
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="people">
+      <div style="border-left:2px solid orange;padding-left:15px;margin-bottom:40px;">
+        <p>
+          <strong>Datei auswählen, welche die Daten der Personentabelle enthält.</strong><br>
+          Bevor die Daten importiert werden, werden alle vorherigen Daten gelöscht.
+        </p>
+        <p>Die Daten dieser Einheit sind 1:n abhängig von den Artefakten.</p>
+        <ul>
+          <head><strong>Erforderliche Attribute </strong>(Zeile 1 der Tabelle)</head>
+          <%= ArtefactPerson.col_attr.map{|c| content_tag(:li, c.camelize) }.join.html_safe %>
+        </ul>
+        <hr>
+        <%= form_tag artefacts_people_imports_path, multipart: true do %>
+          <div class="form-group">
+            <label for="artefacts_file">Datei</label>
+            <%= file_field_tag :artefacts_people_file %>
+            <p class="help-block">Diese Datei heißt etwa BabPer.xlsx</p>
+          </div>
+          <%= submit_tag "Import", class: 'btn btn-warning text-strong' %>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+
 </div>
