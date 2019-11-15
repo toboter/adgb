@@ -454,6 +454,9 @@ tei-custodialHist {
 tei-date[data-tei-when]:empty:before {
   content: attr(when);
 }
+tei-div[type="edition"] tei-date {
+  background-color: #f6e1c9;
+}
 /* e */
 tei-editionStmt {
   display:block;
@@ -647,6 +650,10 @@ tei-hi[rend="caps"] {
 }
 tei-hi[rend="italic"] {
   font-style: italic;
+}
+tei-hi[rend="superscript"] {
+  font-size: x-small;
+  vertical-align: super;
 }
 tei-hi {
   /* GLS: do we want to bold this or change the background color? */
@@ -1004,6 +1011,15 @@ tei-musicNotation:before {
 tei-name {
   /* Empty Rule Set */
 }
+tei-name[type="firstName"] {
+  color: #366210;
+}
+tei-name[type="fathersName"] {
+  color: #103662;
+}
+tei-name[type="familyName"] {
+  color: #621036;
+}
 tei-nameLink {
   /* Empty Rule Set */
 }
@@ -1020,6 +1036,7 @@ tei-normalization {
   /* Empty Rule Set */
 }
 tei-note {
+  background-color: yellow;
   /*
   display: block;
   margin: 1.5em auto 1.5em auto;
@@ -1170,7 +1187,8 @@ tei-physDesc {
 tei-place {
   /* Empty Rule Set */
 }
-tei-placeName {
+tei-placeName, tei-name[type="placeName"] {
+  color: #623c10;
   /* Empty Rule Set */
 }
 tei-population {
@@ -1623,7 +1641,7 @@ tei-foreign[lang='sum']  {
 }
 tei-foreign[lang='akk'] {
   text-transform: lowercase;
-  font-style:italic;
+  font-style: italic;
 }
 
 tei-support {
