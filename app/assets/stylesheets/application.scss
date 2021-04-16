@@ -40,6 +40,75 @@ body {
   height: 50px;
   background-color: #f5f5f5;
 }
+
+.chevron {
+  li {
+    margin-bottom:5px;
+    a {
+      color: #0366d6;
+      background: image-url('li-chevron.png') 0 7px no-repeat;
+      padding-left:10px;
+      font:400 15px/1.6 helvetica,arial,freesans,clean,sans-serif;
+      display:block
+    }
+    a:hover {
+      color: #0366d6;
+      background-position:2px 7px;
+      text-decoration: none;
+    }
+  }
+}
+
+footer {
+    border-top: 1px solid #e1e4e8;
+    background-color: #fafbfc;
+    .container {
+        padding: 40px 15px 40px 15px;
+        margin: 0 15px;
+    }
+    ul {
+        list-style: none;
+        padding-left: 0;
+        margin-left: -15px;
+        @extend .chevron;
+    }
+}
+
+@media (min-width: 768px) {
+    footer {
+        border-top: 1px solid #e1e4e8;
+        background-color: #fafbfc;
+        .container {
+            margin: 0 auto;
+        }
+        ul.footer-links {
+            margin:0;
+            padding:0;
+            li {
+                font-size: small;
+                display: inline-block;
+                padding-left: 5px;
+                padding-right: 5px;
+                a {
+                    font-size: small;
+                    background: none;
+                    margin-left: 20px;
+                    color: #0366d6;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+            span.footer-links-left {
+                float: left;
+            }
+            span.footer-links-right {
+                float: right;
+            }
+        }
+    }
+}
+
 .navbar-static-bottom {
   @extend .navbar-fixed-bottom;
   position: relative;
@@ -115,15 +184,15 @@ a.filter-link {
 }
 
 .artefacts-list {
-  
+
 }
 
-#map img { 
+#map img {
   max-width: none;
 }
-#map label { 
-  width: auto; display:inline; 
-} 
+#map label {
+  width: auto; display:inline;
+}
 
 .edit-subject-tags {
   .form-group {
