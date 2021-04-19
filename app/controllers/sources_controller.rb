@@ -185,7 +185,7 @@ class SourcesController < ApplicationController
         query = params[:search].presence || '*'
         sources = Source
           .visible_for(current_user)
-          .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
         sk_results = Source.search(query,
           where: { id: sources.ids },
@@ -236,7 +236,7 @@ class SourcesController < ApplicationController
         query = params[:search].presence || '*'
         sources = Source
           .visible_for(current_user)
-          .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
         sk_results = Source.search(query,
           where: { id: sources.ids },

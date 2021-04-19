@@ -65,10 +65,10 @@ class GrantsController < ApplicationController
     records = model_class.visible_for(current_user).all
     query = params[:search].presence || '*'
     if model_class.respond_to?(:filter)
-     records = records.filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+     records = records.filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
     end
 
-    sk_results = model_class.search(query, 
+    sk_results = model_class.search(query,
       where: { id: records.ids },
       fields: [:default_fields],
       per_page: 10000,
@@ -96,15 +96,15 @@ class GrantsController < ApplicationController
     @accessors = params[:accessors]
     model_class = params[:model_name].constantize
 
-    authorize! :revoke_multiple_access, model_class    
+    authorize! :revoke_multiple_access, model_class
 
     records = model_class.visible_for(current_user).all
     query = params[:search].presence || '*'
     if model_class.respond_to?(:filter)
-      records = records.filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+      records = records.filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
     end
 
-    sk_results = model_class.search(query, 
+    sk_results = model_class.search(query,
       where: { id: records.ids },
       fields: [:default_fields],
       per_page: 10000 ,
@@ -124,7 +124,7 @@ class GrantsController < ApplicationController
     results.in_batches.each do |records|
       ShareModel.where(shared_to: @acc_instances, resource_id: records.ids, resource_type: model_class.name).delete_all
     end
-    
+
 
     redirect_to [model_class, search: params[:search]], notice: "Successfully revoked access to #{view_context.pluralize(results.count, model_class.name)}."
   end
@@ -134,10 +134,10 @@ class GrantsController < ApplicationController
     def set_resource
       parent_class = params[:model_name].constantize
       parent_foreing_key = params[:model_name].foreign_key
-    
+
       @resource = parent_class.friendly.find(params[parent_foreing_key])
     end
-    
+
     def set_grant
       @grant = @resource.shares.find(params[:id])
     end

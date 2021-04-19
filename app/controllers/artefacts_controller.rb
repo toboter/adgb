@@ -236,7 +236,7 @@ class ArtefactsController < ApplicationController
         string_q = query.gsub('+', ' ').squish
         artefacts = Artefact
           .visible_for(current_user)
-          .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
         sk_results = Artefact.search(string_q,
           where: { id: artefacts.ids },
@@ -288,7 +288,7 @@ class ArtefactsController < ApplicationController
         string_q = query.gsub('+', ' ').squish
         artefacts = Artefact
           .visible_for(current_user)
-          .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
         sk_results = Artefact.search(string_q,
           where: { id: artefacts.ids },
