@@ -17,7 +17,7 @@ class ArtefactsController < ApplicationController
 
     artefacts = Artefact
     .visible_for(current_user)
-    .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+    .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
 
     per_page = params[:format] == 'json' && params[:all] == 'true' ? nil : session[:per_page]
 

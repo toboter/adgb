@@ -15,7 +15,7 @@ class SourcesController < ApplicationController
 
     sources = Source
       .visible_for(current_user)
-      .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
+      .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
       .auto_include(false)
 
     per_page = params[:format] == 'json' && params[:all] == 'true' ? nil : session[:per_page]
@@ -24,9 +24,9 @@ class SourcesController < ApplicationController
         Source.auto_include(false).search(query,
           where: {id: sources.ids},
           fields: [:default_fields],
-          page: params[:page], 
+          page: params[:page],
           per_page: per_page,
-          order: sort_order, 
+          order: sort_order,
           misspellings: {below: 1}
         ) do |body|
           body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
@@ -34,7 +34,7 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
-      # view == simple is rendering a plain json view without any defined external schema and 
+      # view == simple is rendering a plain json view without any defined external schema and
       # is needed for looking up sources on the artefacts edit view.
       format.json { params[:view].present? && params[:view] == 'simple' ? (render json: @sources.to_json) : (render json: @sources, each_serializer: SourceSerializer) }
       format.js
@@ -68,7 +68,7 @@ class SourcesController < ApplicationController
       @contributions[User.find(v.whodunnit).name] += v.changed_characters_length if v.changed_characters_length.present?
       @growth[v.id] = v.total_characters_length if v.total_characters_length.present?
     end
-    
+
     respond_to do |format|
       format.html
       format.json { render json: @source, serializer: SourceSerializer }
@@ -186,17 +186,17 @@ class SourcesController < ApplicationController
         sources = Source
           .visible_for(current_user)
           .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-        
-        sk_results = Source.search(query, 
+
+        sk_results = Source.search(query,
           where: { id: sources.ids },
           per_page: 10000,
           misspellings: {below: 1}
           ) do |body|
             body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
           end
-        
+
         results = Source.where(id: sk_results.map(&:id))
-        
+
         @published_length = 0
         results.in_batches.each do |records|
           records_length = records.where(locked: false).each do |r|
@@ -237,17 +237,17 @@ class SourcesController < ApplicationController
         sources = Source
           .visible_for(current_user)
           .filter(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-        
-        sk_results = Source.search(query, 
+
+        sk_results = Source.search(query,
           where: { id: sources.ids },
           per_page: 10000,
           misspellings: {below: 1}
           ) do |body|
             body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
           end
-        
+
         results = Source.where(id: sk_results.map(&:id))
-        
+
         @unlocked_length = 0
         results.in_batches.each do |records|
           records_length = records.where(locked: true).each do |r|
@@ -321,7 +321,7 @@ class SourcesController < ApplicationController
 
     def sources_params
       params.require(:source).permit(
-        add_to_tag_list: [], 
+        add_to_tag_list: [],
         remove_from_tag_list: []
       )
     end
