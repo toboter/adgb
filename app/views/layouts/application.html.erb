@@ -8,8 +8,7 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-DSL0000258575007@s93.bbi-o2.de
-eu5hbu0vh1
+
   <body>
 
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -51,7 +50,7 @@ eu5hbu0vh1
                 </ul>
               </li>
             <% else %>
-              <li><%= link_to fa_icon('sign-in', text: "Sign in through Bab-ili"), "/auth/babili" %></li>
+              <li><%= link_to fa_icon('sign-in', text: "Sign in through Bab-ili"), "/auth/babili", method: :post %></li>
             <% end %>
           </ul>
         </div>
