@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.4.1'
+ruby '2.5.9' # was 2.4.1
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.5' # 5.2.0
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 5.2'
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
@@ -48,11 +48,11 @@ gem "chartkick", ">= 3.2.0"
 gem "font-awesome-rails"
 gem 'cocoon'
 gem 'will_paginate-bootstrap'
-# Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss 
+# Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
 gem 'gmaps4rails'
 
-gem 'searchkick' 
+gem 'searchkick'
 gem 'roo'
 gem 'geoutm'
 gem 'browser'

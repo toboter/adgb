@@ -25,8 +25,8 @@
       div.version-main-cell {
         margin-left: 70px;
         a.toggle-link {
-          @extend .btn;
-          @extend .btn-default;
+          @extend .btn !optional;
+          @extend .btn-default !optional;
           background-color: #ccc;
           border: none;
           font-weight: bold;
