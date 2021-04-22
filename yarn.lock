@@ -278,12 +278,10 @@ blob@0.0.5:
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.5.tgz#d680eeef25f8cd91ad533f5b01eed48e64caf683"
   integrity sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==
 
-bootstrap-tokenfield@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-tokenfield/-/bootstrap-tokenfield-0.12.0.tgz#5d763c3d196de71078ac4d49dc2ea169cb870cdf"
-  integrity sha1-XXY8PRlt5xB4rE1J3C6hacuHDN8=
-  dependencies:
-    jquery "^2.1.0"
+bootstrap-tokenfield-jquery3@^0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-tokenfield-jquery3/-/bootstrap-tokenfield-jquery3-0.13.1.tgz#24dbd1d6c8f83742681a75cbf815c41107eb17b1"
+  integrity sha512-EJxjkfFSyZ6fvLvlesKDNOQwZm9JNcClhUjTVq2jUTqt8vJ4zOBgi8xdZ5MK+NxcILvJCCAR02YmUfMGlpsxBw==
 
 buffer-from@^0.1.1:
   version "0.1.2"
@@ -437,15 +435,10 @@ isarray@2.0.1:
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-2.0.1.tgz#a37d94ed9cda2d59865c9f76fe596ee1f338741e"
   integrity sha1-o32U7ZzaLVmGXJ92/llu4fM4dB4=
 
-jquery@>=1.12.0, jquery@^3.3.1:
+jquery@>=1.12.0, jquery@^3.5.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
   integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
-
-jquery@^2.1.0:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
-  integrity sha1-LInWiJterFIqfuoywUUhVZxsvwI=
 
 js-base64@^2.4.9:
   version "2.6.4"

@@ -22,7 +22,7 @@
 //= require chartkick
 //= require magnific-popup/dist/jquery.magnific-popup.min
 //= require selectize/dist/js/standalone/selectize.min
-//= require bootstrap-tokenfield/dist/bootstrap-tokenfield.min
+//= require bootstrap-tokenfield-jquery3/dist/bootstrap-tokenfield.min
 //= require turbolinks
 //= require_tree .
 

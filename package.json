@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "bootstrap-tokenfield": "^0.12.0",
-    "jquery": "^3.3.1",
+    "bootstrap-tokenfield-jquery3": "^0.13.1",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.19",
     "magnific-popup": "^1.1.0",
     "rails-ujs": "^5.2.1",
