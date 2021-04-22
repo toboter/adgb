@@ -97,14 +97,15 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12 ">
+            <p>&copy; <%= Time.now.strftime("%Y") %> adgb.babylon-online.org (v. <%= APP_VERSION %> | ruby <%= RUBY_VERSION %>, rails <%= Rails.version %>)</p>
             <ul class="footer-links">
               <span class="footer-links-left">
-                <li>&copy; <%= Time.now.strftime("%Y") %> adgb.babylon-online.org (v. <%= APP_VERSION %> | ruby <%= RUBY_VERSION %>, rails <%= Rails.version %>)</li>
-                <li><%= link_to "Terms", 'http://babylon-online.org/help/categories/site' %></li>
+                <li><%= link_to "Licensing", 'http://babylon-online.org/help/articles/licensing' %></li>
                 <li><%= link_to "Security", 'http://babylon-online.org/settings/security' %></li>
               </span>
               <span class="footer-links-right">
                 <li><%= link_to "Help", 'http://babylon-online.org/help/categories' %></li>
+                <li><%= link_to "Sitemap", 'http://babylon-online.org/help/articles/sitemap' %></li>
                 <li><%= link_to "Contact", "http://babylon-online.org/contact?origin=adgb" %></li>
                 <li><%= link_to "API", 'http://babylon-online.org/developer' %></li>
                 <li><%= link_to "Blog", 'http://babylon-online.org/blog' %></li>
