@@ -4,6 +4,7 @@ class Ability
   def initialize(user)
     can :index, Artefact, published?: true
     can :index, Source, published?: true
+    cannot :read, 'museum_internals'
 
     # user ||= User.new # guest user (not logged in)
     if user
@@ -31,7 +32,7 @@ class Ability
 
       can :manage, [Artefact, Source, Archive, PhotoImport, ArtefactPhoto, ArtefactPerson, ArtefactReference, LiteratureItem] if user.is_admin?
       can :update_concept_data, :tags if user.is_admin?#
-      
+
 
       cannot :read, 'museum_internals'
       can :read, 'museum_internals' if user.is_admin? || user.is_publisher? || user.is_creator?

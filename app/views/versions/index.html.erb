@@ -21,9 +21,9 @@
                   <%= image_tag user.image_thumb_url if user.image_thumb_url && Rails.env == 'production' %>
                 </div>
                 <div class="version-main-cell">
-                  <%= content_tag :span, user.name, class: 'text-strong' %> 
-                  <%= content_tag :span, event_happend_for(version.event), class: 'text-small' %> 
-                  <%= content_tag :span, class: 'text-small text-strong' do %> 
+                  <%= content_tag :span, user.name, class: 'text-strong' %>
+                  <%= content_tag :span, event_happend_for(version.event), class: 'text-small' %>
+                  <%= content_tag :span, class: 'text-small text-strong' do %>
                     <% if version.next && version.next.event != 'publish' && (version.event != 'destroy' || version.event != 'publish') %>
                       <%= link_to version.version_name, send("#{version.item.class.name.underscore}_version_path", version.item, version.next), title: 'View this version', class: '' %>
                     <% else %>
@@ -31,21 +31,21 @@
                     <% end %>
                   <% end if version.item %>
                   <%= content_tag :span, time_ago_in_words(version.created_at)+ ' ago', class: 'text-small' %>
-                  <%= link_to '...', "#collapse-details-on-version-#{version.id}", 
-                    data: { toggle: 'collapse' }, 
-                    aria: {expanded: 'false', controls: "collapse-details-on-version-#{version.id}"}, 
-                    class: 'toggle-link', 
+                  <%= link_to '...', "#collapse-details-on-version-#{version.id}",
+                    data: { toggle: 'collapse' },
+                    aria: {expanded: 'false', controls: "collapse-details-on-version-#{version.id}"},
+                    class: 'toggle-link',
                     role: 'button' %>
                   <%= content_tag :p, class: 'text-small text-gray' do %>
                     Total characters on this version: <%= version.total_characters_length %>.
                     Changed: <%= version.changed_characters_length %>
-                  <% end %>                  
+                  <% end %>
                   <%= content_tag :div, class: 'version-changeset collapse', id: "collapse-details-on-version-#{version.id}" do %>
                     <% version.changeset.each do |k,v| %>
                       <%= content_tag :div, class: "row" do %>
                         <div class="col-md-2">
                           <%= content_tag :span, k.humanize, class: 'text-strong text-gray' %>
-                        </div>        
+                        </div>
                         <div class="col-md-5">
                           <%= Diffy::SplitDiff.new(v[0], v[1], :format => :html).left.html_safe %>
                         </div>
@@ -53,8 +53,8 @@
                           <%= Diffy::SplitDiff.new(v[0], v[1], :format => :html).right.html_safe %>
                         </div>
                       <% end if v[1].present? || v[0] %>
-                    <% end %>      
-                  <% end %>
+                    <% end %>
+                  <% end if can?(:read, 'museum_internals') %>
                 </div>
               </td>
               <td class="version-links-cell">
@@ -63,7 +63,7 @@
                 </div>
               </td>
             <% end %>
-          <% end %>        
+          <% end %>
         </tbody>
       </table>
     <% end %>
