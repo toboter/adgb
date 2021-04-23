@@ -43,14 +43,14 @@ class ArtefactSerializer < ActiveModel::Serializer
   attribute :excavationUnit do
     # Enspricht nicht dem Schema
     {
-      tell: object.fo_tell, 
-      fo1: object.fo1, 
-      fo2: object.fo2, 
-      fo3: object.fo3, 
-      fo4: object.fo4, 
+      tell: object.fo_tell,
+      fo1: object.fo1,
+      fo2: object.fo2,
+      fo3: object.fo3,
+      fo4: object.fo4,
       comment: {
         de: object.fo_text
-      }, 
+      },
       excavated: {
       },
       geometry: {
@@ -66,7 +66,7 @@ class ArtefactSerializer < ActiveModel::Serializer
     }
   end
 
-  attribute :title do 
+  attribute :title do
     {
       de: object.full_entry.try(:squish)
     }
@@ -93,10 +93,7 @@ class ArtefactSerializer < ActiveModel::Serializer
   end
 
   attribute :locations do
-    [
-      location_hash(object.standort, {dateParts: [2012]}),
-      location_hash(object.standort_alt, {dateParts: [1917]})
-  ].compact
+    []
   end
 
   attribute :tags do
@@ -126,14 +123,14 @@ class ArtefactSerializer < ActiveModel::Serializer
 
   attribute :options do
     {
-      content: object.inhalt, 
-      archive: object.arkiv, 
-      archiveTextNumber: object.text_in_archiv, 
+      content: object.inhalt,
+      archive: object.arkiv,
+      archiveTextNumber: object.text_in_archiv,
       dating: {
-        year: object.jahr, 
+        year: object.jahr,
         date: object.datum
       },
-      zeil2: object.zeil2, 
+      zeil2: object.zeil2,
       zeil1: object.zeil1,
       namedPersons: object.people
     }
