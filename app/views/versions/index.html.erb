@@ -35,26 +35,30 @@
                     data: { toggle: 'collapse' },
                     aria: {expanded: 'false', controls: "collapse-details-on-version-#{version.id}"},
                     class: 'toggle-link',
-                    role: 'button' %>
+                    role: 'button' if can?(:read, 'museum_internals') %>
                   <%= content_tag :p, class: 'text-small text-gray' do %>
                     Total characters on this version: <%= version.total_characters_length %>.
                     Changed: <%= version.changed_characters_length %>
                   <% end %>
                   <%= content_tag :div, class: 'version-changeset collapse', id: "collapse-details-on-version-#{version.id}" do %>
-                    <% version.changeset.each do |k,v| %>
-                      <%= content_tag :div, class: "row" do %>
-                        <div class="col-md-2">
-                          <%= content_tag :span, k.humanize, class: 'text-strong text-gray' %>
-                        </div>
-                        <div class="col-md-5">
-                          <%= Diffy::SplitDiff.new(v[0], v[1], :format => :html).left.html_safe %>
-                        </div>
-                        <div class="col-md-5">
-                          <%= Diffy::SplitDiff.new(v[0], v[1], :format => :html).right.html_safe %>
-                        </div>
-                      <% end if v[1].present? || v[0] %>
+                    <% if can?(:read, 'museum_internals') %>
+                      <% version.changeset.each do |k,v| %>
+                        <%= content_tag :div, class: "row" do %>
+                          <div class="col-md-2">
+                            <%= content_tag :span, k.humanize, class: 'text-strong text-gray' %>
+                          </div>
+                          <div class="col-md-5">
+                            <%= Diffy::SplitDiff.new(v[0], v[1], :format => :html).left.html_safe %>
+                          </div>
+                          <div class="col-md-5">
+                            <%= Diffy::SplitDiff.new(v[0], v[1], :format => :html).right.html_safe %>
+                          </div>
+                        <% end if v[1].present? || v[0] %>
+                      <% end %>
+                    <% else %>
+                      <p>You do not have the appropriate authorization to view this content.</p>
                     <% end %>
-                  <% end if can?(:read, 'museum_internals') %>
+                  <% end %>
                 </div>
               </td>
               <td class="version-links-cell">
