@@ -20,7 +20,7 @@ gem 'rest-client'
 gem 'cancancan'
 
 gem 'turbolinks', '~> 5'
-# gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.5'
 gem 'bootsnap', '>= 1.7.0', require: false
 gem 'rack-cors', require: 'rack/cors'
 

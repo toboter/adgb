@@ -1,10 +1,16 @@
 <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
   <div class="col-md-12">
     <%= form_tag search_path, method: :get, class: "" do %>
-      <div class="input-group">
-        <span class="input-group-addon"><%= link_to fa_icon('search'), '' %></span>
-        <%= search_field_tag 'search', params[:search], placeholder: "Search", class: "form-control" %>
+    <div class="form-inline row">
+      <div class="form-group col-md-12 col-sm-12" style="display: flex; justify-content: space-between;">
+        <div class="input-group" style="flex-grow:1;margin-right:10px;">
+          <div class="input-group-addon" style="width:40px;"><%= link_to fa_icon('info'), 'http://babylon-online.org/help/articles/suchen-und-filtern-in-der-app-artefacts', target: :_blank, title: 'Open info page on searching', data: {toggle: 'tooltip', placement: 'bottom'} %></div>
+          <div class="input-group-addon" style="width:40px;"><%= link_to fa_icon('times-circle'), root_path, title: 'Remove all filters / reset page', data: {toggle: 'tooltip', placement: 'bottom'}  %></div>
+          <%= search_field_tag 'search', params[:search], placeholder: "Search in all fields", class: 'form-control' %>
+        </div>
+        <%= submit_tag 'Go!', class: 'btn btn-primary', style: 'width:100px;', data: { disable_with: "Loading..." } %>
       </div>
+    </div>
     <% end %>
     <small>
       <%= pluralize(@results.total_count, 'result') %>

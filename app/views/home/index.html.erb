@@ -10,10 +10,16 @@
 <div class="row" style="margin:60px 0;">
   <div class="col-md-9 col-centered">
     <%= form_tag search_path, method: :get, class: "" do %>
-      <div class="input-group">
-        <span class="input-group-addon"><%= link_to fa_icon('search'), '' %></span>
-        <%= search_field_tag 'search', '', placeholder: "Search", class: "form-control" %>
+    <div class="form-inline row">
+      <div class="form-group col-md-12 col-sm-12" style="display: flex; justify-content: space-between;">
+        <div class="input-group" style="flex-grow:1;margin-right:10px;">
+          <div class="input-group-addon" style="width:40px;"><%= link_to fa_icon('info'), 'http://babylon-online.org/help/articles/suchen-und-filtern-in-der-app-artefacts', target: :_blank, title: 'Open info page on searching', data: {toggle: 'tooltip', placement: 'bottom'} %></div>
+          <div class="input-group-addon" style="width:40px;"><%= link_to fa_icon('times-circle'), root_path, title: 'Remove all filters / reset page', data: {toggle: 'tooltip', placement: 'bottom'}  %></div>
+          <%= search_field_tag 'search', params[:search], placeholder: "Search in all fields", class: 'form-control' %>
+        </div>
+        <%= submit_tag 'Go!', class: 'btn btn-primary', style: 'width:100px;', data: { disable_with: "Loading..." } %>
       </div>
+    </div>
       <%= content_tag :div, class: 'text-center tag-cloud --spacious' do %>
         <% tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| %>
           <%= link_to tag.name, search_path(search: "tag:\"#{tag.name}\""), id: tag.name, class: css_class %>
@@ -25,12 +31,12 @@
 
 
 <p>
-  The Koldewey-artefacts is a reworking of the excavation inventory from Koldewey’s 
-  Babylon-excavation 1899-1917 critically compared and supplemented with other information 
-  by Olof Pedersén. It lists all excavation numbers used with museum numbers, excavation photos, 
-  drawings, findspots, short descriptions, and bibliographical references. The information has 
-  been to some extent systematized and corrected with problems notified. The clay tablets were 
-  previously treated in a book, Olof Pedersén, Archive und Bibliotheken in Babylon, ADOG 25, 2005. 
+  The Koldewey-artefacts is a reworking of the excavation inventory from Koldewey’s
+  Babylon-excavation 1899-1917 critically compared and supplemented with other information
+  by Olof Pedersén. It lists all excavation numbers used with museum numbers, excavation photos,
+  drawings, findspots, short descriptions, and bibliographical references. The information has
+  been to some extent systematized and corrected with problems notified. The clay tablets were
+  previously treated in a book, Olof Pedersén, Archive und Bibliotheken in Babylon, ADOG 25, 2005.
   The information in Koldewey-artefacts is available as Open Access.
 </p>
 

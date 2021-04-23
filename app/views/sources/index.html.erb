@@ -1,16 +1,18 @@
 <% title "Sources", false %>
 
 <div class="row">
-  <div class="col-md-12" style="margin:10px 0;">
+  <div class="col-md-12" style="margin-top:10px;">
     <%= form_tag sources_path, :method => 'get', remote: true do %>
       <div class="form-inline row">
-        <div class="form-group col-md-8 col-sm-8">
-          <div class="input-group" style="width:100%">
-            <span class="input-group-addon" style="width:38px;"><%= link_to fa_icon('search'), '' %></span>
-            <%= search_field_tag 'search', params[:search], placeholder: "Search in all fields", class: 'form-control' %>
+        <div class="form-group col-md-9 col-sm-8" style="display: flex; justify-content: space-between;">
+          <div class="input-group" style="flex-grow:1;margin-right:10px;">
+            <div class="input-group-addon" style="width:40px;"><%= link_to fa_icon('info'), 'http://babylon-online.org/help/articles/suchen-und-filtern-in-der-app-artefacts', target: :_blank, title: 'Open info page on filtering', data: {toggle: 'tooltip', placement: 'bottom'} %></div>
+            <div class="input-group-addon" style="width:40px;"><%= link_to fa_icon('times-circle'), sources_path, title: 'Remove all filters / reset page', data: {toggle: 'tooltip', placement: 'bottom'}  %></div>
+            <%= search_field_tag 'search', params[:search], placeholder: "Search in all fields", class: 'form-control', id: 'search-sources' %>
           </div>
+          <%= submit_tag 'Go!', class: 'btn btn-primary', style: 'width:100px;', data: { disable_with: "Loading..." } %>
         </div>
-        <div class="form-group col-md-3 col-md-offset-1 col-sm-3 col-sm-offset-1">
+        <div class="form-group col-md-2 col-md-offset-1 col-sm-3 col-sm-offset-1">
           <%= select_tag 'sorted_by', options_for_select(Source.options_for_sorted_by, params[:sorted_by]), class: 'form-control pull-right', onchange: "this.form.submit()" %>
         </div>
       </div>
@@ -46,7 +48,7 @@
           </div>
         <% end if can_create? || can_administrate? %>
       </div>
-    <% end %> 
+    <% end %>
   </div>
 </div>
 
