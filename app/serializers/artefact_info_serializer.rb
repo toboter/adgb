@@ -1,6 +1,6 @@
 class ArtefactInfoSerializer < ActiveModel::Serializer
   attribute(:id) {object.slug}
-  attribute :excavationNumber do 
+  attribute :excavationNumber do
     {
       excavationProjectData: object.grabung,
       number: object.bab,
@@ -12,9 +12,12 @@ class ArtefactInfoSerializer < ActiveModel::Serializer
       }
     }
   end
-  attribute :collectionNumber do 
+  attribute :collectionNumber do
     {
-      collectionData: object.mus_sig,
+      collectionData: {
+        abbr: object.mus_sig,
+        holder: object.holder
+      },
       number: object.mus_nr,
       numberIndex: number_index(object.mus_ind),
       literal: object.mus_name.try(:squish),

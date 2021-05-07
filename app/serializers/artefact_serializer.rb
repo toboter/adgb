@@ -16,7 +16,10 @@ class ArtefactSerializer < ActiveModel::Serializer
         }
       },
       collectionNumber: {
-        collectionData: object.mus_sig,
+        collectionData: {
+          abbr: object.mus_sig,
+          holder: object.holder
+        },
         number: object.mus_nr,
         numberIndex: number_index(object.mus_ind),
         literal: object.mus_name.try(:squish),

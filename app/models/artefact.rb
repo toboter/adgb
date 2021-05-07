@@ -102,7 +102,6 @@ class Artefact < ApplicationRecord
     "#{bab_name} #{mus_name}"
   end
 
-
   # Scopes
 
   scope :with_published_records, lambda { |flag|
@@ -183,7 +182,8 @@ class Artefact < ApplicationRecord
       findspot: {lat: latitude, lon: longitude},
       type: 'Artefact',
       contributor: User.find(versions.map{|v| v.whodunnit}.reject(&:nil?).uniq).map(&:name),
-      published: published?
+      published: published?,
+      holder: holder
     )
   end
 
@@ -290,6 +290,48 @@ class Artefact < ApplicationRecord
     self.text_solution = text_to_text_solution
   end
 
+
+  HOLDERS = {
+    "A" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung A (Tontafelsammlung Assur)",
+    "Ash" => "Ashmolean Museum, University of Oxford",
+    "B" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung B (Tontafelsammlung Babylon)",
+    "Babylon" => "Babylon, Irak",
+    "Bremen" => "Sammlung in Bremen",
+    "BM" => "British Museum, London",
+    "Chicago A" => "Oriental Institute, University of Chicago,Chicago, IL / Sammlung A (1)",
+    "D" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung D (Tontafelsammlung Divers)",
+    "EŞEM" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung EŞEM (Sammlung Archäologische Objekte)",
+    "FLP" => "Free Library, Philadelphia, PA",
+    "FM" => "Field Museum of Natural History (früher: Chicago Natural History Museum), Chicago, IL",
+    "Hit" => "Status unklar, letzte Lokalisierung in Hit während Fundtransport, möglicherweise heute Eski $ark Eserleri Müzesi, Istanbul oder Vorderasiatisches Museum, Berlin",
+    "IM" => "Irak Museum, Bagdad",
+    "ISL" => "Bab Museum für Islamische Kunst, Staatliche Museen zu Berlin, Stiftung Preußischer Kulturbesitz, Berlin",
+    "KM" => "Kelsey Museum of Archaeology, University of Michigan, Ann Arbor, MI",
+    "LB" => "de Liagre Böhl Collection, Leiden",
+    "ML" => "McLennan Library, Montreal",
+    "MLC" => "Morgan Library Collection, New York, NY",
+    "Münzkabinett" => "Münzkabinett, Staatliche Museen zu Berlin, Stiftung Preußischer Kulturbesitz, Berlin",
+    "MM" => "Musee Biblique de Monserrat, Barcelona",
+    "Privatsammlung England" => "Privatsammlung, England",
+    "Privatsammlung M. Foeken, Leiden" => "Privatsammlung M. Foeken, Leiden",
+    "RM" => "Redpath Museum, McGill University, Montreal",
+    "RMC" => "Rare and Manuscript Collections, Cornell University, Ithaca, NY",
+    "ROM" => "Royal Ontario Museum, Toronto",
+    "VA" => "Vorderasiatisches Museum, Staatliche Museen zu Berlin, Stiftung Preußischer Kulturbesitz, Berlin / Sammlung Vorderasien",
+    "VA Bab" => "Vorderasiatisches Museum, Staatliche Museen zu Berlin, Stiftung Preußischer Kulturbesitz, Berlin / Babylon-Sammlung",
+    "VAT" => "Vorderasiatisches Museum, Staatliche Museen zu Berlin, Stiftung Preußischer Kulturbesitz, Berlin / Tontafel-Sammlung",
+    "VAG" => "Vorderasiatisches Museum, Staatliche Museen zu Berlin, Stiftung Preußischer Kulturbesitz, Berlin / Gips-Sammlung",
+    "verbrannt" => "Status unklar, Hinweise auf Kriegsverlust",
+    "Walters Art Museum" => "The Walters Art Museum, Baltimore, MD",
+    "weggeworfen" => "Status unklar, möglicherweise auf der Grabung verworfen",
+    "YBC" => "Yale Babylonian Collection, New Haven, CT"
+  }
+
+  def holder
+    if mus_sig.present?
+      Artefact::HOLDERS[mus_sig]
+    end
+  end
 
   # GEO
 

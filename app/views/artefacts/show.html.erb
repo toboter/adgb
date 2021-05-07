@@ -46,6 +46,7 @@
           <%= table_row(@artefact.bab_name, 'Excavation No') %>
           <%= table_row(@artefact.b_join, 'Grabung Joins') %>
           <%= table_row(@artefact.b_korr, 'Grabung Korrektur') %>
+          <%= table_row(@artefact.holder, 'Holder/Collection') %>
           <%= table_row(@artefact.mus_name, 'Museum No') if can?(:read, 'museum_internals') %>
           <%= table_row(@artefact.m_join, 'Museum Joins') if can?(:read, 'museum_internals') %>
           <%= table_row(@artefact.m_korr, 'Museum Korrektur') if can?(:read, 'museum_internals') %>
