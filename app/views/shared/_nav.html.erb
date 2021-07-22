@@ -1,13 +1,12 @@
 <%= content_tag :li, link_to(fa_icon('database', text: "Artefacts"), artefacts_path), class: ('active' if current_page?(artefacts_url)) %>
 <%= content_tag :li, link_to(fa_icon('users', text: "Historic people"), people_path), class: ('active' if current_page?(people_url)) %>
-<%= content_tag :li, link_to(fa_icon('book', text: "Literature"), literature_items_path), class: ('active' if current_page?(literature_items_url)) %> 
+<%= content_tag :li, link_to(fa_icon('book', text: "Literature"), literature_items_path), class: ('active' if current_page?(literature_items_url)) %>
 <hr>
 
 <%= content_tag :li, link_to(fa_icon('database', text: "Sources"), sources_path), class: ('active' if current_page?(sources_path)) %>
 <%= content_tag :li, link_to(fa_icon('archive', text: "Archives"), archives_path), class: ('active' if current_page?(archives_path)) %>
+<hr>
 
-
-
-            
-     
-
+<%= content_tag :li, style: 'margin-top:50px;' do %>
+  <%= link_to image_tag('logo-babili.png', style: 'height:30px;'), 'http://babili.babylon-online.org/', title: 'Goto babili home page', target: :_blank %>
+<% end %>
