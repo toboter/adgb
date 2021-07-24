@@ -1,7 +1,7 @@
 
 <div class="page-header">
   <h2>
-    Artefakte der deutschen Grabungen Babylon (ADGB)<br>
+    ADGB - Artefakte und Archivalien der Deutschen Grabungen Babylon<br>
     <small>adgb.babylon-online.org</small>
   </h2>
 </div>
@@ -31,13 +31,19 @@
 
 
 <p>
-  The Koldewey-artefacts is a reworking of the excavation inventory from Koldewey’s
-  Babylon-excavation 1899-1917 critically compared and supplemented with other information
-  by Olof Pedersén. It lists all excavation numbers used with museum numbers, excavation photos,
-  drawings, findspots, short descriptions, and bibliographical references. The information has
-  been to some extent systematized and corrected with problems notified. The clay tablets were
-  previously treated in a book, Olof Pedersén, Archive und Bibliotheken in Babylon, ADOG 25, 2005.
-  The information in Koldewey-artefacts is available as Open Access.
+  <span class="text-strong">ADGB Artefacts</span> is a reworking of the excavation inventory from Koldewey’s Babylon-excavation (1899-1917) and the excavations conducted by the German Archaeological Institute (1957-1973), critically compared and supplemented with other information by Olof Pedersén. It lists all excavation numbers used with museum numbers, excavation photos, drawings, findspots, short descriptions, and bibliographical references. The information has been to some extent systematized and corrected with problems notified.
+</p>
+<p>
+  <span class="text-strong">Historic People</span> lists persons mentioned in the cuneiform texts from Babylon with their titles/functions and the corresponding excavation numbers.
+</p>
+<p>
+  <span class="text-strong">Literature</span> is a specific short list of all the bibliographic references which cover Babylon artefacts. The entries point to the corresponding excavation numbers. (All publications in “Literature” are separately added in the Bibliographies database with their complete reference.)
+</p>
+<p>
+  <span class="text-strong">ADGB Sources</span> covers mainly all the photographic documentation of both enterprises and to some further extent the documentation on the Ninurta Temple. The entries are derived from the photo inventories, and list the photo numbers, date, subject etc. The Koldwey-excavation photo entries are additionally enriched by an upload of all available image files.
+</p>
+<p>
+  <span class="text-strong">Archives</span> allows you to browse the sources by the holding archive. The number of shown archives results from the entries in sources.
 </p>
 
 <div class="row" style="margin:30px 0;">
@@ -52,9 +58,9 @@
   <% end %>
 </div>
 <div class="row" style="margin:30px 0;">
-  <h3 class="text-center col-md-12">Koldewey Excavation between 1899 and 1917</h3>
+  <h3 class="text-center col-md-12">Koldewey excavations between 1899 and 1917</h3>
   <%= content_tag :div, class: 'col-md-12' do %>
-    <%= line_chart Artefact.group(:gr_jahr).having(gr_jahr: 1899..1917).count, colors: ["orange", "#999"] %>
-    <p class="text-muted text-center">Count of excavated artefacts over the years.</p>
+    <%= line_chart @excavated_years, colors: ["orange", "#999"] %>
+    <p class="text-muted text-center">Sum of excavated artefacts by year.</p>
   <% end %>
 </div>

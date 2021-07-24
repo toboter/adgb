@@ -300,7 +300,7 @@ class Artefact < ApplicationRecord
     "BM" => "British Museum, London",
     "Chicago A" => "Oriental Institute, University of Chicago,Chicago, IL / Sammlung A (1)",
     "D" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung D (Tontafelsammlung Divers)",
-    "EŞEM" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung EŞEM (Sammlung Archäologische Objekte)",
+    "EŞEM" => "Eski Şark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung EŞEM (Sammlung Archäologische Objekte)",
     "FLP" => "Free Library, Philadelphia, PA",
     "FM" => "Field Museum of Natural History (früher: Chicago Natural History Museum), Chicago, IL",
     "Hit" => "Status unklar, letzte Lokalisierung in Hit während Fundtransport, möglicherweise heute Eski $ark Eserleri Müzesi, Istanbul oder Vorderasiatisches Museum, Berlin",
