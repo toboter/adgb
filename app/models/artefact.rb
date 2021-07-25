@@ -292,14 +292,14 @@ class Artefact < ApplicationRecord
 
 
   HOLDERS = {
-    "A" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung A (Tontafelsammlung Assur)",
+    "A" => "Eski Şark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung A (Tontafelsammlung Assur)",
     "Ash" => "Ashmolean Museum, University of Oxford",
-    "B" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung B (Tontafelsammlung Babylon)",
+    "B" => "Eski Şark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung B (Tontafelsammlung Babylon)",
     "Babylon" => "Babylon, Irak",
     "Bremen" => "Sammlung in Bremen",
     "BM" => "British Museum, London",
     "Chicago A" => "Oriental Institute, University of Chicago,Chicago, IL / Sammlung A (1)",
-    "D" => "Eski $ark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung D (Tontafelsammlung Divers)",
+    "D" => "Eski Şark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung D (Tontafelsammlung Divers)",
     "EŞEM" => "Eski Şark Eserleri Müzesi (Museum der Altorientalischen Sammlungen), istanbul Arkeoloji Müzeleri, Istanbul / Sammlung EŞEM (Sammlung Archäologische Objekte)",
     "FLP" => "Free Library, Philadelphia, PA",
     "FM" => "Field Museum of Natural History (früher: Chicago Natural History Museum), Chicago, IL",
