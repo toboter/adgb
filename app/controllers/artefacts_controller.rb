@@ -14,7 +14,6 @@ class ArtefactsController < ApplicationController
     sort_order = Artefact.sorted_by(params[:sorted_by] ||= 'score_desc') if Artefact.any?
     query = params[:search].presence || '*'
     string_q = query.gsub('+', ' ').squish
-    start_id = params[:start].presence || 1
 
     artefacts = Artefact
     .visible_for(current_user)
