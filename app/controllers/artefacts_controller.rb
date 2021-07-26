@@ -14,6 +14,7 @@ class ArtefactsController < ApplicationController
     sort_order = Artefact.sorted_by(params[:sorted_by] ||= 'score_desc') if Artefact.any?
     query = params[:search].presence || '*'
     string_q = query.gsub('+', ' ').squish
+    start_id = params[:start].presence || 1
 
     artefacts = Artefact
     .visible_for(current_user)
@@ -21,23 +22,31 @@ class ArtefactsController < ApplicationController
 
     per_page = params[:format] == 'json' && params[:all] == 'true' ? nil : session[:per_page]
 
-    @artefacts =
-      Artefact.search(string_q,
-        where: {id: artefacts.ids},
-        fields: [:default_fields],
-        page: params[:page],
-        per_page: per_page,
-        order: sort_order,
-        misspellings: {below: 1}
-      ) do |body|
-        body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "AND" } }
-        body[:track_total_hits] = true
-      end
+    unless params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
+      @artefacts =
+        Artefact.search(string_q,
+          where: {id: artefacts.ids},
+          fields: [:default_fields],
+          page: params[:page],
+          per_page: per_page,
+          order: sort_order,
+          misspellings: {below: 1}
+        ) do |body|
+          body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "AND" } }
+          body[:track_total_hits] = true
+        end
+    end
 
     respond_to do |format|
       format.html
       format.js
-      format.json { render json: @artefacts, each_serializer: ArtefactSerializer }
+      format.json {
+        if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
+          render json: artefacts.order('id ASC').paginate(page: params[:page], per_page: 10000), each_serializer: ArtefactSerializer
+        else
+          render json: @artefacts, each_serializer: ArtefactSerializer
+        end
+      }
     end
   end
 

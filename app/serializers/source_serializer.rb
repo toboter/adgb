@@ -27,10 +27,10 @@ class SourceSerializer < ActiveModel::Serializer
   end
 
   attribute :contains do
-    object.children.map{ |c| 
-      { 
+    object.children.map{ |c|
+      {
         id: c.slug,
-        callNumber: c.name 
+        callNumber: c.name
       }
     }
   end
@@ -50,13 +50,13 @@ class SourceSerializer < ActiveModel::Serializer
       de: object.remarks
     }
   end
-  
+
   attribute :measurements do
     [
       {raw: object.measurements}
     ]
   end
-  
+
   attribute :locations do
     [
       location_hash(object.location_current, {dateParts: [2012]}),
@@ -100,7 +100,7 @@ class SourceSerializer < ActiveModel::Serializer
   end
 
   attribute :excavatedObjects do
-    object.occurences.map { |o| 
+    object.occurences.map { |o|
       {
         excavatedObjectData: (o.try(:artefact) ? ArtefactInfoSerializer.new(o.artefact) : o.try(:p_bab_rel)),
         locator: o.position,
@@ -145,14 +145,14 @@ class SourceSerializer < ActiveModel::Serializer
       }
     } if object.versions.any?
   end
-  
+
   attribute :links do
     {
       self: api_source_url(object.id),
       html: source_url(object)
     }
   end
-  
+
   attribute(:full_entry) {object.call_number}
 
   # ---
