@@ -7,7 +7,7 @@ class SourceSerializer < ActiveModel::Serializer
     object.child? ? SourceInfoSerializer.new(object.parent) : ArchiveSerializer.new(object.archive)
   end
   attribute :serialNumber do
-    object.sheet.presence || object.call_number.sub(object.collection, '').gsub(',', '').squish!
+    object.sheet.presence || object.call_number.sub(object.collection, '').sub(object.archive.try(:name), '').gsub(',', '').squish!
   end
   attribute :callNumber do
     {
