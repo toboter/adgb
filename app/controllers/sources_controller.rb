@@ -20,7 +20,8 @@ class SourcesController < ApplicationController
 
     per_page = params[:format] == 'json' && params[:all] == 'true' ? nil : session[:per_page]
 
-    @sources =
+    unless params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
+      @sources =
         Source.auto_include(false).search(query,
           where: {id: sources.ids},
           fields: [:default_fields],
@@ -31,13 +32,20 @@ class SourcesController < ApplicationController
         ) do |body|
           body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
         end
+    end
 
     respond_to do |format|
       format.html
       # view == simple is rendering a plain json view without any defined external schema and
       # is needed for looking up sources on the artefacts edit view.
-      format.json { params[:view].present? && params[:view] == 'simple' ? (render json: @sources.to_json) : (render json: @sources, each_serializer: SourceSerializer) }
       format.js
+      format.json {
+        if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
+          render json: sources.order('id ASC').paginate(page: params[:page], per_page: 1000), each_serializer: SourceSerializer
+        else
+          params[:view].present? && params[:view] == 'simple' ? (render json: @sources.to_json) : (render json: @sources, each_serializer: SourceSerializer)
+        end
+      }
     end
   end
 
