@@ -4,7 +4,7 @@ babylon-artefacts
 
 # Dependencies
 * ruby 2.7.3
-* rails 5.2.6
+* rails 5.2.8
 * bundler 2.3.26
 * node >= 16.15.1
 * yarn 1.22.19
