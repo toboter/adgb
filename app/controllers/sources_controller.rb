@@ -22,7 +22,7 @@ class SourcesController < ApplicationController
 
     unless params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
       @sources =
-        Source.auto_include(false).search(query,
+        Source.search(query,
           where: {id: sources.ids},
           fields: [:default_fields],
           page: params[:page],

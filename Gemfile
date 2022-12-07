@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.3'
 
 gem 'rails', '~> 5.2.6'
-gem 'pg', '>= 0.18', '< 2.0'
+gem 'pg', '>= 1.4.5', '< 2.0'
 gem 'puma', '~> 5.2'
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
@@ -53,7 +53,9 @@ gem 'will_paginate-bootstrap'
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
 gem 'gmaps4rails'
 
-gem 'searchkick', '~> 4'
+gem 'searchkick'
+gem "opensearch-ruby"
+
 gem 'roo'
 gem 'geoutm'
 gem 'browser'
