@@ -337,7 +337,7 @@ DEPENDENCIES
   pg (>= 1.4.5, < 2.0)
   puma (~> 5.2)
   rack-cors
-  rails (~> 5.2.6)
+  rails (~> 5.2.8)
   rest-client
   roo
   sassc-rails
