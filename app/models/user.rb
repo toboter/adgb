@@ -8,13 +8,13 @@ class User < ApplicationRecord
 
   validates :name, uniqueness: true
 
-  def self.current
-    Thread.current[:current_user]
-  end
-
-  def self.current=(usr)
-    Thread.current[:current_user] = usr
-  end
+#  def self.current
+#    Thread.current[:current_user]
+#  end
+#
+#  def self.current=(usr)
+#    Thread.current[:current_user] = usr
+#  end
 
   def self.search(search)
     wildcard_search = "%#{search}%"
@@ -43,13 +43,13 @@ class User < ApplicationRecord
 
   # extend enki
   def is_owner?
-    record_activities.where(activity_type: 'Created').any? || 
+    record_activities.where(activity_type: 'Created').any? ||
     app_admin
   end
 
   def is_editor?
     shared_with_me.where(edit: true).any? ||
-      groups.map{|g| g.shared_with_me.where(edit: true).any?}.include?(true) || 
+      groups.map{|g| g.shared_with_me.where(edit: true).any?}.include?(true) ||
       app_admin
   end
   # ..
@@ -69,7 +69,7 @@ class User < ApplicationRecord
   def group_list
     groups.map(&:name)
   end
-  
+
   def group_list=(names)
     self.groups = names.reject { |c| c.empty? }.flatten.map do |n|
       Group.where(name: n).first

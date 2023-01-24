@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :init_session_per_page
   before_action :set_paper_trail_whodunnit
 
-  around_action :set_current_user
+#  around_action :set_current_user
 
   rescue_from CanCan::AccessDenied do |exception|
     session[:user_return_to] = request.path if !current_user
@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
       if !current_user && params[:login] == 'true'
         format.html { redirect_to '/auth/babili', info: 'You need to sign in before continuing.' }
       else
-        format.html { redirect_to root_url, :alert => exception.message }        
+        format.html { redirect_to root_url, :alert => exception.message }
       end
     end
   end
@@ -29,14 +29,20 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_current_user
-    User.current = current_user
-    yield
-  ensure
-    # to address the thread variable leak issues in Puma/Thin webserver
-    User.current = nil
+  helper_method :current_user
+
+  def current_user
+    @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
   end
-  
+
+#  def set_current_user
+#    User.current = current_user
+#    yield
+#  ensure
+#    # to address the thread variable leak issues in Puma/Thin webserver
+#    User.current = nil
+#  end
+
   helper_method :current_user_repos
 
   def init_session_per_page
@@ -44,15 +50,15 @@ class ApplicationController < ActionController::Base
   end
 
   def oauth_client
-    @oauth_client ||= OAuth2::Client.new(Rails.application.secrets.client_id, 
-      Rails.application.secrets.client_secret, 
+    @oauth_client ||= OAuth2::Client.new(Rails.application.secrets.client_id,
+      Rails.application.secrets.client_secret,
       site: Rails.application.secrets.provider_site)
   end
 
   def access_token
     @access_token ||= OAuth2::AccessToken.new(oauth_client, session[:access_token]) if session[:access_token]
   end
-  
+
   def authorize
     redirect_to root_url, alert: "Not authorized. Please sign in." if current_user.nil?
   end
@@ -70,7 +76,7 @@ class ApplicationController < ActionController::Base
     if current_user && access_token && access_token.expired?
       session[:user_id] = nil
       session[:access_token] = nil
-      
+
       redirect_to root_url, notice: 'Access token expired. You have been logged out.'
     end
   end
