@@ -1,5 +1,4 @@
 class ArtefactsController < ApplicationController
-  require 'rest-client'
   require 'json'
 
   load_and_authorize_resource
