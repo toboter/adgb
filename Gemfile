@@ -1,19 +1,19 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.3'
+ruby '2.7.7'
 
 gem "net-http"
 
 gem 'rails', '~> 5.2.8'
 gem 'pg', '>= 1.4.5', '< 2.0'
-gem 'puma', '~> 5.2'
+gem 'puma', ">= 5.3.1"
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
 gem 'mini_racer', platforms: :ruby
 
-gem 'omniauth-oauth2', '= 1.7.0' #1.7.1 does not work
+gem 'omniauth-oauth2' #, '= 1.7.0' #1.7.1 does not work
 gem 'omniauth-rails_csrf_protection'
 # -> https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
 
