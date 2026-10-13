@@ -83,7 +83,7 @@
           data-file-types="<%= %w[image/*] %>" 
           data-updater-id="<%= current_user.id %>"
           data-token="<%= @access_token.token %>"
-          data-url="<%= Rails.application.secrets.provider_site + '/v1/raw/files.json' %>">
+          data-url="<%= Rails.application.credentials.provider_site + '/v1/raw/files.json' %>">
         </div>
 
         <hr>

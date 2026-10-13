@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include JsonSerializerRendering
+
   protect_from_forgery with: :exception, prepend: true
 
   before_action :check_token!
@@ -21,11 +23,15 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from OAuth2::Error do |exception|
-    if exception.response.status == 401
+    status = exception.response&.status
+    if status == 401
       session[:user_id] = nil
       session[:access_token] = nil
 
       redirect_to root_url, alert: "Access token expired, try signing in again."
+    else
+      redirect_back fallback_location: root_url,
+                    alert: "Babili API error (#{status || 'unknown'}): #{exception.message.to_s.truncate(200)}"
     end
   end
 
@@ -50,9 +56,9 @@ class ApplicationController < ActionController::Base
   end
 
   def oauth_client
-    @oauth_client ||= OAuth2::Client.new(Rails.application.secrets.client_id,
-      Rails.application.secrets.client_secret,
-      site: Rails.application.secrets.provider_site)
+    @oauth_client ||= OAuth2::Client.new(Rails.application.credentials.client_id,
+      Rails.application.credentials.client_secret,
+      site: Rails.application.credentials.provider_site)
   end
 
   def access_token
@@ -67,8 +73,38 @@ class ApplicationController < ActionController::Base
     redirect_to root_url, alert: "You need administrative priviledges." if !current_user.app_admin
   end
 
+  # Babili still exposes enrolled collections at GET /v1/user/repositories
+  # (returns CollectionSerializer). Token registration uses /v1/collections.
   def current_user_repos
-    @current_user_repos = JSON.parse(((current_user && access_token) ? access_token.get("/v1/user/repositories").body : []), object_class: OpenStruct)
+    @current_user_repos =
+      if current_user && access_token
+        parse_babili_json(access_token.get("/v1/user/repositories").body)
+      else
+        []
+      end
+  end
+
+  # Babili AMS :json responses are root-wrapped ({"user": {...}} / {"collections": [...]}).
+  # Unwrap a single root key and deep-convert to OpenStruct for existing callers.
+  def parse_babili_json(body)
+    data = body.present? ? JSON.parse(body) : nil
+    return [] if data.nil?
+
+    if data.is_a?(Hash) && data.keys.size == 1 && !data.key?("meta")
+      data = data.values.first
+    end
+    deep_ostruct(data)
+  end
+
+  def deep_ostruct(node)
+    case node
+    when Hash
+      OpenStruct.new(node.transform_values { |value| deep_ostruct(value) })
+    when Array
+      node.map { |value| deep_ostruct(value) }
+    else
+      node
+    end
   end
 
   # The current_user is logged out automatically and redirected to root if the access_token is expired.

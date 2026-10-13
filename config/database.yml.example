@@ -1,0 +1,26 @@
+# Copy to config/database.yml and adjust.
+# config/database.yml is gitignored.
+# Use host: localhost so Postgres uses password auth (not peer on Unix socket).
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
+  port: 5432
+  username: rails
+  password: rails
+
+development:
+  <<: *default
+  database: adgb_development
+
+test:
+  <<: *default
+  database: adgb_test
+
+production:
+  <<: *default
+  database: adgb_production
+  # Prefer DATABASE_URL in production:
+  # url: <%= ENV['DATABASE_URL'] %>

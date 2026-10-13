@@ -32,50 +32,54 @@ class SessionsController < ApplicationController
 
   private
   def update_user
-    puts 'updating user'
     user = User.find(session[:user_id])
-    babili_user = JSON.parse(access_token.get('/v1/user').body, object_class: OpenStruct)
-    babili_accessibilities = JSON.parse(access_token.get("/v1/authorizations/clients/#{Rails.application.secrets.client_id}").body, object_class: OpenStruct)
+    babili_user = parse_babili_json(access_token.get('/v1/user').body)
+    babili_accessibilities = parse_babili_json(
+      access_token.get("/v1/authorizations/clients/#{Rails.application.credentials.client_id}").body
+    )
 
-    babili_accessibilities.organization_accessors.each do |org|
+    Array(babili_accessibilities.organization_accessors).each do |org|
       group = Group.where(gid: org.id, provider: 'babili').first_or_create! do |g|
         g.name = org.name
       end
       group.users = User.where(uid: org.member_ids, provider: 'babili')
     end
 
-    user.app_admin = babili_accessibilities.user_permissions.extra.manage
-    user.app_creator = babili_accessibilities.user_permissions.create
-    user.app_publisher = babili_accessibilities.user_permissions.extra.publish
-    user.app_commentator = babili_accessibilities.user_permissions.extra.comment
-   
+    perms = babili_accessibilities.user_permissions
+    user.app_admin = perms.extra.manage
+    user.app_creator = perms.create
+    user.app_publisher = perms.extra.publish
+    user.app_commentator = perms.extra.comment
+
     user.email = babili_user.email
     user.name = babili_user.display_name
     user.image_thumb_url = babili_user.image_thumb_50
-    
+
     flash[:success] = 'User info and permissions updated' if user.save
     set_local_token_on_babili if @new_user.present?
   end
 
   def set_local_token_on_babili
-    puts 'sending token'
-    # adding the initial token to each repo in babili when signing up the first time start
-    repos = JSON.parse(access_token.get("/v1/repositories/resources/#{Rails.application.secrets.host_id}").body, object_class: OpenStruct)
+    # Register this app's API token on each Babili collection for this host.
+    # /v1/user/repositories is still the list endpoint; token CRUD uses /v1/collections.
+    collections = Array(
+      parse_babili_json(
+        access_token.get("/v1/collections/resources/#{Rails.application.credentials.host_id}").body
+      )
+    )
 
-    if repos.any? && current_user.regenerate_token
+    if collections.any? && current_user.regenerate_token
       begin
-        repos.each do |r|
+        collections.each do |c|
           data = {token: current_user.token, token_type: 'Token'}
-          resp = access_token.post("/v1/repositories/#{r.id}/tokens", body: data)
+          resp = access_token.post("/v1/collections/#{c.id}/tokens", body: data)
           flash[:notice] = (resp.status == 201 ? "Token received." : 'An error occured.')
         end
       rescue RestClient::ExceptionWithResponse => e
         flash[:alert] = "The Server ist returning #{e}. Token not sent."
       end
     else
-      flash[:alert] = "Token not created. #{'No repositories found.' if !repos.any?}"
+      flash[:alert] = "Token not created. #{'No collections found.' if collections.empty?}"
     end
-    # This can also be done through the adgb/settings page manually.
-    # adding token to babili end
   end
 end

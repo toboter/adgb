@@ -10,42 +10,57 @@ class Api::WebhooksController < ActionController::API
 
   # application_url/v1/hooks/update_accessibilities?access_token=babili-token
   def update_user_accessibilities
-    user_url = "#{Rails.application.secrets.provider_site}/v1/user"
+    user_url = "#{Rails.application.credentials.provider_site}/v1/user"
     user_response = RestClient.get user_url, {:Authorization => "Bearer #{@token}"}
-    user_parsed = JSON.parse(user_response.body)
+    user_parsed = unwrap_babili_root(JSON.parse(user_response.body))
     user = User.where(provider: 'babili', uid: user_parsed['id']).first
 
-    # babili_accessibilities = JSON.parse(((current_user && access_token) ? access_token.get("/v1/authorizations/clients/#{Rails.application.secrets.client_id}").body : []), object_class: OpenStruct)
-    babili_access_url = "#{Rails.application.secrets.provider_site}/v1/authorizations/clients/#{Rails.application.secrets.client_id}"
+    babili_access_url = "#{Rails.application.credentials.provider_site}/v1/authorizations/clients/#{Rails.application.credentials.client_id}"
     babili_access_resp = RestClient.get babili_access_url, {:Authorization => "Bearer #{@token}"}
-    babili_accessibilities = JSON.parse(babili_access_resp.body, object_class: OpenStruct)
+    babili_accessibilities = deep_ostruct(unwrap_babili_root(JSON.parse(babili_access_resp.body)))
 
-    babili_accessibilities.organization_accessors.each do |org|
+    Array(babili_accessibilities.organization_accessors).each do |org|
       group = Group.where(gid: org.id, provider: 'babili').first_or_create! do |g|
         g.name = org.name
       end
       group.users = User.where(uid: org.member_ids, provider: 'babili')
     end
-    
-    user.app_admin = babili_accessibilities.user_permissions.extra.manage
-    user.app_creator = babili_accessibilities.user_permissions.create
-    user.app_publisher = babili_accessibilities.user_permissions.extra.publish
-    user.app_commentator = babili_accessibilities.user_permissions.extra.comment
+
+    perms = babili_accessibilities.user_permissions
+    user.app_admin = perms.extra.manage
+    user.app_creator = perms.create
+    user.app_publisher = perms.extra.publish
+    user.app_commentator = perms.extra.comment
 
     if user.save
       render json: {message: 'updated', status: 200}, status: :ok
     else
       render json: {message: 'failed', status: 400}, status: :bad_request
     end
-
-    # raise user.inspect
-    # erwartet oauth access token für babili
-    # fragt nach user.accessibilities mit access token
   end
-  
+
   private
   def set_token
     @token = request.headers['Authorization'] ? request.headers['Authorization'].split(' ').last : params[:access_token]
+  end
+
+  def unwrap_babili_root(data)
+    if data.is_a?(Hash) && data.keys.size == 1 && !data.key?("meta")
+      data.values.first
+    else
+      data
+    end
+  end
+
+  def deep_ostruct(node)
+    case node
+    when Hash
+      OpenStruct.new(node.transform_values { |value| deep_ostruct(value) })
+    when Array
+      node.map { |value| deep_ostruct(value) }
+    else
+      node
+    end
   end
 
 end

@@ -1,28 +1,39 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.7'
+ruby '3.4.2'
 
 gem "net-http"
+gem "csv"
+gem "ostruct"
 
-gem 'rails', '~> 5.2.8'
+gem 'rails', '~> 8.1.0'
+# concurrent-ruby pin no longer required on Rails 8 / Ruby 3.2+
 gem 'pg', '>= 1.4.5', '< 2.0'
 gem 'puma', ">= 5.3.1"
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.2'
-gem 'mini_racer', platforms: :ruby
+# ExecJS 2.8.x passes create_additions to JSON.parse; incompatible with json 3.x
+gem 'execjs', '>= 2.10'
+# Keep Sprockets (do not introduce Webpacker / Propshaft this upgrade).
+gem 'sprockets-rails'
+# Ruby 3.4: tilt <2.2 freezes/force_encoding breaks font-awesome .css.erb via sassc-rails
+gem 'tilt', '>= 2.2'
+# JS runtime for ExecJS/uglifier: use system Node (nvm). mini_racer/libv8-node
+# fails on glibc WSL when Bundler resolves the musl platform gem.
+# Sprockets 4 still registers CoffeeScript; selectize ships a stray .coffee file
+# under node_modules, so keep the compiler gem (no coffee-rails / no app .coffee).
+gem 'coffee-script'
 
 gem 'omniauth-oauth2' #, '= 1.7.0' #1.7.1 does not work
 gem 'omniauth-rails_csrf_protection'
 # -> https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
 
-gem 'active_model_serializers', '~> 0.10.0'
 gem 'rest-client'
 gem 'cancancan'
 
 gem 'turbolinks', '~> 5'
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.13'
 gem 'bootsnap', '>= 1.7.0', require: false
 gem 'rack-cors', require: 'rack/cors'
 
@@ -31,23 +42,20 @@ group :development, :test do
 end
 
 group :development do
-  gem 'web-console'
-  gem 'listen', '~> 3.0.5'
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '~> 3.5'
 end
 
 group :test do
   gem 'capybara', '>= 2.15', '< 4.0'
   gem 'selenium-webdriver'
-  gem "webdrivers"
 end
 
 gem 'bootstrap-sass', '= 3.4.1'
 gem 'simple_form'
 gem 'diffy'
 gem "chartkick", "~> 4.0"
-gem "font-awesome-rails"
+gem "font-awesome-rails", '~> 4.7.0.9'
 gem 'cocoon'
 gem 'will_paginate-bootstrap'
 
@@ -55,15 +63,15 @@ gem 'will_paginate-bootstrap'
 # https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
 gem 'gmaps4rails'
 
-gem 'searchkick'
-gem "opensearch-ruby"
+gem 'searchkick', '~> 6.1'
+gem "opensearch-ruby", '~> 3.0'
 
 gem 'roo'
 gem 'geoutm'
 gem 'browser'
 gem 'closure_tree'
-gem 'paper_trail'
+gem 'paper_trail', '~> 17.0'
 gem 'shareable_models'
 gem 'friendly_id'
-gem 'acts-as-taggable-on', '~> 6.0'
-gem 'goldiloader'
+gem 'acts-as-taggable-on', '~> 13.0'
+gem 'goldiloader', '~> 6.0'

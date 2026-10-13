@@ -6,8 +6,19 @@ class ArtefactsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get artefacts_url
-    assert_response :success
+    # Index uses Searchkick; stub so the test does not need OpenSearch.
+    # Return a will_paginate collection (views call total_pages / page_entries_info).
+    # (Minitest 6 no longer ships Object#stub.)
+    singleton = Artefact.singleton_class
+    singleton.alias_method :__search_without_stub, :search
+    singleton.define_method(:search) { |*| Artefact.none.paginate(page: 1) }
+    begin
+      get artefacts_url
+      assert_response :success
+    ensure
+      singleton.alias_method :search, :__search_without_stub
+      singleton.remove_method :__search_without_stub
+    end
   end
 
   test "should get new" do
@@ -17,7 +28,7 @@ class ArtefactsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create artefact" do
     assert_difference('Artefact.count') do
-      post artefacts_url, params: { artefact: { UTMx: @artefact.UTMx, UTMxx: @artefact.UTMxx, UTMy: @artefact.UTMy, UTMyy: @artefact.UTMyy, zeichnung: @artefact.zeichnung, abklatsch: @artefact.abklatsch, arkiv: @artefact.arkiv, b_join: @artefact.b_join, b_korr: @artefact.b_korr, bab: @artefact.bab, bab_ind: @artefact.bab_ind, bab_rel: @artefact.bab_rel, datum: @artefact.datum, diss: @artefact.diss, f_obj: @artefact.f_obj, fo1: @artefact.fo1, fo2: @artefact.fo2, fo3: @artefact.fo3, fo4: @artefact.fo4, fo_tell: @artefact.fo_tell, fo_text: @artefact.fo_text, grab: @artefact.grab, grabung: @artefact.grabung, inhalt: @artefact.inhalt, jahr: @artefact.jahr, kod: @artefact.kod, m_join: @artefact.m_join, m_korr: @artefact.m_korr, mas1: @artefact.mas1, mas2: @artefact.mas2, mas3: @artefact.mas3, mus_id: @artefact.mus_id, mus_ind: @artefact.mus_ind, mus_nr: @artefact.mus_nr, mus_sig: @artefact.mus_sig, period: @artefact.period, sig: @artefact.sig, standort: @artefact.standort, standort_alt: @artefact.standort_alt, text: @artefact.text, text_in_archiv: @artefact.text_in_archiv, zeil1: @artefact.zeil1, zeil2: @artefact.zeil2 } }
+      post artefacts_url, params: { artefact: { utmx: @artefact.utmx, utmxx: @artefact.utmxx, utmy: @artefact.utmy, utmyy: @artefact.utmyy, zeichnung: @artefact.zeichnung, abklatsch: @artefact.abklatsch, arkiv: @artefact.arkiv, b_join: @artefact.b_join, b_korr: @artefact.b_korr, bab: @artefact.bab, bab_ind: @artefact.bab_ind, bab_rel: @artefact.bab_rel, datum: @artefact.datum, diss: @artefact.diss, f_obj: @artefact.f_obj, fo1: @artefact.fo1, fo2: @artefact.fo2, fo3: @artefact.fo3, fo4: @artefact.fo4, fo_tell: @artefact.fo_tell, fo_text: @artefact.fo_text, grab: @artefact.grab, grabung: @artefact.grabung, inhalt: @artefact.inhalt, jahr: @artefact.jahr, kod: @artefact.kod, m_join: @artefact.m_join, m_korr: @artefact.m_korr, mas1: @artefact.mas1, mas2: @artefact.mas2, mas3: @artefact.mas3, mus_id: @artefact.mus_id, mus_ind: @artefact.mus_ind, mus_nr: @artefact.mus_nr, mus_sig: @artefact.mus_sig, period: @artefact.period, sig: @artefact.sig, standort: @artefact.standort, standort_alt: @artefact.standort_alt, text: @artefact.text, text_in_archiv: @artefact.text_in_archiv, zeil1: @artefact.zeil1, zeil2: @artefact.zeil2 } }
     end
 
     assert_redirected_to artefact_url(Artefact.last)
@@ -34,7 +45,7 @@ class ArtefactsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update artefact" do
-    patch artefact_url(@artefact), params: { artefact: { UTMx: @artefact.UTMx, UTMxx: @artefact.UTMxx, UTMy: @artefact.UTMy, UTMyy: @artefact.UTMyy, zeichnung: @artefact.zeichnung, abklatsch: @artefact.abklatsch, arkiv: @artefact.arkiv, b_join: @artefact.b_join, b_korr: @artefact.b_korr, bab: @artefact.bab, bab_ind: @artefact.bab_ind, bab_rel: @artefact.bab_rel, datum: @artefact.datum, diss: @artefact.diss, f_obj: @artefact.f_obj, fo1: @artefact.fo1, fo2: @artefact.fo2, fo3: @artefact.fo3, fo4: @artefact.fo4, fo_tell: @artefact.fo_tell, fo_text: @artefact.fo_text, grab: @artefact.grab, grabung: @artefact.grabung, inhalt: @artefact.inhalt, jahr: @artefact.jahr, kod: @artefact.kod, m_join: @artefact.m_join, m_korr: @artefact.m_korr, mas1: @artefact.mas1, mas2: @artefact.mas2, mas3: @artefact.mas3, mus_id: @artefact.mus_id, mus_ind: @artefact.mus_ind, mus_nr: @artefact.mus_nr, mus_sig: @artefact.mus_sig, period: @artefact.period, sig: @artefact.sig, standort: @artefact.standort, standort_alt: @artefact.standort_alt, text: @artefact.text, text_in_archiv: @artefact.text_in_archiv, zeil1: @artefact.zeil1, zeil2: @artefact.zeil2 } }
+    patch artefact_url(@artefact), params: { artefact: { utmx: @artefact.utmx, utmxx: @artefact.utmxx, utmy: @artefact.utmy, utmyy: @artefact.utmyy, zeichnung: @artefact.zeichnung, abklatsch: @artefact.abklatsch, arkiv: @artefact.arkiv, b_join: @artefact.b_join, b_korr: @artefact.b_korr, bab: @artefact.bab, bab_ind: @artefact.bab_ind, bab_rel: @artefact.bab_rel, datum: @artefact.datum, diss: @artefact.diss, f_obj: @artefact.f_obj, fo1: @artefact.fo1, fo2: @artefact.fo2, fo3: @artefact.fo3, fo4: @artefact.fo4, fo_tell: @artefact.fo_tell, fo_text: @artefact.fo_text, grab: @artefact.grab, grabung: @artefact.grabung, inhalt: @artefact.inhalt, jahr: @artefact.jahr, kod: @artefact.kod, m_join: @artefact.m_join, m_korr: @artefact.m_korr, mas1: @artefact.mas1, mas2: @artefact.mas2, mas3: @artefact.mas3, mus_id: @artefact.mus_id, mus_ind: @artefact.mus_ind, mus_nr: @artefact.mus_nr, mus_sig: @artefact.mus_sig, period: @artefact.period, sig: @artefact.sig, standort: @artefact.standort, standort_alt: @artefact.standort_alt, text: @artefact.text, text_in_archiv: @artefact.text_in_archiv, zeil1: @artefact.zeil1, zeil2: @artefact.zeil2 } }
     assert_redirected_to artefact_url(@artefact)
   end
 

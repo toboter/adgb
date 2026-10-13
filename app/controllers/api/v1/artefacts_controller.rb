@@ -7,12 +7,12 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
     artefacts = artefacts.where("updated_at > ?", params[:since]) if params[:since]
     artefacts = artefacts.paginate(page: params[:page], per_page: params[:per_page] || 30)
 
-    render json: artefacts, meta: pagination_dict(artefacts), each_serializer: ArtefactSerializer
+    render_with_serializer(artefacts, meta: pagination_dict(artefacts), each_serializer: ArtefactSerializer)
   end
 
   def show
     artefact = Artefact.visible_for(@user).friendly.find(params[:id])
-    render json: artefact, serializer: ArtefactSerializer
+    render_with_serializer(artefact, serializer: ArtefactSerializer)
   end
 
   # /api/artefacts/search
@@ -31,7 +31,7 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
       ) do |body|
         body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
       end
-    render json: results, meta: pagination_dict(results), each_serializer: ArtefactSerializer
+    render_with_serializer(results, meta: pagination_dict(results), each_serializer: ArtefactSerializer)
   end
 
 end

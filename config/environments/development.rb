@@ -1,4 +1,6 @@
 Rails.application.configure do
+  config.hosts << 'dev.local'
+  config.hosts << 'localhost'
   Rails.application.routes.default_url_options = { host: 'dev.local', port: 3001 }
   # Settings specified here will take precedence over those in config/application.rb.
 

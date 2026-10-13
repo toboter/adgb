@@ -4,7 +4,7 @@ module OmniAuth
       option :name, :babili
 
       option :client_options, {
-        site: Rails.application.secrets.provider_site,
+        site: Rails.application.credentials.provider_site,
         authorize_path: '/oauth/authorize'
       }
 
@@ -23,12 +23,19 @@ module OmniAuth
           gender: raw_info["gender"],
           name: raw_info["display_name"],
           image_thumb_50: raw_info["image_thumb_50"]
-          # and anything else you want to return to your API consumers
         }
       end
 
       def raw_info
-        @raw_info ||= access_token.get('/v1/user.json').parsed
+        @raw_info ||= begin
+          parsed = access_token.get('/v1/user.json').parsed
+          # AMS :json adapter wraps as {"user": {...}}
+          if parsed.is_a?(Hash) && parsed.key?("user")
+            parsed["user"]
+          else
+            parsed
+          end
+        end
       end
     end
   end

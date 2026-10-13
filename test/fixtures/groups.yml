@@ -1,0 +1,4 @@
+one:
+  name: Fixture Group
+  provider: babili
+  gid: fixture-group-1

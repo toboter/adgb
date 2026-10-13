@@ -31,7 +31,7 @@ module Visibility
               (sharings[:shared_to_id].eq(accessor.id.to_i)).and(sharings[:shared_to_type].eq(accessor.class)).to_sql
             }.join(' OR ')
           )
-          .exists
+          .arel.exists
       )
       # Join syntax
       # includes(:share_models).where(share_models: {id: nil})
@@ -44,7 +44,7 @@ module Visibility
       where(
         ShareModel \
           .where(sharings[:resource_id].eq(resources[:id]).and(sharings[:resource_type].eq(self.base_class.name) )) \
-          .exists.not
+          .arel.exists.not
       )
     end
 
@@ -58,7 +58,7 @@ module Visibility
             .and(activities[:item_type].eq(self.base_class.name)) \
             .and(activities[:event].eq('create')) \
             .and(activities[:whodunnit].eq(user.id.to_s)) ) \
-          .exists
+          .arel.exists
       )
     end
 
@@ -71,7 +71,7 @@ module Visibility
           .where(versions[:item_id].eq(resources[:id]) \
             .and(versions[:item_type].eq(self.base_class.name)) \
             .and(versions[:event].eq('publish')) ) \
-          .exists
+          .arel.exists
       ).where(resources[:locked].eq(true))
     end
 

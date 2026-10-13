@@ -40,9 +40,9 @@ class ArtefactsController < ApplicationController
       format.js
       format.json {
         if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
-          render json: artefacts.order('id ASC').paginate(page: params[:page], per_page: 1000), each_serializer: ArtefactSerializer
+          render_with_serializer(artefacts.order('id ASC').paginate(page: params[:page], per_page: 1000), each_serializer: ArtefactSerializer)
         else
-          render json: @artefacts, each_serializer: ArtefactSerializer
+          render_with_serializer(@artefacts, each_serializer: ArtefactSerializer)
         end
       }
     end
@@ -91,24 +91,24 @@ class ArtefactsController < ApplicationController
     end
 
     # This loads the text edition for the artefact on github which is an epidoc xml file and passes it to CETEIcean in the view
-    repo = Rails.application.secrets.git_repo
-    token = Rails.application.secrets.git_token
-    if @artefact.mus_name.present?
+    repo = Rails.application.credentials.git_repo
+    token = Rails.application.credentials.git_token
+    text_data = nil
+    if @artefact.mus_name.present? && repo.present? && token.present?
       url = "https://api.github.com/search/code?q=repo:#{repo} filename:#{@artefact.mus_name.parameterize(separator: '_')}.xml"
+      file_url = nil
       begin
         response = RestClient.get(url, {:Authorization => "Token #{token}", :Accept => "application/vnd.github.v3.raw"})
         search_data = JSON.parse(response.body)
         if search_data['total_count'].to_i >= 1
           path = search_data['items'][0]['path']
-          file_url = "https://api.github.com/repos/#{repo}/contents/#{path}?token=#{token}"
+          file_url = "https://api.github.com/repos/#{repo}/contents/#{path}"
           @html_url = search_data['items'][0]['html_url']
-        else
-          file_url = 'NotFound'
         end
       rescue RestClient::ExceptionWithResponse => e
         text_data = "<xml>#{e.response}</xml>"
       end
-      if file_url != 'NotFound'
+      if file_url.present?
         begin
           response = RestClient.get(file_url, {:Authorization => "Token #{token}", :Accept => "application/vnd.github.v3.raw"})
           text_data = response.body
@@ -133,7 +133,7 @@ class ArtefactsController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.json { render json: @artefact, serializer: ArtefactSerializer }
+      format.json { render_with_serializer(@artefact, serializer: ArtefactSerializer) }
     end
   end
 

@@ -1,4 +1,6 @@
 class Api::V1::BaseController < ActionController::API
+  include JsonSerializerRendering
+
   require 'rest-client'
   require 'json'
 
@@ -16,9 +18,9 @@ class Api::V1::BaseController < ActionController::API
   end
 
   def oauth_client
-    @oauth_client ||= OAuth2::Client.new(Rails.application.secrets.client_id, 
-      Rails.application.secrets.client_secret, 
-      site: Rails.application.secrets.provider_site)
+    @oauth_client ||= OAuth2::Client.new(Rails.application.credentials.client_id, 
+      Rails.application.credentials.client_secret, 
+      site: Rails.application.credentials.provider_site)
   end
   
   def access_token

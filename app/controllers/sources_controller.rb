@@ -41,9 +41,13 @@ class SourcesController < ApplicationController
       format.js
       format.json {
         if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
-          render json: Source.visible_for(current_user).order('id ASC').paginate(page: params[:page], per_page: 1000), each_serializer: SourceSerializer
+          render_with_serializer(Source.visible_for(current_user).order('id ASC').paginate(page: params[:page], per_page: 1000), each_serializer: SourceSerializer)
         else
-          params[:view].present? && params[:view] == 'simple' ? (render json: @sources.to_json) : (render json: @sources, each_serializer: SourceSerializer)
+          if params[:view].present? && params[:view] == 'simple'
+            render json: @sources.to_json
+          else
+            render_with_serializer(@sources, each_serializer: SourceSerializer)
+          end
         end
       }
     end
@@ -54,7 +58,7 @@ class SourcesController < ApplicationController
   def show
     # if @source.type == 'Photo'
     #   @ref = @source.references
-    #   @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.secrets.media_host}/api/commons/search", user_access_token: nil)
+    #   @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.credentials.media_host}/api/commons/search", user_access_token: nil)
     #   @url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@source.name}&f=match}"
     #   begin
     #     response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
@@ -79,7 +83,7 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @source, serializer: SourceSerializer }
+      format.json { render_with_serializer(@source, serializer: SourceSerializer) }
       format.js
     end
   end

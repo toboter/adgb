@@ -41,6 +41,14 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Local Postgres role lacks rights to toggle pg_constraint.convalidated (Rails
+  # fixture FK check) and to disable RI triggers. Join fixtures that would load
+  # before their parents are kept empty; skip the privileged FK revalidation.
+  config.active_record.verify_foreign_keys_for_fixtures = false
+
+  # Integration tests use www.example.com by default.
+  config.hosts.clear
+
   config.logger = Logger.new(config.paths["log"].first, 5, 50.megabytes)
 
   # Raises error for missing translations

@@ -2,25 +2,25 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_18_143014) do
-
+ActiveRecord::Schema[8.1].define(version: 2019_04_18_143014) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
+  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -32,23 +32,23 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "archives", force: :cascade do |t|
     t.string "name"
     t.integer "sources_count"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "artefact_people", id: :serial, force: :cascade do |t|
     t.string "person"
     t.string "titel"
     t.string "n_bab_rel"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["n_bab_rel"], name: "index_artefact_people_on_n_bab_rel"
   end
 
@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "ph_add"
     t.string "position"
     t.string "p_rel"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "source_id"
     t.index ["p_bab_rel"], name: "index_artefact_photos_on_p_bab_rel"
     t.index ["p_rel"], name: "index_artefact_photos_on_p_rel"
@@ -73,8 +73,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "seite"
     t.string "b_bab_rel"
     t.string "ph_rel"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "source_id"
     t.integer "literature_item_id"
     t.index ["b_bab_rel"], name: "index_artefact_references_on_b_bab_rel"
@@ -126,8 +126,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "datum"
     t.string "zeil2"
     t.string "zeil1"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "gr_datum"
     t.string "gr_jahr"
     t.string "slug"
@@ -145,8 +145,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "file_url"
     t.string "html_url"
     t.string "file_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["file_id"], name: "index_attachments_on_file_id"
     t.index ["source_id"], name: "index_attachments_on_source_id"
   end
@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
     t.string "scope"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
@@ -167,15 +167,15 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "name"
     t.string "provider"
     t.string "gid"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "import_events", force: :cascade do |t|
     t.string "name"
     t.integer "creator_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "sheets_count"
     t.index ["creator_id"], name: "index_import_events_on_creator_id"
   end
@@ -196,12 +196,22 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.index ["event_id"], name: "index_import_sheets_on_event_id"
   end
 
+  create_table "imports", force: :cascade do |t|
+    t.string "name"
+    t.jsonb "data"
+    t.integer "creator_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["creator_id"], name: "index_imports_on_creator_id"
+    t.index ["data"], name: "index_imports_on_data", using: :gin
+  end
+
   create_table "literature_item_sources", force: :cascade do |t|
     t.bigint "literature_item_id"
     t.bigint "source_id"
     t.string "locator"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["literature_item_id", "source_id"], name: "index_lit_source_on_item_and_source", unique: true
     t.index ["literature_item_id"], name: "index_literature_item_sources_on_literature_item_id"
     t.index ["source_id"], name: "index_literature_item_sources_on_source_id"
@@ -212,8 +222,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "ver"
     t.string "publ"
     t.string "jahr"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["biblio_data"], name: "index_literature_items_on_biblio_data", using: :gin
     t.index ["ver", "publ", "jahr"], name: "index_literature_items_on_ver_and_publ_and_jahr", unique: true
   end
@@ -221,8 +231,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
   create_table "memberships", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "group_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["group_id", "user_id"], name: "index_memberships_on_group_id_and_user_id", unique: true
     t.index ["group_id"], name: "index_memberships_on_group_id"
     t.index ["user_id"], name: "index_memberships_on_user_id"
@@ -235,8 +245,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "ph_add"
     t.string "ph_datum"
     t.text "ph_text"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "slug"
     t.boolean "locked", default: false, null: false
     t.index ["ph_rel"], name: "index_photo_imports_on_ph_rel", unique: true
@@ -248,8 +258,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "resource_type"
     t.integer "resource_id"
     t.string "activity_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["resource_id", "resource_type", "activity_type"], name: "index_record_activities_on_resource_and_activity", unique: true
     t.index ["resource_type", "resource_id"], name: "index_record_activities_on_resource_type_and_resource_id"
   end
@@ -262,8 +272,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "shared_from_type"
     t.integer "shared_from_id"
     t.boolean "edit"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["resource_id", "resource_type", "shared_to_id", "shared_to_type"], name: "index_share_models_on_resource_and_shared_to", unique: true
     t.index ["resource_type", "resource_id"], name: "index_share_models_on_resource_type_and_resource_id"
     t.index ["shared_from_type", "shared_from_id"], name: "index_share_models_on_shared_from_type_and_shared_from_id"
@@ -306,14 +316,14 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "location_history"
     t.string "state"
     t.text "history"
-    t.string "relevance", default: "{}"
+    t.string "relevance"
     t.string "relevance_comment"
-    t.string "digitize_remarks", default: "{}"
+    t.string "digitize_remarks"
     t.string "keywords"
     t.string "links"
     t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "locked", default: false, null: false
     t.index ["archive_id"], name: "index_sources_on_archive_id"
     t.index ["call_number"], name: "index_sources_on_call_number"
@@ -329,7 +339,7 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "tagger_type"
     t.integer "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -358,8 +368,8 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "email"
     t.string "birthday"
     t.string "gender"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "token"
     t.boolean "app_admin"
     t.boolean "app_commentator"
@@ -374,7 +384,7 @@ ActiveRecord::Schema.define(version: 2019_04_18_143014) do
     t.string "event", null: false
     t.string "whodunnit"
     t.jsonb "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.jsonb "object_changes"
     t.string "version_name"
     t.integer "changed_characters_length"

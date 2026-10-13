@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  bab_rel: MyString
+  bab_rel: fixture-artefact-one
   grabung: MyString
   bab: 1
   bab_ind: MyString
@@ -32,10 +32,10 @@ one:
   fo3: MyString
   fo4: MyString
   fo_text: MyText
-  UTMx: 1
-  UTMxx: 1
-  UTMy: 1
-  UTMyy: 1
+  utmx: 1
+  utmxx: 1
+  utmy: 1
+  utmyy: 1
   inhalt: MyText
   period: MyString
   arkiv: MyString
@@ -46,7 +46,7 @@ one:
   zeil1: MyString
 
 two:
-  bab_rel: MyString
+  bab_rel: fixture-artefact-two
   grabung: MyString
   bab: 1
   bab_ind: MyString
@@ -77,10 +77,10 @@ two:
   fo3: MyString
   fo4: MyString
   fo_text: MyText
-  UTMx: 1
-  UTMxx: 1
-  UTMy: 1
-  UTMyy: 1
+  utmx: 1
+  utmxx: 1
+  utmy: 1
+  utmyy: 1
   inhalt: MyText
   period: MyString
   arkiv: MyString

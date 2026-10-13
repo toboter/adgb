@@ -16,7 +16,7 @@
 <% end unless @version %>
 
 <% content_for :head do %>
-  <script src="//maps.google.com/maps/api/js?key=<%= Rails.application.secrets.gmaps_api_key %>"></script>
+  <script src="//maps.google.com/maps/api/js?key=<%= Rails.application.credentials.gmaps_api_key %>"></script>
   <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
 <% end %>
 

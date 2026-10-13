@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  verfasser: MyString
+  ver: MyString
   publ: MyString
   jahr: MyString
   seite: MyString
@@ -9,7 +9,7 @@ one:
   ph_rel: MyString
 
 two:
-  verfasser: MyString
+  ver: MyString
   publ: MyString
   jahr: MyString
   seite: MyString

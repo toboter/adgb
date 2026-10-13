@@ -217,7 +217,7 @@ class Source < ApplicationRecord
     ]
   end
 
-  serialize :digitize_remarks, Array
+  serialize :digitize_remarks, type: Array, coder: YAML
   def digitize_remarks_list
     digitize_remarks
   end
@@ -232,7 +232,7 @@ class Source < ApplicationRecord
     5 => 'nein (nicht zu digitalisieren)'
   }
 
-  serialize :relevance, Array
+  serialize :relevance, type: Array, coder: YAML
   def relevance_list
     relevance
   end

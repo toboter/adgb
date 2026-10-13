@@ -1,5 +1,5 @@
 Rails.application.configure do
-  Rails.application.routes.default_url_options = { host: Rails.application.secrets.host }
+  Rails.application.routes.default_url_options = { host: Rails.application.credentials.host }
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.

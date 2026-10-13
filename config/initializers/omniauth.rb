@@ -2,8 +2,8 @@ require 'omniauth/strategies/babili'
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :babili, 
-  Rails.application.secrets.client_id, 
-  Rails.application.secrets.client_secret,
+  Rails.application.credentials.client_id, 
+  Rails.application.credentials.client_secret,
   {
     client_options: {
       ssl: {

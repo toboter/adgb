@@ -6,12 +6,12 @@ class Api::V1::SourcesController < Api::V1::BaseController
     sources = sources.where("updated_at > ?", params[:since]) if params[:since]
     sources = sources.paginate(page: params[:page], per_page: params[:per_page] || 30)
 
-    render json: sources, meta: pagination_dict(sources), each_serializer: SourceSerializer
+    render_with_serializer(sources, meta: pagination_dict(sources), each_serializer: SourceSerializer)
   end
 
   def show
     source = Source.visible_for(@user).friendly.find(params[:id])
-    render json: source, serializer: SourceSerializer
+    render_with_serializer(source, serializer: SourceSerializer)
   end
   
   def search
@@ -28,7 +28,7 @@ class Api::V1::SourcesController < Api::V1::BaseController
     ) do |body|
       body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
     end
-    render json: results, meta: pagination_dict(results), each_serializer: SourceSerializer
+    render_with_serializer(results, meta: pagination_dict(results), each_serializer: SourceSerializer)
 
   end
 

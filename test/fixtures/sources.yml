@@ -1,19 +1,11 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  slug: MyString
-  identifier_stable: MyString
-  identifier_temp: MyString
-  type: 
-  type_data: 
-  parent_id: 1
+  type: Source
+  title: Fixture source one
   remarks: MyText
+  slug: fixture-source-one
 
 two:
-  slug: MyString
-  identifier_stable: MyString
-  identifier_temp: MyString
-  type: 
-  type_data: 
-  parent_id: 1
+  type: Source
+  title: Fixture source two
   remarks: MyText
+  slug: fixture-source-two

@@ -1,2 +1,2 @@
-# config/initializers/paper_trail.rb
-# PaperTrail.config.track_associations = false
+# Prefer JSON (ADGB versions columns are already jsonb).
+PaperTrail.serializer = PaperTrail::Serializers::JSON

@@ -1,9 +1,3 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  literature_item: one
-  source: one
-
-two:
-  literature_item: two
-  source: two
+# Join rows need literature_items + sources first. Left empty because Postgres
+# cannot disable FK triggers without SUPERUSER, and this file sorts before
+# literature_items.yml / sources.yml under fixtures :all.

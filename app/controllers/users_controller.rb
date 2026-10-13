@@ -59,7 +59,11 @@ class UsersController < ApplicationController
   end
 
   def add_token_to_babili
-    repos = JSON.parse(access_token.get("/v1/collections/resources/#{Rails.application.secrets.host_id}").body, object_class: OpenStruct)
+    repos = Array(
+      parse_babili_json(
+        access_token.get("/v1/collections/resources/#{Rails.application.credentials.host_id}").body
+      )
+    )
 
     if repos.any? && current_user.regenerate_token
       begin
@@ -73,25 +77,33 @@ class UsersController < ApplicationController
         redirect_to settings_users_url, alert: "The Server ist returning #{e}. Token not sent."
       end
     else
-      redirect_to settings_users_url, alert: "Token not created. #{'No collections found.' if !repos.any?}"
+      redirect_to settings_users_url, alert: "Token not created. #{'No collections found.' if repos.empty?}"
     end
   end
 
   def update_accessibilities
-    babili_accessibilities = JSON.parse(((current_user && access_token) ? access_token.get("/v1/authorizations/clients/#{Rails.application.secrets.client_id}").body : []), object_class: OpenStruct)
+    unless current_user && access_token
+      redirect_to settings_users_url, alert: 'Not signed in to Babili.'
+      return
+    end
+
+    babili_accessibilities = parse_babili_json(
+      access_token.get("/v1/authorizations/clients/#{Rails.application.credentials.client_id}").body
+    )
     user = current_user
 
-    babili_accessibilities.organization_accessors.each do |org|
+    Array(babili_accessibilities.organization_accessors).each do |org|
       group = Group.where(gid: org.id, provider: 'babili').first_or_create! do |g|
         g.name = org.name
       end
       group.users = User.where(uid: org.member_ids, provider: 'babili')
     end
 
-    user.app_admin = babili_accessibilities.user_permissions.extra.manage
-    user.app_creator = babili_accessibilities.user_permissions.create
-    user.app_publisher = babili_accessibilities.user_permissions.extra.publish
-    user.app_commentator = babili_accessibilities.user_permissions.extra.comment
+    perms = babili_accessibilities.user_permissions
+    user.app_admin = perms.extra.manage
+    user.app_creator = perms.create
+    user.app_publisher = perms.extra.publish
+    user.app_commentator = perms.extra.comment
 
     respond_to do |format|
       if user.save

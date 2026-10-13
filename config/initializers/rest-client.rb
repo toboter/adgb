@@ -1,2 +1,2 @@
 require 'rest-client'
-RestClient.proxy = Rails.application.secrets.proxy ||= nil
+RestClient.proxy = Rails.application.credentials.proxy
