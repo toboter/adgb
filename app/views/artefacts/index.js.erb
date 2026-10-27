@@ -1,8 +1,8 @@
 $("#page-result-info").empty();
-$("#pagination-results").remove(); 
+$("#pagination-results").remove();
 <% js = escape_javascript(render(partial: 'artefacts/list', locals: { artefacts: @artefacts })) %>
 $("#_results").html("<%= js %>");
-$("#page-result-info").html("<%= escape_javascript(page_entries_info @artefacts, model: 'Artefact') %>");
+$("#page-result-info").attr("data-total", "<%= @pagy&.count.to_i %>").html("<%= escape_javascript(pagy_entries(@pagy, item_name: 'Artefact')) %>");
 $('#show-target').empty();
 $('#show-target').append('<%= j render(partial: 'artefacts/show', locals: {artefact: @artefacts.first}) %>');
-$(window.location.replace("<%= artefacts_path(search: params[:search]) %>"));
+history.replaceState(null, '', "<%= j artefacts_path(request.query_parameters.except(:utf8, :commit, :_)) %>");

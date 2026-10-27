@@ -7,11 +7,13 @@ class ArtefactsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     # Index uses Searchkick; stub so the test does not need OpenSearch.
-    # Return a will_paginate collection (views call total_pages / page_entries_info).
-    # (Minitest 6 no longer ships Object#stub.)
+    # Stub must look like Searchkick results for pagy(:searchkick, …).
+    results = []
+    results.define_singleton_method(:options) { { page: 1, per_page: 50 } }
+    results.define_singleton_method(:total_count) { 0 }
     singleton = Artefact.singleton_class
     singleton.alias_method :__search_without_stub, :search
-    singleton.define_method(:search) { |*| Artefact.none.paginate(page: 1) }
+    singleton.define_method(:search) { |*| results }
     begin
       get artefacts_url
       assert_response :success

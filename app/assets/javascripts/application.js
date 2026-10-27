@@ -47,7 +47,7 @@ $(document).on('turbolinks:load', function(){
         token = $(this).data('token')
         $('#search-artefacts').tokenfield('createToken', token);
         e.preventDefault(); // Prevent link from following its href
-        $('#search-artefacts')[0].form.submit();
+        Rails.fire($('#search-artefacts')[0].form, 'submit');
     });
     $('.filter-link').tooltip({
         title: 'Click to filter for this attribute.',
@@ -70,6 +70,64 @@ $(document).on('turbolinks:load', function(){
         if ($('.checkbox:checked').length == $('.checkbox').length ){
             $("#select_all").prop('checked', true);
         }
+    });
+
+    function updateBulkActionCount($modal) {
+        var checked = $('.checkbox:checked').length;
+        var itemName = $modal.data('item-name') || 'records';
+        var total = parseInt($('#page-result-info').attr('data-total'), 10) || 0;
+        var $count = $modal.find('.bulk-action-count');
+        var isAccess = $modal.is('#access-settings');
+
+        $count.removeClass('alert-info alert-warning').addClass(checked > 0 ? 'alert-info' : 'alert-warning');
+
+        if (checked > 0) {
+            if (isAccess) {
+                $count.html(
+                    'Scope: <strong>' + checked + ' checked ' + itemName + '</strong>. ' +
+                    'Sharing or revoking access below applies only to those records.'
+                );
+            } else {
+                $count.html('This will change <strong>' + checked + ' checked ' + itemName + '</strong>.');
+            }
+        } else {
+            if (isAccess) {
+                $count.html(
+                    '<strong>No ' + itemName + ' are checked.</strong> ' +
+                    'Sharing or revoking access below will change accessibility for ' +
+                    '<strong>all ' + total + ' ' + itemName + '</strong> in the current search results.'
+                );
+            } else {
+                $count.html(
+                    '<strong>No ' + itemName + ' are checked.</strong> ' +
+                    'This will change <strong>all ' + total + ' ' + itemName + '</strong> in the current search results.'
+                );
+            }
+        }
+
+        $modal.find('form.bulk-record-ids-form [type="submit"]').each(function () {
+            var $btn = $(this);
+            var base = $btn.data('base-label') || $btn.val();
+            $btn.data('base-label', base);
+            if (checked > 0) {
+                $btn.val(base + ' (' + checked + ' checked)');
+            } else {
+                $btn.val(base + ' (all ' + total + ')');
+            }
+        });
+    }
+
+    $(document).on('show.bs.modal', '.bulk-action-modal', function () {
+        updateBulkActionCount($(this));
+    });
+
+    // Bulk modals live outside the list form — copy checked row ids in on submit.
+    $(document).on('submit', 'form.bulk-record-ids-form, #access-settings form', function () {
+        var $form = $(this);
+        $form.find('input[name="record_ids[]"]').remove();
+        $('.checkbox:checked').each(function () {
+            $('<input>').attr({ type: 'hidden', name: 'record_ids[]', value: this.value }).appendTo($form);
+        });
     });
 
     $(function () {

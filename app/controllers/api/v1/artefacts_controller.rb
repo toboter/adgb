@@ -5,8 +5,8 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
     sort_order = Artefact.sorted_by(params[:sort].presence || 'updated_at_desc')
     artefacts = Artefact.visible_for(@user).order(sort_order)
     artefacts = artefacts.where("updated_at > ?", params[:since]) if params[:since]
-    @artefacts = artefacts.paginate(page: params[:page], per_page: params[:per_page] || 30)
-    @meta = pagination_dict(@artefacts)
+    @pagy, @artefacts = pagy(:offset, artefacts, limit: (params[:per_page] || 30).to_i)
+    @meta = pagination_dict(@pagy)
 
     render template: "api/v1/artefacts/index"
   end
@@ -27,8 +27,8 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
     Rails.logger.info("[api/artefacts#search] user=#{@user&.id || 'anonymous'} visible=#{artefact_ids.size} q=#{query.inspect}")
 
     if query.blank? || artefact_ids.empty?
-      @artefacts = scope.none.paginate(page: page, per_page: per_page)
-      @meta = pagination_dict(@artefacts)
+      @pagy, @artefacts = pagy(:offset, scope.none, limit: per_page)
+      @meta = pagination_dict(@pagy)
       return render template: "api/v1/artefacts/index"
     end
 
@@ -48,26 +48,27 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
 
       if Rails.env.development? && @artefacts.total_count.to_i.zero?
         Rails.logger.warn("[api/artefacts#search] OpenSearch returned 0 hits; using SQL fallback")
-        @artefacts = sql_search_artefacts(scope, query, page, per_page)
+        @pagy, @artefacts = pagy(:offset, sql_search_artefacts(scope, query), limit: per_page)
+      else
+        @pagy = pagy(:searchkick, @artefacts)
       end
     rescue StandardError => e
       Rails.logger.warn("[api/artefacts#search] OpenSearch failed (#{e.class}: #{e.message}); using SQL fallback")
-      @artefacts = sql_search_artefacts(scope, query, page, per_page)
+      @pagy, @artefacts = pagy(:offset, sql_search_artefacts(scope, query), limit: per_page)
     end
 
-    @meta = pagination_dict(@artefacts)
+    @meta = pagination_dict(@pagy)
     render template: "api/v1/artefacts/index"
   end
 
   private
 
-  def sql_search_artefacts(scope, query, page, per_page)
+  def sql_search_artefacts(scope, query)
     pattern = "%#{Artefact.sanitize_sql_like(query)}%"
     # Cast integer columns (bab, mus_nr) — ILIKE is text-only in Postgres.
     scope.where(
       "bab::text ILIKE :q OR bab_rel ILIKE :q OR f_obj ILIKE :q OR kod ILIKE :q OR grabung ILIKE :q OR mus_sig ILIKE :q OR mus_nr::text ILIKE :q OR standort ILIKE :q OR fo_text ILIKE :q",
       q: pattern
-    ).order(updated_at: :desc).paginate(page: page, per_page: per_page)
+    ).order(updated_at: :desc)
   end
 end
-

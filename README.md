@@ -12,6 +12,13 @@ ADGB is the Babylon excavation artefacts research app. It authenticates against 
 * postgresql >= 15
 * opensearch >= 2.4
 
+Sharing / grants use a **local** `Sharing` concern and `ShareModel` (replaces the
+unmaintained `shareable_models` gem). The `share_models` table is unchanged.
+
+Babili-only markup/RDF stack (`html-pipeline` 2.x, `commonmarker`,
+`linkeddata` / Getty AAT SPARQL) is documented under Dependencies and Future
+TODOs in the Babili README — ADGB does not depend on those gems.
+
 
 # Local setup
 ```bash

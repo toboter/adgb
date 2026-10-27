@@ -1,5 +1,5 @@
 <div id="init-pagination">
-  <%= will_paginate artefacts, renderer: BootstrapPagination::Rails %>
+  <%= pagy_nav(@pagy) %>
 </div>
 <div id="_results" class="row artefacts-list">
   <div class="col-md-12">
@@ -146,7 +146,7 @@
 </div>
 
 <% content_for :modals do %>
-  <div id="access-settings" class="modal fade" role="dialog" aria-labelledby="access-settings-heading" aria-hidden="true">
+  <div id="access-settings" class="modal fade bulk-action-modal" role="dialog" aria-labelledby="access-settings-heading" aria-hidden="true" data-item-name="<%= Artefact.model_name.human(count: 2) %>">
     <div class="modal-dialog  modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -154,6 +154,7 @@
           <h4 class="modal-title" id="access-settings-heading">Accessibility settings</h4>
         </div>
         <div class="modal-body">
+          <div class="alert alert-info bulk-action-count" role="status" style="margin-bottom:15px;"></div>
           <%= render partial: 'grants/grant_multiple', locals: {model: Artefact} if can?(:grant_multiple_access, Artefact) %>
           <br>
           <%= render partial: 'grants/revoke_multiple', locals: {model: Artefact} if can?(:revoke_multiple_access, Artefact) %>

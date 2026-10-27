@@ -1,6 +1,8 @@
 class SourcesController < ApplicationController
   require 'json'
 
+  include BulkRecordSelection
+
   load_and_authorize_resource
   skip_load_resource only: [:index, :publish, :unlock, :edit_multiple, :update_multiple]
   skip_authorize_resource only: [:index, :publish, :unlock, :edit_multiple, :update_multiple]
@@ -31,6 +33,7 @@ class SourcesController < ApplicationController
         ) do |body|
           body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
         end
+      @pagy = pagy(:searchkick, @sources) if per_page
     end
 
     respond_to do |format|
@@ -40,7 +43,7 @@ class SourcesController < ApplicationController
       format.js
       format.json {
         if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
-          @sources = Source.visible_for(current_user).order('id ASC').paginate(page: params[:page], per_page: 1000)
+          @pagy, @sources = pagy(:offset, Source.visible_for(current_user).order('id ASC'), limit: 1000)
           render template: "sources/index"
         elsif params[:view].present? && params[:view] == 'simple'
           # Searchkick::Relation#to_json dumps the query object, not hits — materialize first.
@@ -193,20 +196,7 @@ class SourcesController < ApplicationController
         end
       else
         authorize! :publish_multiple, Source
-        query = params[:search].presence || '*'
-        sources = Source
-          .visible_for(current_user)
-          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-
-        sk_results = Source.search(query,
-          where: { id: sources.ids },
-          per_page: 10000,
-          misspellings: {below: 1}
-          ) do |body|
-            body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
-          end
-
-        results = Source.where(id: sk_results.map(&:id))
+        results = bulk_selected_records(Source)
 
         @published_length = 0
         results.in_batches.each do |records|
@@ -215,8 +205,6 @@ class SourcesController < ApplicationController
             r.paper_trail_event = 'publish'
             r.save
           end
-          # versions = records.map {|record| "(#{record.id},'#{record.class.base_class.name}','publish','#{current_user.id}',now(),now())" }
-          # ActiveRecord::Base.connection.execute("INSERT INTO versions (item_id, item_type, event, whodunnit, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
           @published_length = @published_length + records_length.count
         end
         if @published_length > 0
@@ -244,20 +232,7 @@ class SourcesController < ApplicationController
         end
       else
         authorize! :unlock_multiple, Source
-        query = params[:search].presence || '*'
-        sources = Source
-          .visible_for(current_user)
-          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-
-        sk_results = Source.search(query,
-          where: { id: sources.ids },
-          per_page: 10000,
-          misspellings: {below: 1}
-          ) do |body|
-            body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
-          end
-
-        results = Source.where(id: sk_results.map(&:id))
+        results = bulk_selected_records(Source)
 
         @unlocked_length = 0
         results.in_batches.each do |records|
@@ -266,8 +241,6 @@ class SourcesController < ApplicationController
             r.paper_trail_event = 'reopen'
             r.save
           end
-          # versions = records.map {|record| "(#{record.id},'#{record.class.base_class.name}','publish','#{current_user.id}',now(),now())" }
-          # ActiveRecord::Base.connection.execute("INSERT INTO versions (item_id, item_type, event, whodunnit, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
           @unlocked_length = @unlocked_length + records_length.count
         end
         if @unlocked_length > 0

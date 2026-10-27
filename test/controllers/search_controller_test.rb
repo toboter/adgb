@@ -21,8 +21,10 @@ class SearchControllerTest < ActionDispatch::IntegrationTest
     artefact = artefacts(:one)
     publish_record!(artefact)
 
-    page = WillPaginate::Collection.create(1, 30, 1) { |pager| pager.replace([artefact]) }
-    with_stubbed_method(Artefact, :search, returns: page) do
+    results = [artefact]
+    results.define_singleton_method(:options) { { page: 1, per_page: 30 } }
+    results.define_singleton_method(:total_count) { 1 }
+    with_stubbed_method(Artefact, :search, returns: results) do
       get search_api_artefacts_path, params: { q: "fixture" }, as: :json
     end
 

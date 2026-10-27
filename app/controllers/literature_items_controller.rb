@@ -2,7 +2,11 @@ class LiteratureItemsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @literature_items = @literature_items.order(jahr: :asc).paginate(:page => params[:page], :per_page => session[:per_page]).includes(:artefacts, :sources)
+    @pagy, @literature_items = pagy(
+      :offset,
+      @literature_items.order(jahr: :asc).includes(:artefacts, :sources),
+      limit: session[:per_page]
+    )
   end
 
   def show

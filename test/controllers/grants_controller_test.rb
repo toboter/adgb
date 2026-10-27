@@ -47,6 +47,21 @@ class GrantsControllerTest < ActionDispatch::IntegrationTest
     assert ShareModel.exists?(resource: @artefact, shared_to: @other)
   end
 
+  test "grant_multiple scopes to checked record_ids" do
+    other_artefact = artefacts(:two)
+    create_record_version!(other_artefact, event: "create", user: @owner)
+
+    post grant_multiple_artefacts_path, params: {
+      model_name: "Artefact",
+      accessors: ["#{@other.id} User"],
+      record_ids: [@artefact.id]
+    }
+
+    assert_redirected_to artefacts_path
+    assert ShareModel.exists?(resource: @artefact, shared_to: @other)
+    refute ShareModel.exists?(resource: other_artefact, shared_to: @other)
+  end
+
 
 
   private

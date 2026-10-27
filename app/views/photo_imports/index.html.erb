@@ -48,7 +48,7 @@
 
     <div class="well" style="padding:10px 10px;">
       <span id="page-result-info">
-        <%= page_entries_info @photos, model: 'PhotoImport' %>
+        <%= pagy_entries(@pagy, item_name: 'PhotoImport') %>
       </span>
     </div>
     <%= render(partial: 'photo_imports/list', locals: { photos: @photos }) %>

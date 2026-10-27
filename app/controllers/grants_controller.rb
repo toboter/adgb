@@ -1,4 +1,6 @@
 class GrantsController < ApplicationController
+  include BulkRecordSelection
+
   before_action :set_resource, except: [:grant_multiple, :revoke_multiple]
   before_action :set_grant, only: [:update, :destroy]
 
@@ -62,22 +64,7 @@ class GrantsController < ApplicationController
 
     authorize! :grant_multiple_access, model_class
 
-    records = model_class.visible_for(current_user).all
-    query = params[:search].presence || '*'
-    if model_class.respond_to?(:filter)
-     records = records.filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-    end
-
-    sk_results = model_class.search(query,
-      where: { id: records.ids },
-      fields: [:default_fields],
-      per_page: 10000,
-      misspellings: {below: 1}
-      ) do |body|
-        body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
-      end
-
-    results = model_class.where(id: sk_results.map(&:id))
+    results = bulk_selected_records(model_class)
 
     results.in_batches.each do |records|
       @values = []
@@ -98,22 +85,7 @@ class GrantsController < ApplicationController
 
     authorize! :revoke_multiple_access, model_class
 
-    records = model_class.visible_for(current_user).all
-    query = params[:search].presence || '*'
-    if model_class.respond_to?(:filter)
-      records = records.filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-    end
-
-    sk_results = model_class.search(query,
-      where: { id: records.ids },
-      fields: [:default_fields],
-      per_page: 10000 ,
-      misspellings: {below: 1}
-      ) do |body|
-        body[:query][:bool][:must] = { query_string: { query: query, default_operator: "and" } }
-      end
-
-    results = model_class.where(id: sk_results.map(&:id))
+    results = bulk_selected_records(model_class)
 
     @acc_instances =[]
     @accessors.each do |accessor|

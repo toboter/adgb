@@ -1,5 +1,6 @@
 <div class="clearfix">
-      <%= form_tag [:revoke_multiple, model], method: :delete do %>
+      <strong>Revoke access:</strong>
+      <%= form_tag [:revoke_multiple, model], method: :delete, class: 'bulk-record-ids-form' do %>
         <%= hidden_field_tag "search", params[:search], id: 'hidden-search' %>
         <%= hidden_field_tag "with_user_shared_to_like", params[:with_user_shared_to_like] %>
         <%= hidden_field_tag "with_unshared_records", params[:with_unshared_records] %>

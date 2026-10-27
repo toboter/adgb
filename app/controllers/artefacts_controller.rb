@@ -1,6 +1,8 @@
 class ArtefactsController < ApplicationController
   require 'json'
 
+  include BulkRecordSelection
+
   load_and_authorize_resource
   skip_load_resource only: [:index, :mapview, :publish, :unlock, :edit_multiple, :update_multiple]
   skip_authorize_resource only: [:index, :mapview, :publish, :unlock, :edit_multiple, :update_multiple]
@@ -33,6 +35,7 @@ class ArtefactsController < ApplicationController
           body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "AND" } }
           body[:track_total_hits] = true
         end
+      @pagy = pagy(:searchkick, @artefacts) if per_page
     end
 
     respond_to do |format|
@@ -40,7 +43,7 @@ class ArtefactsController < ApplicationController
       format.js
       format.json {
         if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
-          @artefacts = artefacts.order('id ASC').paginate(page: params[:page], per_page: 1000)
+          @pagy, @artefacts = pagy(:offset, artefacts.order('id ASC'), limit: 1000)
         end
         render template: "artefacts/index"
       }
@@ -226,21 +229,7 @@ class ArtefactsController < ApplicationController
         end
       else
         authorize! :publish_multiple, Artefact
-        query = params[:search].presence || '*'
-        string_q = query.gsub('+', ' ').squish
-        artefacts = Artefact
-          .visible_for(current_user)
-          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-
-        sk_results = Artefact.search(string_q,
-          where: { id: artefacts.ids },
-          per_page: 10000,
-          misspellings: {below: 1}
-          ) do |body|
-            body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
-          end
-
-        results = Artefact.where(id: sk_results.map(&:id))
+        results = bulk_selected_records(Artefact)
 
         @published_length = 0
         results.in_batches.each do |records|
@@ -249,8 +238,6 @@ class ArtefactsController < ApplicationController
             r.paper_trail_event = 'publish'
             r.save
           end
-          # versions = records.map {|record| "(#{record.id},'#{record.class.base_class.name}','publish','#{current_user.id}',now(),now())" }
-          # ActiveRecord::Base.connection.execute("INSERT INTO versions (item_id, item_type, event, whodunnit, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
           @published_length = @published_length + records_length.count
         end
         if @published_length > 0
@@ -278,21 +265,7 @@ class ArtefactsController < ApplicationController
         end
       else
         authorize! :unlock_multiple, Artefact
-        query = params[:search].presence || '*'
-        string_q = query.gsub('+', ' ').squish
-        artefacts = Artefact
-          .visible_for(current_user)
-          .filter_by(params.slice(:with_user_shared_to_like, :with_unshared_records, :with_published_records))
-
-        sk_results = Artefact.search(string_q,
-          where: { id: artefacts.ids },
-          per_page: 10000,
-          misspellings: {below: 1}
-          ) do |body|
-            body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
-          end
-
-        results = Artefact.where(id: sk_results.map(&:id))
+        results = bulk_selected_records(Artefact)
 
         @unlocked_length = 0
         results.in_batches.each do |records|
@@ -301,8 +274,6 @@ class ArtefactsController < ApplicationController
             r.paper_trail_event = 'reopen'
             r.save
           end
-          # versions = records.map {|record| "(#{record.id},'#{record.class.base_class.name}','publish','#{current_user.id}',now(),now())" }
-          # ActiveRecord::Base.connection.execute("INSERT INTO versions (item_id, item_type, event, whodunnit, created_at, updated_at) VALUES #{values.flatten.compact.to_a.join(",")}")
           @unlocked_length = @unlocked_length + records_length.count
         end
         if @unlocked_length > 0

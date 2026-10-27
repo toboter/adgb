@@ -13,7 +13,7 @@
           <%= submit_tag 'Go!', class: 'btn btn-primary', style: 'width:100px;', data: { disable_with: "Loading..." } %>
         </div>
         <div class="form-group col-md-2 col-md-offset-1 col-sm-3 col-sm-offset-1">
-          <%= select_tag 'sorted_by', options_for_select(Source.options_for_sorted_by, params[:sorted_by]), class: 'form-control pull-right', onchange: "this.form.submit()" %>
+          <%= select_tag 'sorted_by', options_for_select(Source.options_for_sorted_by, params[:sorted_by]), class: 'form-control pull-right', onchange: 'Rails.fire(this.form, "submit")' %>
         </div>
       </div>
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" style="margin-top:10px;">
@@ -30,16 +30,16 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <%= check_box_tag :with_published_records, true, params[:with_published_records], onchange: "this.form.submit()" %>
+                    <%= check_box_tag :with_published_records, true, params[:with_published_records], onchange: 'Rails.fire(this.form, "submit")' %>
                     <%= label_tag(:with_published_records, 'Published records only') %>
                   </div>
                   <div class="form-group">
-                    <%= check_box_tag :with_unshared_records, true, params[:with_unshared_records], onchange: "this.form.submit()" %>
+                    <%= check_box_tag :with_unshared_records, true, params[:with_unshared_records], onchange: 'Rails.fire(this.form, "submit")' %>
                     <%= label_tag(:with_unshared_records, 'Records not shared to anyone') %>
                   </div>
                   <div class="form-group">
                     <%= label_tag(:with_user_shared_to_like, 'Records shared to') %>
-                    <%= select_tag(:with_user_shared_to_like, options_from_collection_for_select(User.all, 'id', 'name', params[:with_user_shared_to_like]), include_blank: '- Any -', class: 'form-control', onchange: "this.form.submit()") %>
+                    <%= select_tag(:with_user_shared_to_like, options_from_collection_for_select(User.all, 'id', 'name', params[:with_user_shared_to_like]), include_blank: '- Any -', class: 'form-control', onchange: 'Rails.fire(this.form, "submit")') %>
                     <p class="text-muted">Results also include groups a user belongs to</p>
                   </div>
                 </div>
@@ -55,8 +55,8 @@
 <div class="row">
   <div class="col-md-7">
     <div class="well" style="padding:10px 10px;">
-      <span id="page-result-info">
-        <%= page_entries_info @sources, model: 'Source' %>
+      <span id="page-result-info" data-total="<%= @pagy&.count.to_i %>">
+        <%= pagy_entries(@pagy, item_name: 'Source') %>
       </span>
       <%= link_to('Reset', sources_path, class: 'pull-right btn btn-sm btn-default', style: 'margin-top: -2px;line-height:1;') %>
     </div>

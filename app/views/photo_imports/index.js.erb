@@ -2,6 +2,6 @@ $("#page-result-info").empty();
 $("#pagination-results").remove(); 
 <% js = escape_javascript(render(partial: 'photo_imports/list', locals: { photos: @photos })) %>
 $("#filterrific_results").html("<%= js %>");
-$("#page-result-info").html("<%= escape_javascript(page_entries_info @photos, model: 'PhotoImport') %>");
+$("#page-result-info").html("<%= escape_javascript(pagy_entries(@pagy, item_name: 'PhotoImport')) %>");
 $('#show-target').empty();
 $('#show-target').append('<%= j render(partial: 'photos/show', locals: {photo: @photos.first, images: @images}) %>');

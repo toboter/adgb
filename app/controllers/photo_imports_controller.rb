@@ -12,7 +12,7 @@ class PhotoImportsController < ApplicationController
     @photos = @photos.with_user_shared_to_like(params[:with_user_shared_to_like]) if params[:with_user_shared_to_like]
     @photos = @photos.with_unshared_records(params[:with_unshared_records]) if params[:with_unshared_records]
     @photos = @photos.with_published_records(params[:with_published_records]) if params[:with_published_records]
-    @photos = @photos.paginate(:page => params[:page], per_page: session[:per_page])
+    @pagy, @photos = pagy(:offset, @photos, limit: session[:per_page])
   end
 
   # GET /photos/1

@@ -9,6 +9,6 @@
     <% end %>
   </div>
   <div id="pagination-results">
-    <%= will_paginate photos, params: params.merge({filterrific: nil}), renderer: BootstrapPagination::Rails %>
+    <%= pagy_nav(@pagy) %>
   </div>
 </div>

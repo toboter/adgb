@@ -1,9 +1,27 @@
-<%= form_tag [:publish, klass], method: :post, style: 'display:inline' do %>
-  <%= hidden_field_tag "search", params[:search], id: 'hidden-search' %>
-  <%= hidden_field_tag "with_user_shared_to_like", params[:with_user_shared_to_like] %>
-  <%= hidden_field_tag "with_unshared_records", params[:with_unshared_records] %>
-  <%= hidden_field_tag "with_published_records", params[:with_published_records] %>
-  <%= submit_tag "Publish all", 
-    class: 'btn btn-default btn-sm text-strong', 
-    data: { confirm: 'Are you sure?' } %>
-<% end %> 
+<% modal_id = "publish-multiple-#{klass.model_name.singular}" %>
+<button type="button" class="btn btn-default btn-sm text-strong" data-toggle="modal" data-target="#<%= modal_id %>">
+  <%= fa_icon('check-square-o', text: 'Publish') %>
+</button>
+<div id="<%= modal_id %>" class="modal fade bulk-action-modal" tabindex="-1" role="dialog" aria-labelledby="<%= modal_id %>-heading" aria-hidden="true" data-item-name="<%= klass.model_name.human(count: 2) %>">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="<%= modal_id %>-heading">Publish <%= klass.model_name.human(count: 2) %></h4>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info bulk-action-count" role="status"></div>
+        <%= form_tag [:publish, klass], method: :post, class: 'bulk-record-ids-form' do %>
+          <%= hidden_field_tag "search", params[:search] %>
+          <%= hidden_field_tag "with_user_shared_to_like", params[:with_user_shared_to_like] %>
+          <%= hidden_field_tag "with_unshared_records", params[:with_unshared_records] %>
+          <%= hidden_field_tag "with_published_records", params[:with_published_records] %>
+          <%= submit_tag "Publish", class: 'btn btn-primary text-strong' %>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default text-strong" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

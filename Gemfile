@@ -54,7 +54,7 @@ gem 'diffy'
 gem "chartkick", "~> 4.0"
 gem "font-awesome-rails", '~> 4.7.0.9'
 gem 'cocoon'
-gem 'will_paginate-bootstrap'
+# pagination: pagy (was will_paginate-bootstrap)
 
 gem 'searchkick', '~> 6.1'
 gem "opensearch-ruby", '~> 3.0'
@@ -64,7 +64,9 @@ gem 'geoutm'
 gem 'browser'
 gem 'closure_tree'
 gem 'paper_trail', '~> 17.0'
-gem 'shareable_models'
+# Sharing: local Sharing concern + ShareModel (was shareable_models gem)
 gem 'friendly_id'
 gem 'acts-as-taggable-on', '~> 13.0'
 gem 'goldiloader', '~> 6.0'
+
+gem "pagy", "~> 43.0"
