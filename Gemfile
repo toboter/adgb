@@ -21,9 +21,6 @@ gem 'sprockets-rails'
 gem 'tilt', '>= 2.2'
 # JS runtime for ExecJS/uglifier: use system Node (nvm). mini_racer/libv8-node
 # fails on glibc WSL when Bundler resolves the musl platform gem.
-# Sprockets 4 still registers CoffeeScript; selectize ships a stray .coffee file
-# under node_modules, so keep the compiler gem (no coffee-rails / no app .coffee).
-gem 'coffee-script'
 
 gem 'omniauth-oauth2' #, '= 1.7.0' #1.7.1 does not work
 gem 'omniauth-rails_csrf_protection'
@@ -58,10 +55,6 @@ gem "chartkick", "~> 4.0"
 gem "font-awesome-rails", '~> 4.7.0.9'
 gem 'cocoon'
 gem 'will_paginate-bootstrap'
-
-# Ein Wechsel zu http://leafletjs.com/ ist sinnvoll. Mindestens muss
-# https://github.com/jawj/OverlappingMarkerSpiderfier eingebaut werden.
-gem 'gmaps4rails'
 
 gem 'searchkick', '~> 6.1'
 gem "opensearch-ruby", '~> 3.0'

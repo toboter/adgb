@@ -6,10 +6,11 @@
   <%= f.input :jahr %>
 
   <%= f.input :biblio_data,
-        collection: [literature_item.try(:biblio_data).presence || nil].compact, 
+        collection: [literature_item.try(:biblio_data).presence || nil].compact,
         label_method: lambda { |b| b.try(:[], 'shortTitle') },
         value_method: lambda { |b| b.try(:to_json) },
         selected: literature_item.try(:biblio_data),
+        input_html: { class: 'biblio_search' },
         label: "Literature entry",
         hint: 'Find the matching literature entry on babylon-online.org.' %>
   

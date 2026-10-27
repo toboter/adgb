@@ -108,10 +108,6 @@ GEM
       activerecord (>= 4.2.10)
       with_advisory_lock (>= 4.0.0)
     cocoon (1.2.15)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.12.2)
     concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
     crass (1.0.7)
@@ -137,7 +133,6 @@ GEM
     geoutm (1.0.2)
     globalid (1.4.0)
       activesupport (>= 6.1)
-    gmaps4rails (2.1.2)
     goldiloader (6.0.0)
       activerecord (>= 7.2, < 8.3)
       activesupport (>= 7.2, < 8.3)
@@ -372,7 +367,6 @@ DEPENDENCIES
   chartkick (~> 4.0)
   closure_tree
   cocoon
-  coffee-script
   csv
   diffy
   execjs (>= 2.10)
@@ -380,7 +374,6 @@ DEPENDENCIES
   font-awesome-rails (~> 4.7.0.9)
   friendly_id
   geoutm
-  gmaps4rails
   goldiloader (~> 6.0)
   jbuilder (~> 2.13)
   listen (~> 3.5)

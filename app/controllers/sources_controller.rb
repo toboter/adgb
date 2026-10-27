@@ -43,7 +43,9 @@ class SourcesController < ApplicationController
           @sources = Source.visible_for(current_user).order('id ASC').paginate(page: params[:page], per_page: 1000)
           render template: "sources/index"
         elsif params[:view].present? && params[:view] == 'simple'
-          render json: @sources.to_json
+          # Searchkick::Relation#to_json dumps the query object, not hits — materialize first.
+          # Slim payload for artefact/source selectize lookups.
+          render json: Array(@sources).as_json(only: %i[id call_number sheet type temp_call_number])
         else
           render template: "sources/index"
         end

@@ -10,8 +10,10 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *= require magnific-popup/dist/magnific-popup.css
- *= require selectize/dist/css/selectize.css
- *= require selectize/dist/css/selectize.bootstrap3.css
+ *= require leaflet/dist/leaflet
+ *= require leaflet.markercluster/dist/MarkerCluster
+ *= require leaflet.markercluster/dist/MarkerCluster.Default
+ *= require @selectize/selectize/dist/css/selectize.bootstrap3.css
  *= require bootstrap-tokenfield-jquery3/dist/css/bootstrap-tokenfield.min.css
  */
 
@@ -212,3 +214,69 @@ a.filter-link {
         font-size: 1.6em;
     }
 }
+
+/* Selectize 0.15 — after Bootstrap so these win over selectize.bootstrap3 */
+.selectize-control .selectize-input {
+  overflow: visible !important;
+}
+.selectize-control.single .selectize-input.input-active {
+  overflow: visible !important;
+}
+.selectize-control.single .selectize-input input,
+.selectize-control.single .selectize-input.input-active input {
+  opacity: 1 !important;
+  position: relative !important;
+  left: 0 !important;
+  /* Fill the control so long placeholders aren't clipped by autoGrow/max-width */
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  padding-right: 1.25rem !important; /* room for the caret */
+  color: #333 !important;
+  cursor: text !important;
+}
+.selectize-control.multi .selectize-input > input {
+  min-width: 14rem !important;
+  max-width: none !important;
+}
+
+/* Above Bootstrap 3 modal (1050) when dropdownParent is body */
+.selectize-dropdown {
+  z-index: 2000 !important;
+  min-width: 22rem !important;
+  box-sizing: border-box;
+}
+
+.selectize-dropdown .selectize-dropdown-content {
+  padding: 4px 0 !important;
+  max-height: 280px;
+}
+
+.selectize-dropdown .option,
+.selectize-dropdown .optgroup-header,
+.selectize-dropdown .no-results,
+.selectize-dropdown .create,
+.selectize-dropdown [data-selectable] {
+  padding: 10px 16px !important;
+  line-height: 1.45 !important;
+  white-space: normal !important;
+  box-sizing: border-box;
+}
+
+.selectize-dropdown .option .option-title,
+.selectize-dropdown .option strong {
+  display: block;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.selectize-dropdown .option .option-meta,
+.selectize-dropdown .option .text-small,
+.selectize-dropdown .option .text-muted {
+  display: block;
+  margin: 4px 0 0 !important;
+  line-height: 1.35 !important;
+  white-space: normal !important;
+}
+

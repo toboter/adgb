@@ -64,18 +64,16 @@ class ArtefactsController < ApplicationController
         body[:query][:bool][:must] = { query_string: { query: string_q, default_operator: "and" } }
       end
 
-    @gmhash = Gmaps4rails.build_markers(@artefacts) do |artefact, marker|
-      if artefact.utm?
-        marker.lat artefact.latitude
-        marker.lng artefact.longitude
-        marker.infowindow "#{artefact.full_entry} #{' ('+artefact.kod+')' if artefact.kod} #{', '+artefact.f_obj if artefact.f_obj}"
-        # Die marker müssen noch abhängig von ihrer Genauigkeit eingefärbt werden. <= 10 ist rot, alles andere blau.
-        marker.picture({
-          :url => artefact.utmxx <= 10 && artefact.utmyy <= 10 ? "http://maps.google.com/mapfiles/ms/micons/red.png" : "http://maps.google.com/mapfiles/ms/micons/blue.png",
-          :width   => 32,
-          :height  => 32
-        })
-      end
+    # Leaflet markers: precise UTM (≤10) → red, otherwise blue.
+    @gmhash = @artefacts.filter_map do |artefact|
+      next unless artefact.utm? && artefact.latitude.present? && artefact.longitude.present?
+
+      {
+        lat: artefact.latitude,
+        lng: artefact.longitude,
+        popup: "#{artefact.full_entry}#{' (' + artefact.kod + ')' if artefact.kod}#{', ' + artefact.f_obj if artefact.f_obj}",
+        precise: artefact.utmxx.to_f <= 10 && artefact.utmyy.to_f <= 10
+      }
     end
   end
 

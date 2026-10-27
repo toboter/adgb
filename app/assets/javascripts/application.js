@@ -16,12 +16,13 @@
 //= require cocoon
 //= require toastr/toastr
 //= require uppy/dist/uppy.min
-//= require underscore/underscore-min
-//= require gmaps/google
 //= require Chart.bundle
 //= require chartkick
 //= require magnific-popup/dist/jquery.magnific-popup.min
-//= require selectize/dist/js/standalone/selectize.min
+//= require leaflet/dist/leaflet
+//= require leaflet.markercluster/dist/leaflet.markercluster
+//= require @selectize/selectize/dist/js/selectize.min
+//= require selectize_helpers
 //= require bootstrap-tokenfield-jquery3/dist/bootstrap-tokenfield.min
 //= require turbolinks
 //= require_tree .
@@ -53,8 +54,6 @@ $(document).on('turbolinks:load', function(){
         delay: 300,
         placement : 'left'
     });
-
-    $('.user_group_list_item').selectize();
 
     //select all checkboxes
     $("#select_all").change(function(){  //"select all" change

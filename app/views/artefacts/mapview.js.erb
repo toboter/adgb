@@ -1,3 +1,3 @@
-$("#mapviewModal").modal('show');
-<% js = escape_javascript(render(partial: 'artefacts/mapview', locals: {gmhash: @gmhash})) %>
+<% js = escape_javascript(render(partial: 'artefacts/mapview', locals: { gmhash: @gmhash })) %>
 $("#mapviewModal").find(".modal-body").html("<%= js %>");
+$("#mapviewModal").modal("show");

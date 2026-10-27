@@ -1,13 +1,14 @@
 {
   "dependencies": {
+    "@selectize/selectize": "0.15.2",
     "bootstrap-tokenfield-jquery3": "^0.13.1",
     "jquery": "^3.5.0",
+    "leaflet": "1.9.4",
+    "leaflet.markercluster": "1.5.3",
     "lodash": "^4.17.19",
     "magnific-popup": "^1.1.0",
     "rails-ujs": "^5.2.1",
-    "selectize": "^0.12.6",
     "toastr": "^2.1.4",
-    "underscore": "^1.9.1",
     "uppy": "^0.27.2"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"

@@ -1,28 +1,5 @@
-<div id="map" style='width: 100%; height: 500px;'></div>
-
+<div id="map" style="width: 100%; height: 500px;"></div>
 
 <script type="text/javascript">
-
-  handler = Gmaps.build('Google', { 
-    markers: { 
-      clusterer: { 
-        maxZoom:  18, 
-        gridSize: 10
-      }
-    }
-  });
-  handler.buildMap({
-      provider: {
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-      },
-      internal: {
-        id: 'map'
-      }
-    },
-    function(){
-      markers = handler.addMarkers(<%=raw gmhash.delete_if(&:blank?).to_json %>);
-      handler.bounds.extendWith(markers);
-      handler.fitMapToBounds();
-    }
-  );
+  AdgbMap.build("map", <%= raw gmhash.to_json %>, { cluster: true });
 </script>
