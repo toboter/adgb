@@ -84,8 +84,9 @@ Rails.application.routes.draw do
   # resources :users, except: :show, path: '/admin/users'
 
   resources :users, path: '/admin/users' do
-    get 'add_token_to_babili', to: 'users#add_token_to_babili', on: :collection
-    get 'get_accessibilities', to: 'users#update_accessibilities', on: :collection
+    # POST-only: these mutate tokens/permissions and must not be prefetchable GETs.
+    post 'add_token_to_babili', to: 'users#add_token_to_babili', on: :collection
+    post 'get_accessibilities', to: 'users#update_accessibilities', on: :collection
     get 'settings', to: 'users#settings', on: :collection
   end
   

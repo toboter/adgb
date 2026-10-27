@@ -7,12 +7,19 @@ class Api::WebhooksController < ActionController::API
 
   end
 
-  # application_url/v1/hooks/update_accessibilities?access_token=babili-token
+  # application_url/api/hooks/update_accessibilities?access_token=babili-token
   def update_user_accessibilities
+    if @token.blank?
+      return render json: { message: 'missing access token', status: 401 }, status: :unauthorized
+    end
+
     user_url = "#{Rails.application.credentials.provider_site}/v1/user"
     user_response = HttpClient.get(user_url, headers: { Authorization: "Bearer #{@token}" }, open_timeout: 10, timeout: 30)
     user_parsed = unwrap_babili_root(JSON.parse(user_response.body))
     user = User.where(provider: 'babili', uid: user_parsed['id']).first
+    unless user
+      return render json: { message: 'user not found for token', status: 404 }, status: :not_found
+    end
 
     babili_access_url = "#{Rails.application.credentials.provider_site}/v1/authorizations/clients/#{Rails.application.credentials.client_id}"
     babili_access_resp = HttpClient.get(babili_access_url, headers: { Authorization: "Bearer #{@token}" }, open_timeout: 10, timeout: 30)
@@ -32,10 +39,16 @@ class Api::WebhooksController < ActionController::API
     user.app_commentator = perms.extra.comment
 
     if user.save
-      render json: {message: 'updated', status: 200}, status: :ok
+      render json: { message: 'updated', status: 200 }, status: :ok
     else
-      render json: {message: 'failed', status: 400}, status: :bad_request
+      render json: { message: 'failed', status: 400 }, status: :bad_request
     end
+  rescue Faraday::UnauthorizedError
+    render json: { message: 'babili rejected access token', status: 401 }, status: :unauthorized
+  rescue Faraday::ForbiddenError
+    render json: { message: 'babili forbidden (token missing required scopes)', status: 403 }, status: :forbidden
+  rescue Faraday::Error => e
+    render json: { message: "babili request failed: #{e.message}", status: 502 }, status: :bad_gateway
   end
 
   private
