@@ -48,6 +48,7 @@ Rails.application.configure do
 
   # Integration tests use www.example.com by default.
   config.hosts.clear
+  Rails.application.routes.default_url_options = { host: "www.example.com" }
 
   config.logger = Logger.new(config.paths["log"].first, 5, 50.megabytes)
 

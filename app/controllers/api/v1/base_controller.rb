@@ -1,5 +1,6 @@
 class Api::V1::BaseController < ActionController::API
-  include JsonSerializerRendering
+  include ActionController::Helpers
+  helper JsonSerializationHelper
 
   require 'rest-client'
   require 'json'

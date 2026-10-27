@@ -2,10 +2,14 @@ one:
   type: Source
   title: Fixture source one
   remarks: MyText
+  call_number: FIX-SRC-1
   slug: fixture-source-one
+  locked: false
 
 two:
   type: Source
   title: Fixture source two
   remarks: MyText
+  call_number: FIX-SRC-2
   slug: fixture-source-two
+  locked: false

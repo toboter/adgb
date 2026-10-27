@@ -1,17 +1,26 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  provider: MyString
-  uid: MyString
-  name: MyString
-  email: MyString
+  provider: babili
+  uid: user-one-uid
+  name: Fixture User One
+  email: one@example.com
   birthday: MyString
   gender: MyString
+  app_admin: false
+  app_creator: false
+  app_publisher: false
+  app_commentator: false
 
 two:
-  provider: MyString
-  uid: MyString
-  name: MyString
-  email: MyString
+  provider: babili
+  uid: user-two-uid
+  name: Fixture User Two
+  email: two@example.com
   birthday: MyString
   gender: MyString
+  app_admin: false
+  app_creator: false
+  app_publisher: false
+  app_commentator: false
+

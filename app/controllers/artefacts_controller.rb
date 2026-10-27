@@ -40,10 +40,9 @@ class ArtefactsController < ApplicationController
       format.js
       format.json {
         if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
-          render_with_serializer(artefacts.order('id ASC').paginate(page: params[:page], per_page: 1000), each_serializer: ArtefactSerializer)
-        else
-          render_with_serializer(@artefacts, each_serializer: ArtefactSerializer)
+          @artefacts = artefacts.order('id ASC').paginate(page: params[:page], per_page: 1000)
         end
+        render template: "artefacts/index"
       }
     end
   end
@@ -133,7 +132,7 @@ class ArtefactsController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.json { render_with_serializer(@artefact, serializer: ArtefactSerializer) }
+      format.json { render template: "artefacts/show" }
     end
   end
 

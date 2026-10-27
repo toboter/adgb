@@ -2,6 +2,7 @@
 
 one:
   bab_rel: fixture-artefact-one
+  slug: fixture-artefact-one
   grabung: MyString
   bab: 1
   bab_ind: MyString
@@ -47,6 +48,7 @@ one:
 
 two:
   bab_rel: fixture-artefact-two
+  slug: fixture-artefact-two
   grabung: MyString
   bab: 1
   bab_ind: MyString

@@ -73,8 +73,9 @@ Rails.application.routes.draw do
     end
     scope :hooks do
       get 'update_accessibilities', to: 'webhooks#update_user_accessibilities'
-      get 'upload_local_user_token', to: 'webhooks#add_token_to_babili'
+      # Token upload lives on users#add_token_to_babili (session-authenticated).
     end
+
   end
 
   get '/auth/:provider/callback', to: 'sessions#create'

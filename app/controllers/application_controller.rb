@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::Base
-  include JsonSerializerRendering
-
   protect_from_forgery with: :exception, prepend: true
 
   before_action :check_token!

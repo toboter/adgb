@@ -41,13 +41,12 @@ class SourcesController < ApplicationController
       format.js
       format.json {
         if params[:all] == 'true' && params[:in_batches] == 'true' && current_user.id == 1
-          render_with_serializer(Source.visible_for(current_user).order('id ASC').paginate(page: params[:page], per_page: 1000), each_serializer: SourceSerializer)
+          @sources = Source.visible_for(current_user).order('id ASC').paginate(page: params[:page], per_page: 1000)
+          render template: "sources/index"
+        elsif params[:view].present? && params[:view] == 'simple'
+          render json: @sources.to_json
         else
-          if params[:view].present? && params[:view] == 'simple'
-            render json: @sources.to_json
-          else
-            render_with_serializer(@sources, each_serializer: SourceSerializer)
-          end
+          render template: "sources/index"
         end
       }
     end
@@ -83,7 +82,7 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render_with_serializer(@source, serializer: SourceSerializer) }
+      format.json { render template: "sources/show" }
       format.js
     end
   end
