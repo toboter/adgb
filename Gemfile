@@ -29,7 +29,7 @@ gem 'omniauth-oauth2' #, '= 1.7.0' #1.7.1 does not work
 gem 'omniauth-rails_csrf_protection'
 # -> https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
 
-gem 'rest-client'
+gem 'faraday'
 gem 'cancancan'
 
 gem 'turbolinks', '~> 5'

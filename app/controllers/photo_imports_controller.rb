@@ -1,5 +1,4 @@
 class PhotoImportsController < ApplicationController
-  require 'rest-client'
   require 'json'
 
   load_and_authorize_resource
@@ -22,10 +21,9 @@ class PhotoImportsController < ApplicationController
     @commons = current_user ? current_user_repos.detect{|s| s.name == 'Commons'} : OpenStruct.new(url: "#{Rails.application.credentials.media_host}/api/commons/search", user_access_token: nil)
     @url = "#{@commons.collection_classes.first.repo_api_url}?q=#{@photo_import.name}&f=match}"
     begin
-      response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
-      @files= JSON.parse(response.body)
-    rescue Errno::ECONNREFUSED
-      "Server at #{@commons.url} is refusing connection."
+      response = HttpClient.get(@url, headers: { Authorization: "Token #{@commons.user_access_token}" })
+      @files = JSON.parse(response.body)
+    rescue Faraday::Error
       flash.now[:notice] = "Can't connect to #{@commons.url}."
       @files = []
     end

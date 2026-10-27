@@ -1,5 +1,4 @@
 class SessionsController < ApplicationController
-  require 'rest-client'
   after_action :update_user, only: :create
 
   def create
@@ -75,7 +74,7 @@ class SessionsController < ApplicationController
           resp = access_token.post("/v1/collections/#{c.id}/tokens", body: data)
           flash[:notice] = (resp.status == 201 ? "Token received." : 'An error occured.')
         end
-      rescue RestClient::ExceptionWithResponse => e
+      rescue OAuth2::Error => e
         flash[:alert] = "The Server ist returning #{e}. Token not sent."
       end
     else

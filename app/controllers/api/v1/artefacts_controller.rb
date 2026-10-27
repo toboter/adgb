@@ -63,8 +63,9 @@ class Api::V1::ArtefactsController < Api::V1::BaseController
 
   def sql_search_artefacts(scope, query, page, per_page)
     pattern = "%#{Artefact.sanitize_sql_like(query)}%"
+    # Cast integer columns (bab, mus_nr) — ILIKE is text-only in Postgres.
     scope.where(
-      "bab ILIKE :q OR bab_rel ILIKE :q OR f_obj ILIKE :q OR kod ILIKE :q OR grabung ILIKE :q OR mus_sig ILIKE :q OR mus_nr ILIKE :q OR standort ILIKE :q OR fo_text ILIKE :q",
+      "bab::text ILIKE :q OR bab_rel ILIKE :q OR f_obj ILIKE :q OR kod ILIKE :q OR grabung ILIKE :q OR mus_sig ILIKE :q OR mus_nr::text ILIKE :q OR standort ILIKE :q OR fo_text ILIKE :q",
       q: pattern
     ).order(updated_at: :desc).paginate(page: page, per_page: per_page)
   end

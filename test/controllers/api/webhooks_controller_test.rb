@@ -25,7 +25,7 @@ class Api::WebhooksControllerTest < ActionDispatch::IntegrationTest
       OpenStruct.new(body: access_payload)
     ]
 
-    with_stubbed_method(RestClient, :get, returns: ->(*) { responses.shift }) do
+    with_stubbed_method(HttpClient, :get, returns: ->(*) { responses.shift }) do
       get "/api/hooks/update_accessibilities", params: { access_token: "hook-token" }, as: :json
     end
 

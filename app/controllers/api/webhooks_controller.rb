@@ -1,5 +1,4 @@
 class Api::WebhooksController < ActionController::API
-  require 'rest-client'
   require 'json'
 
   before_action :set_token
@@ -11,12 +10,12 @@ class Api::WebhooksController < ActionController::API
   # application_url/v1/hooks/update_accessibilities?access_token=babili-token
   def update_user_accessibilities
     user_url = "#{Rails.application.credentials.provider_site}/v1/user"
-    user_response = RestClient.get user_url, {:Authorization => "Bearer #{@token}"}
+    user_response = HttpClient.get(user_url, headers: { Authorization: "Bearer #{@token}" }, open_timeout: 10, timeout: 30)
     user_parsed = unwrap_babili_root(JSON.parse(user_response.body))
     user = User.where(provider: 'babili', uid: user_parsed['id']).first
 
     babili_access_url = "#{Rails.application.credentials.provider_site}/v1/authorizations/clients/#{Rails.application.credentials.client_id}"
-    babili_access_resp = RestClient.get babili_access_url, {:Authorization => "Bearer #{@token}"}
+    babili_access_resp = HttpClient.get(babili_access_url, headers: { Authorization: "Bearer #{@token}" }, open_timeout: 10, timeout: 30)
     babili_accessibilities = deep_ostruct(unwrap_babili_root(JSON.parse(babili_access_resp.body)))
 
     Array(babili_accessibilities.organization_accessors).each do |org|

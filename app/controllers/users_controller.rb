@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  require 'rest-client'
   before_action :authorize
   before_action :administrative, only: [:index, :update, :destroy]
   before_action :set_user, only: [:update, :destroy]
@@ -73,7 +72,7 @@ class UsersController < ApplicationController
           flash[:notice] = (resp.status == 201 ? "Token received." : 'An error occured.')
         end
         redirect_to settings_users_url, notice: 'Updated'
-      rescue RestClient::ExceptionWithResponse => e
+      rescue OAuth2::Error => e
         redirect_to settings_users_url, alert: "The Server ist returning #{e}. Token not sent."
       end
     else

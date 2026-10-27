@@ -96,38 +96,28 @@ class ArtefactsController < ApplicationController
     if @artefact.mus_name.present? && repo.present? && token.present?
       url = "https://api.github.com/search/code?q=repo:#{repo} filename:#{@artefact.mus_name.parameterize(separator: '_')}.xml"
       file_url = nil
+      headers = { Authorization: "Token #{token}", Accept: "application/vnd.github.v3.raw" }
       begin
-        response = RestClient.get(url, {:Authorization => "Token #{token}", :Accept => "application/vnd.github.v3.raw"})
+        response = HttpClient.get(url, headers: headers, open_timeout: 10, timeout: 30)
         search_data = JSON.parse(response.body)
         if search_data['total_count'].to_i >= 1
           path = search_data['items'][0]['path']
           file_url = "https://api.github.com/repos/#{repo}/contents/#{path}"
           @html_url = search_data['items'][0]['html_url']
         end
-      rescue RestClient::ExceptionWithResponse => e
-        text_data = "<xml>#{e.response}</xml>"
+      rescue Faraday::Error => e
+        text_data = "<xml>#{e.response&.dig(:body) || e.message}</xml>"
       end
       if file_url.present?
         begin
-          response = RestClient.get(file_url, {:Authorization => "Token #{token}", :Accept => "application/vnd.github.v3.raw"})
+          response = HttpClient.get(file_url, headers: headers, open_timeout: 10, timeout: 30)
           text_data = response.body
-        rescue RestClient::ExceptionWithResponse => e
-          text_data = "<xml>#{e.response}</xml>"
+        rescue Faraday::Error => e
+          text_data = "<xml>#{e.response&.dig(:body) || e.message}</xml>"
         end
       end
     end
     @text_data = text_data || '<xml>Keine Textbearbeitung gefunden!</xml>'
-
-      #   begin
-      #     response = RestClient.get(@url, {:Authorization => "Token #{@commons.user_access_token}"})
-      #     @files= JSON.parse(response.body)
-      #   rescue RestClient::ExceptionWithResponse => e
-      #     e.response
-      #   rescue Errno::ECONNREFUSED
-      #     "Server at #{@commons.url} is refusing connection."
-      #     flash.now[:notice] = "Can't connect to #{@commons.url}."
-      #     @files = []
-      #   end
 
     respond_to do |format|
       format.html

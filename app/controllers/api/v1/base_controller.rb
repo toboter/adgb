@@ -2,7 +2,6 @@ class Api::V1::BaseController < ActionController::API
   include ActionController::Helpers
   helper JsonSerializationHelper
 
-  require 'rest-client'
   require 'json'
 
   before_action :set_token, :set_user
