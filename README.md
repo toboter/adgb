@@ -15,9 +15,14 @@ ADGB is the Babylon excavation artefacts research app. It authenticates against 
 Sharing / grants use a **local** `Sharing` concern and `ShareModel` (replaces the
 unmaintained `shareable_models` gem). The `share_models` table is unchanged.
 
+Frontend is still **Bootstrap 3 + jQuery + Turbolinks + Sprockets**. Recently
+updated: **Uppy 4.18** (was 0.27), **`@rails/ujs` 7.1** (was rails-ujs 5.2),
+**Chartkick 5**. Deferred later: Bootstrap 5, Turbo/Stimulus, Propshaft /
+jsbundling, `font-awesome-rails` → npm FA, `sassc`/`uglifier` → dartsass/terser.
+
 Babili-only markup/RDF stack (`html-pipeline` 2.x, `commonmarker`,
-`linkeddata` / Getty AAT SPARQL) is documented under Dependencies and Future
-TODOs in the Babili README — ADGB does not depend on those gems.
+`linkeddata` / Getty AAT SPARQL) and Froala→Trix Writer notes are in the
+Babili README — ADGB does not use those editors/gems.
 
 
 # Local setup

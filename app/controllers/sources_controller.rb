@@ -116,8 +116,16 @@ class SourcesController < ApplicationController
   # PATCH/PUT /sources/1.json
   def update
     if params[:attachments]
-      files = JSON.parse(params[:attachments])['successful'].extend(Hashie::Extensions::DeepFind).deep_select('body')
-      @source.attachments << files.map{|file| Attachment.new(file_id: file['id'], file_url: file['file_url'], html_url: file['html_url']) unless file['id'].in?(@source.attachments.map(&:file_id)) }.compact
+      # Uppy Form (≥3) stores an array of { successful, failed, uploadID } batches.
+      batches = JSON.parse(params[:attachments])
+      batches = [batches] unless batches.is_a?(Array)
+      successful = batches.flat_map { |batch| Array(batch['successful']) }
+      files = Array(successful.extend(Hashie::Extensions::DeepFind).deep_select('body'))
+      @source.attachments << files.map { |file|
+        next if file['id'].blank? || file['id'].in?(@source.attachments.map(&:file_id))
+        # Persist only the stable Babili id; file_url/html_url are derived at read time.
+        Attachment.new(file_id: file['id'])
+      }.compact
     end
     respond_to do |format|
       if @source.update(source_params)

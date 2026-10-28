@@ -51,7 +51,7 @@ end
 gem 'bootstrap-sass', '= 3.4.1'
 gem 'simple_form'
 gem 'diffy'
-gem "chartkick", "~> 4.0"
+gem "chartkick", "~> 5.0"
 gem "font-awesome-rails", '~> 4.7.0.9'
 gem 'cocoon'
 # pagination: pagy (was will_paginate-bootstrap)
