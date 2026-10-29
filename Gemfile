@@ -70,3 +70,4 @@ gem 'acts-as-taggable-on', '~> 13.0'
 gem 'goldiloader', '~> 6.0'
 
 gem "pagy", "~> 43.0"
+gem 'rexml', '>= 3.3.9'

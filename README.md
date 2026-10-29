@@ -1,94 +1,107 @@
-# README
-DOGArtefacts / babylon-artefacts
+# ADGB (DOGArtefacts / babylon-artefacts)
 
-ADGB is the Babylon excavation artefacts research app. It authenticates against **Babili** (sibling checkout at `~/dev/babili`) via OAuth2.
+ADGB ist die Forschungsanwendung zu Grabungsfunden und Quellen aus Babylon.
+Benutzer melden sich über **Babili** (OAuth2) an. Dateien, Vokabular und
+Bibliographie liegen bei Babili; ADGB speichert Artefakte, Quellen und
+Zugriffsrechte lokal.
 
-# Dependencies
-* ruby 3.4.2
-* rails 8.1.4
-* bundler 2.5.x
-* node >= 16.15.1
-* yarn 1.22.x
-* postgresql >= 15
-* opensearch >= 2.4
+Schwesterprojekt: Babili (`~/dev/babili` bzw. Produktion `*.babylon-online.org`).
 
-Sharing / grants use a **local** `Sharing` concern and `ShareModel` (replaces the
-unmaintained `shareable_models` gem). The `share_models` table is unchanged.
+## Abhängigkeiten (Stand Modernisierung 2026)
 
-Frontend is still **Bootstrap 3 + jQuery + Turbolinks + Sprockets**. Recently
-updated: **Uppy 4.18** (was 0.27), **`@rails/ujs` 7.1** (was rails-ujs 5.2),
-**Chartkick 5**. Deferred later: Bootstrap 5, Turbo/Stimulus, Propshaft /
-jsbundling, `font-awesome-rails` → npm FA, `sassc`/`uglifier` → dartsass/terser.
+| Komponente | Version / Hinweis |
+|---|---|
+| Ruby | **3.4.2** |
+| Rails | **8.1.4** |
+| Bundler | 2.5.x |
+| Node | ≥ 16.15 |
+| Yarn | 1.22.x |
+| PostgreSQL | ≥ 15 |
+| OpenSearch | ≥ 2.4, **lokal auf dem App-Host, HTTP ohne SSL** (`http://localhost:9200`) |
 
-Babili-only markup/RDF stack (`html-pipeline` 2.x, `commonmarker`,
-`linkeddata` / Getty AAT SPARQL) and Froala→Trix Writer notes are in the
-Babili README — ADGB does not use those editors/gems.
+### Ruby-Gems (Auswahl)
 
+- Suche: Searchkick 6.x + opensearch-ruby 3.x  
+- Sharing: lokale Concerns `Sharing` / `ShareModel` (ersetzt `shareable_models`)  
+- Pagination: Pagy 43  
+- Versionierung: PaperTrail 17  
+- Tags: acts-as-taggable-on 13  
+- Charts: Chartkick 5  
+- Auth-Client: OmniAuth OAuth2 + CSRF-Protection  
 
-# Local setup
+### JavaScript (Yarn)
+
+- Uppy **4.18** (Datei-Upload nach Babili)  
+- `@rails/ujs` **7.1**  
+- jQuery, Leaflet, Selectize, Magnific Popup, Toastr, Chartkick  
+
+### Frontend (bewusst unverändert)
+
+Weiterhin **Bootstrap 3 + jQuery + Turbolinks + Sprockets**. Eine visuelle
+Modernisierung (Bootstrap 5 usw.) ist **nicht** Bestandteil der
+Stack-Modernisierung.
+
+## Lokale Einrichtung
+
 ```bash
 cp config/database.yml.example config/database.yml
-# Encrypted credentials (see config/credentials.yml.example):
-#   bin/rails credentials:edit
-# Needs config/master.key (gitignored). Set provider_site, client_id/secret,
-# host_id, opensearch_url, …
+# Credentials: bin/rails credentials:edit  (benötigt config/master.key)
+# Mindestens: provider_site, client_id, client_secret, host_id, opensearch_url
 bundle install
 yarn install
-bin/rails db:setup   # or restore a production dump for realistic data
+bin/rails db:setup   # oder Produktions-Dump einspielen
 ```
 
-Set `provider_site` to your local Babili API (e.g. `http://api.dev.local:3000`). Point `/etc/hosts` (and the Windows hosts file under WSL) so `api.dev.local` and `dev.local` resolve to `127.0.0.1`. ADGB listens on port **3001**; Babili on **3000**.
+Hosts (WSL + Windows-Hosts-Datei): `api.dev.local` und `dev.local` → `127.0.0.1`.  
+ADGB: Port **3001**. Babili: Port **3000** (`provider_site: http://api.dev.local:3000`).
 
-Minimal regression checks after upgrades:
+OpenSearch-Beispiel in Credentials:
+
+```yaml
+opensearch_url: http://localhost:9200
+```
+
+## OpenSearch / Searchkick
+
+Betrieb: OpenSearch nur auf demselben Rechner wie die App, **HTTP, ohne TLS**.
+Port 9200 nicht öffentlich freigeben.
+
 ```bash
-bin/rails test test/models/visibility_test.rb test/controllers/api/v1/artefacts_controller_test.rb
+export OPENSEARCH_URL='http://localhost:9200'
+bundle exec rake searchkick:reindex CLASS=Artefact
+bundle exec rake searchkick:reindex CLASS=Source
+# Nach jedem Artefact-Reindex:
+curl -s -X PUT "http://localhost:9200/artefacts_development/_settings" \
+  -H 'Content-Type: application/json' \
+  -d '{"index":{"max_terms_count":100000}}'
 ```
 
-# OpenSearch / Searchkick
-Searchkick reads `OPENSEARCH_URL` (defaults to `http://localhost:9200`).
+In Production Indexname `artefacts_production` verwenden.
 
-Recent OpenSearch (including the official Docker image) usually enables the security plugin. Then you must set an authenticated HTTPS URL, e.g.:
+## Tests
 
 ```bash
-export OPENSEARCH_URL='https://admin:YOUR_PASSWORD@localhost:9200'
+bin/rails test
+# Kern-Regression:
+bin/rails test test/models/visibility_test.rb \
+  test/controllers/api/v1/artefacts_controller_test.rb
 ```
 
-**Deploy:** set `OPENSEARCH_URL` in the production environment (env / secrets) to the cluster URL including credentials when security is on. Prefer real TLS with certificate verification in production; local Docker self-signed certs are allowed via `config/initializers/opensearch.rb` only for `https://` URLs in development-style setups.
+Ältere Scaffold-Controller-Tests sind bewusst übersprungen (Routen/Auth
+geändert). Maßgeblich sind Visibility-, Grants-, Sessions- und API-Tests.
 
-### Reindex checklist
-1. Set `OPENSEARCH_URL` (see above).
-2. Reindex:
-   ```bash
-   bundle exec rake searchkick:reindex CLASS=Artefact
-   bundle exec rake searchkick:reindex CLASS=Source
-   ```
-3. Raise `max_terms_count` on the artefacts index (required after every Artefact reindex; Searchkick creates a new physical index with the default 65536 limit). Without this, `/artefacts` fails when filtering all ~78k ids:
-   ```bash
-   curl -sk -u 'admin:YOUR_PASSWORD' -X PUT "https://localhost:9200/artefacts_development/_settings?pretty" \
-     -H 'Content-Type: application/json' \
-     -d '{"index":{"max_terms_count":100000}}'
-   ```
-   Use `artefacts_production` (and matching host/auth) in production.
-4. Confirm:
-   ```bash
-   curl -sk -u 'admin:YOUR_PASSWORD' "https://localhost:9200/artefacts_development/_settings?pretty" | grep max_terms_count
-   ```
+## Dokumentation für Betrieb / Verwaltung
 
-# Upgrade / go-live (code + schema migrations only)
+| Dokument | Inhalt |
+|---|---|
+| [docs/HANDOVER.md](docs/HANDOVER.md) | Übergabe an Verwaltung / Betrieb |
+| [docs/CUTOVER.md](docs/CUTOVER.md) | Checkliste Produktions-**Aktualisierung** |
+| [docs/SECURITY.md](docs/SECURITY.md) | Kurzbefund Sicherheit |
 
-No special dump conversion is required. Production data already has PaperTrail as `jsonb` and no PostGIS. Walk Rails upgrades **locally**; cut over once with the finished apps onto the **existing** production databases.
+## Produktions-Aktualisierung (Kurz)
 
-## Local upgrade path
-1. Develop against a restored dump (or empty DB) on Ruby 2.7 / Rails 5.2.
-2. Climb the Rails ladder locally (6.0 → … → 8.1 + Ruby 3.4). Run `bin/rails db:migrate` when framework/gem migrations appear.
-3. Do **not** deploy intermediate Rails versions to production.
-
-## Production cutover checklist
-1. Maintenance window; backup Postgres (and any Active Storage / file blobs).
-2. Deploy final ADGB (Ruby 3.4 / Rails 8.1) alongside final Babili.
-3. Set env / credentials, including `OPENSEARCH_URL` with credentials when security is on.
-4. `bin/rails db:migrate RAILS_ENV=production` (schema only — no data conversion scripts).
-5. Reindex Searchkick (`Artefact`, `Source`) and set `max_terms_count` (see above).
-6. Smoke: sign-in via Babili OAuth, artefact/source CRUD, search.
-
-**Not required at cutover:** restoring a converted dump, PostGIS casts, or PaperTrail YAML→JSON rewrites.
+Kein Neuaufbau des Servers. Bestehenden Stand aktualisieren: Code ausrollen,
+`bundle install`, `assets:precompile`, Puma neu starten, Searchkick
+reindizieren. **Schema:** Dieses Upgrade bringt nur in **Babili** eine neue
+Migration (Solid Queue/Cable); ADGB unverändert. Details:
+[docs/CUTOVER.md](docs/CUTOVER.md).

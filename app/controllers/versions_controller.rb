@@ -30,10 +30,14 @@ class VersionsController < ApplicationController
 
   private
 
+  VERSIONED_RESOURCE_CLASSES = %w[Artefact Source].freeze
+
   def set_parent
-    parent_class = params[:model_name].constantize
-    parent_foreing_key = params[:model_name].foreign_key
-  
+    name = params[:model_name].to_s
+    raise ActiveRecord::RecordNotFound, "unsupported type" unless VERSIONED_RESOURCE_CLASSES.include?(name)
+    parent_class = name.constantize
+    parent_foreing_key = name.foreign_key
+
     @parent = parent_class.friendly.find(params[parent_foreing_key])
   end
 

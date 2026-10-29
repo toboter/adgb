@@ -1,6 +1,9 @@
 class GrantsController < ApplicationController
   include BulkRecordSelection
 
+  SHAREABLE_RESOURCE_CLASSES = %w[Artefact Source].freeze
+  SHARE_TO_CLASSES = %w[User Group].freeze
+
   before_action :set_resource, except: [:grant_multiple, :revoke_multiple]
   before_action :set_grant, only: [:update, :destroy]
 
@@ -18,7 +21,7 @@ class GrantsController < ApplicationController
   def create
     authorize! :grant_access, @resource
     share_to = params[:share_to].split(',')
-    share_to_klass = share_to.first.classify.constantize
+    share_to_klass = allowed_constantize!(share_to.first.classify, SHARE_TO_CLASSES)
     @share_to = share_to_klass.find(share_to.last)
 
     respond_to do |format|
@@ -58,9 +61,9 @@ class GrantsController < ApplicationController
 
 
   def grant_multiple
-    accessors = params[:accessors] ? params[:accessors].map{ |a| a.split(' ').map{|b| b.strip } }.map{ |h| h.last.classify.constantize.find(h.first) }.compact : false
-    editors = params[:can_edit] ? params[:can_edit].map{ |a| a.split(' ').map{|b| b.strip } }.map{ |h| h.last.classify.constantize.find(h.first) }.compact : false
-    model_class = params[:model_name].constantize
+    accessors = params[:accessors] ? params[:accessors].map{ |a| a.split(' ').map{|b| b.strip } }.map{ |h| allowed_constantize!(h.last.classify, SHARE_TO_CLASSES).find(h.first) }.compact : false
+    editors = params[:can_edit] ? params[:can_edit].map{ |a| a.split(' ').map{|b| b.strip } }.map{ |h| allowed_constantize!(h.last.classify, SHARE_TO_CLASSES).find(h.first) }.compact : false
+    model_class = allowed_constantize!(params[:model_name], SHAREABLE_RESOURCE_CLASSES)
 
     authorize! :grant_multiple_access, model_class
 
@@ -81,7 +84,7 @@ class GrantsController < ApplicationController
 
   def revoke_multiple
     @accessors = params[:accessors]
-    model_class = params[:model_name].constantize
+    model_class = allowed_constantize!(params[:model_name], SHAREABLE_RESOURCE_CLASSES)
 
     authorize! :revoke_multiple_access, model_class
 
@@ -90,7 +93,7 @@ class GrantsController < ApplicationController
     @acc_instances =[]
     @accessors.each do |accessor|
       acc_hash = accessor.split(' ').map{|a| a.strip }
-      @acc_instances << acc_hash.last.classify.constantize.find(acc_hash.first)
+      @acc_instances << allowed_constantize!(acc_hash.last.classify, SHARE_TO_CLASSES).find(acc_hash.first)
     end
 
     results.in_batches.each do |records|
@@ -104,7 +107,7 @@ class GrantsController < ApplicationController
 
   private
     def set_resource
-      parent_class = params[:model_name].constantize
+      parent_class = allowed_constantize!(params[:model_name], SHAREABLE_RESOURCE_CLASSES)
       parent_foreing_key = params[:model_name].foreign_key
 
       @resource = parent_class.friendly.find(params[parent_foreing_key])
@@ -112,6 +115,11 @@ class GrantsController < ApplicationController
 
     def set_grant
       @grant = @resource.shares.find(params[:id])
+    end
+
+    def allowed_constantize!(name, allowlist)
+      raise ActiveRecord::RecordNotFound, "unsupported type" unless allowlist.include?(name.to_s)
+      name.to_s.constantize
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
