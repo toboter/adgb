@@ -8,6 +8,8 @@ gem "csv"
 gem "ostruct"
 
 gem 'rails', '~> 8.1.0', '>= 8.1.4.1'
+# Active Storage 8.1.4.1+ ImageMagick security policy (Import has_one_attached)
+gem 'mini_magick', '~> 5.1'
 # concurrent-ruby pin no longer required on Rails 8 / Ruby 3.2+
 gem 'pg', '>= 1.4.5', '< 2.0'
 gem 'puma', '>= 7.2.1'

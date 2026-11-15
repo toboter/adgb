@@ -172,6 +172,8 @@ GEM
       net-smtp
     marcel (1.2.1)
     matrix (0.4.2)
+    mini_magick (5.4.0)
+      logger
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
     minitest (6.1.0)
@@ -395,6 +397,7 @@ DEPENDENCIES
   jbuilder (~> 2.13)
   jwt (>= 2.10.3)
   listen (~> 3.5)
+  mini_magick (~> 5.1)
   msgpack (>= 1.8.7)
   net-http
   oauth2 (>= 2.0.22)
