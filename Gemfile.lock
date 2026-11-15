@@ -78,8 +78,12 @@ GEM
     acts-as-taggable-on (13.0.0)
       activerecord (>= 7.1, < 8.2)
       zeitwerk (>= 2.4, < 3.0)
-    addressable (2.8.4)
-      public_suffix (>= 2.0.2, < 6.0)
+    addressable (2.9.2)
+      public_suffix (>= 2.0.2, < 8.0)
+    anonymous_loader (0.1.5)
+      version_gem (~> 1.1, >= 1.1.17)
+    auth-sanitizer (0.2.5)
+      version_gem (~> 1.1, >= 1.1.16)
     autoprefixer-rails (10.4.13.0)
       execjs (~> 2)
     base64 (0.3.0)
@@ -119,12 +123,12 @@ GEM
     erubi (1.13.1)
     execjs (2.10.2)
       json (>= 2)
-    faraday (2.14.4)
-      faraday-net_http (>= 2.0, < 3.5)
+    faraday (2.15.1)
+      faraday-net_http (>= 2.0, < 3.6)
       json
       logger
-    faraday-net_http (3.3.0)
-      net-http
+    faraday-net_http (3.5.0)
+      net-http (~> 0.5)
     ffi (1.17.4)
     font-awesome-rails (4.7.0.9)
       railties (>= 3.2, < 9.0)
@@ -136,7 +140,7 @@ GEM
     goldiloader (6.0.0)
       activerecord (>= 7.2, < 8.3)
       activesupport (>= 7.2, < 8.3)
-    hashie (5.1.0)
+    hashie (5.2.0)
       logger
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
@@ -149,8 +153,9 @@ GEM
     jbuilder (2.15.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
-    json (3.0.2)
-    jwt (2.7.0)
+    json (3.1.0)
+    jwt (3.3.0)
+      base64
     listen (3.10.1)
       logger
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -174,9 +179,11 @@ GEM
       prism (~> 1.5)
     msgpack (1.7.0)
     multi_json (1.21.2)
-    multi_xml (0.6.0)
-    net-http (0.3.2)
-      uri
+    multi_xml (0.9.1)
+      bigdecimal (>= 3.1, < 5)
+    net-http (0.10.0)
+      net-protocol (>= 0.3.0)
+      uri (>= 0.11.1)
     net-imap (0.6.7)
       date
       net-protocol
@@ -190,13 +197,16 @@ GEM
     nokogiri (1.19.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    oauth2 (2.0.9)
-      faraday (>= 0.17.3, < 3.0)
-      jwt (>= 1.0, < 3.0)
+    oauth2 (2.1.0)
+      anonymous_loader (~> 0.1, >= 0.1.5)
+      auth-sanitizer (~> 0.2, >= 0.2.5)
+      faraday (>= 0.17.3, < 4.0)
+      jwt (>= 1.0, < 4.0)
+      logger (~> 1.2)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 4)
-      snaky_hash (~> 2.0)
-      version_gem (~> 1.1)
+      snaky_hash (~> 2.0, >= 2.0.9)
+      version_gem (~> 1.1, >= 1.1.17)
     omniauth (2.1.1)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -223,13 +233,14 @@ GEM
       prettyprint
     prettyprint (0.2.1)
     prism (1.9.0)
-    public_suffix (5.0.1)
-    puma (6.2.2)
+    public_suffix (7.0.5)
+    puma (8.1.1)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.2.7)
-    rack-cors (2.0.1)
-      rack (>= 2.0.0)
+    rack (3.2.8)
+    rack-cors (3.0.0)
+      logger
+      rack (>= 3.0.14)
     rack-protection (3.0.6)
       rack
     rack-session (2.1.2)
@@ -310,9 +321,9 @@ GEM
     simple_form (5.2.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
-    snaky_hash (2.0.1)
-      hashie
-      version_gem (~> 1.1, >= 1.1.1)
+    snaky_hash (2.0.9)
+      hashie (>= 0.1.0, < 6)
+      version_gem (~> 1.1, >= 1.1.16)
     sprockets (4.4.1)
       concurrent-ruby (~> 1.1)
       logger
@@ -334,7 +345,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     uri (1.1.2)
     useragent (0.16.11)
-    version_gem (1.1.2)
+    version_gem (1.1.17)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -375,8 +386,10 @@ DEPENDENCIES
   geoutm
   goldiloader (~> 6.0)
   jbuilder (~> 2.13)
+  jwt (>= 2.10.3)
   listen (~> 3.5)
   net-http
+  oauth2 (>= 2.0.22)
   omniauth-oauth2
   omniauth-rails_csrf_protection
   opensearch-ruby (~> 3.0)
@@ -384,8 +397,8 @@ DEPENDENCIES
   pagy (~> 43.0)
   paper_trail (~> 17.0)
   pg (>= 1.4.5, < 2.0)
-  puma (>= 5.3.1)
-  rack-cors
+  puma (>= 7.2.1)
+  rack-cors (>= 2.0.2)
   rails (~> 8.1.0)
   rexml (>= 3.3.9)
   roo

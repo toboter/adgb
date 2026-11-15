@@ -10,7 +10,7 @@ gem "ostruct"
 gem 'rails', '~> 8.1.0'
 # concurrent-ruby pin no longer required on Rails 8 / Ruby 3.2+
 gem 'pg', '>= 1.4.5', '< 2.0'
-gem 'puma', ">= 5.3.1"
+gem 'puma', '>= 7.2.1'
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 # ExecJS 2.8.x passes create_additions to JSON.parse; incompatible with json 3.x
@@ -32,7 +32,9 @@ gem 'cancancan'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.13'
 gem 'bootsnap', '>= 1.7.0', require: false
-gem 'rack-cors', require: 'rack/cors'
+gem 'rack-cors', '>= 2.0.2', require: 'rack/cors'
+gem 'oauth2', '>= 2.0.22'
+gem 'jwt', '>= 2.10.3'
 
 group :development, :test do
   gem 'byebug', platform: :mri

@@ -24,6 +24,12 @@
 /storage
 /config/master.key
 
+# Local tooling / local bundler installs — never commit
+/.tools/
+/.bundle-user/
+/vendor/bundle/
+/vendor/bundle-babili/
+
 # Ignore key files for decrypting credentials and more.
 /config/credentials/*.key
 
