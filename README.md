@@ -7,17 +7,19 @@ Zugriffsrechte lokal.
 
 Schwesterprojekt: Babili (`~/dev/babili` bzw. Produktion `*.babylon-online.org`).
 
-## Abhängigkeiten (Stand Modernisierung 2026)
+## Abhängigkeiten (Stand Modernisierung 2026, Bundle-Stand Nov. 2026)
 
 | Komponente | Version / Hinweis |
 |---|---|
 | Ruby | **3.4.2** |
-| Rails | **8.1.4** |
+| Rails | **8.1.4.1** |
+| Puma | **8.1.x** (≥ 7.2.1) |
 | Bundler | 2.5.x |
 | Node | ≥ 16.15 |
 | Yarn | 1.22.x |
 | PostgreSQL | ≥ 15 |
 | OpenSearch | ≥ 2.4, **lokal auf dem App-Host, HTTP ohne SSL** (`http://localhost:9200`) |
+| ImageMagick | für Active Storage / `mini_magick` **5.4.x** (Policy ab Rails 8.1.4.1) |
 
 ### Ruby-Gems (Auswahl)
 
@@ -27,12 +29,15 @@ Schwesterprojekt: Babili (`~/dev/babili` bzw. Produktion `*.babylon-online.org`)
 - Versionierung: PaperTrail 17  
 - Tags: acts-as-taggable-on 13  
 - Charts: Chartkick 5  
-- Auth-Client: OmniAuth OAuth2 + CSRF-Protection  
+- Auth-Client: OmniAuth **2.4** + OAuth2 + CSRF-Protection (`allowed_hosts`)  
+- Excel-Import: Roo **4** + rubyzip **3.7**  
+- Active Storage: `mini_magick` **~> 5.1**  
 
 ### JavaScript (Yarn)
 
 - Uppy **4.18** (Datei-Upload nach Babili)  
 - `@rails/ujs` **7.1**  
+- lodash **4.18.x**  
 - jQuery, Leaflet, Selectize, Magnific Popup, Toastr, Chartkick  
 
 ### Frontend (bewusst unverändert)

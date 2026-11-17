@@ -2,7 +2,8 @@
 
 **Zielgruppe:** Verwaltung und Betrieb (nicht Entwicklerinnen/Entwickler im
 Tagesgeschäft).  
-**Stand:** Oktober 2026 — nach Modernisierung auf Ruby 3.4 / Rails 8.1.  
+**Stand:** November 2026 — Modernisierung Ruby 3.4 / Rails **8.1.4.1**
+(inkl. nachgezogener Security-Bundle-Updates).  
 **Schwestersystem:** Babili (OAuth-Provider, Dateien, Vokabular, Bibliographie).
 
 ---
@@ -36,7 +37,9 @@ Wesentliche technische Änderungen:
 
 | Thema | Vorher (sinngemäß) | Nachher |
 |---|---|---|
-| Programmiersprache / Framework | ältere Ruby-/Rails-Versionen | Ruby **3.4.2**, Rails **8.1.4** |
+| Programmiersprache / Framework | ältere Ruby-/Rails-Versionen | Ruby **3.4.2**, Rails **8.1.4.1** |
+| App-Server | ältere Puma | **Puma 8.1.x** |
+| Auth-Client | ältere OmniAuth | OmniAuth **2.4** inkl. Host-Allowlist |
 | Rechte teilen | externes, nicht mehr gepflegtes Gem | eigene, lokale Lösung im Code |
 | Hintergrundjobs | (über Babili/Sidekiq historisch) | ADGB selbst: synchrone Web-Requests; Dateien/Jobs bei Babili mit Solid Queue |
 | Datei-Upload-UI | sehr altes Uppy | Uppy 4 |
@@ -198,14 +201,17 @@ Manuelle Smoke-Liste: siehe [CUTOVER.md](CUTOVER.md).
 
 ## 10. Sicherheit (Verwaltungs-Zusammenfassung)
 
-Im Zuge der Modernisierung wurden u. a. Allowlists bei Grants/Versions,
-erweiterte Log-Filter und der aktuelle Rails-/Ruby-Stack nachgezogen.
-**Offene bzw. bewusst akzeptierte Rest-Risiken** (kein Changelog der Fixes):
+Im Zuge der Modernisierung und der November-2026-Bundle-Updates wurden u. a.
+Allowlists bei Grants/Versions, erweiterte Log-Filter, Rails **8.1.4.1**,
+Puma 8.x, OmniAuth 2.4 (`allowed_hosts`), rubyzip 3 / Roo 4 und
+`mini_magick` 5.x nachgezogen.
+**Offene bzw. bewusst akzeptierte Rest-Risiken**:
 [SECURITY.md](SECURITY.md).
 
 - HTTPS für die Web-Oberfläche über den Reverse-Proxy (`force_ssl` in Rails).
 - Secrets verschlüsselt; Master-Key nur auf dem Server.
 - OpenSearch nicht öffentlich.
+- ImageMagick auf dem Host für Active Storage (`mini_magick` 5.x).
 
 ---
 

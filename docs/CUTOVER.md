@@ -19,6 +19,9 @@ getestet. Schwester-Checkliste: Babili `docs/CUTOVER.md`.
 - [ ] Doorkeeper-Redirect-URIs enthalten den Produktions-Callback von ADGB
 - [ ] Host: Ruby 3.4.2, Node/Yarn verfügbar; Sidekiq/Redis für Babili **nicht**
       mehr nötig (Solid Queue in Puma)
+- [ ] ImageMagick installiert (Active Storage / `mini_magick` **5.x**, Rails
+      8.1.4.1 Security-Policy); Bundle-Stand inkl. Puma 8.x / OmniAuth 2.4 /
+      rubyzip 3.x wie Lockfiles
 
 ## Aktualisierung
 
