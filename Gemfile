@@ -14,14 +14,15 @@ gem 'mini_magick', '~> 5.1'
 gem 'pg', '>= 1.4.5', '< 2.0'
 gem 'puma', '>= 7.2.1'
 gem 'sassc-rails'
-gem 'uglifier', '>= 1.3.0'
+# Terser replaces uglifier — Uppy 4 / modern JS uses ?. and ?? that Uglifier cannot parse
+gem 'terser'
 # ExecJS 2.8.x passes create_additions to JSON.parse; incompatible with json 3.x
 gem 'execjs', '>= 2.10'
 # Keep Sprockets (do not introduce Webpacker / Propshaft this upgrade).
 gem 'sprockets-rails'
 # Ruby 3.4: tilt <2.2 freezes/force_encoding breaks font-awesome .css.erb via sassc-rails
 gem 'tilt', '>= 2.2'
-# JS runtime for ExecJS/uglifier: use system Node (nvm). mini_racer/libv8-node
+# JS runtime for ExecJS/terser: use system Node (nvm). mini_racer/libv8-node
 # fails on glibc WSL when Bundler resolves the musl platform gem.
 
 gem 'omniauth', '>= 2.2.0' # forged-host guard (allowed_hosts); see config/initializers/omniauth.rb
