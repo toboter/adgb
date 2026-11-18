@@ -9,15 +9,10 @@ OmniAuth.config.allowed_hosts = [
 ]
 
 Rails.application.config.middleware.use OmniAuth::Builder do
+  # Use the system CA store (Let's Encrypt etc.). Do not point at a missing
+  # cacert.pem — OpenSSL then fails with SSL_CTX_load_verify_file / BIO lib.
   provider :babili,
-  Rails.application.credentials.client_id,
-  Rails.application.credentials.client_secret,
-  {
-    client_options: {
-      ssl: {
-        ca_file: Rails.root.join("cacert.pem").to_s
-      }
-    },
-    scope: 'public write'
-  }
+    Rails.application.credentials.client_id,
+    Rails.application.credentials.client_secret,
+    scope: "public write"
 end
